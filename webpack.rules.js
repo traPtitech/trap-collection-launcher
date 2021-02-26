@@ -24,8 +24,10 @@ module.exports = [
             'module-resolver',
             {
               alias: {
+                '@api': './api',
                 '@': './src',
               },
+              extensions: ['.ts', '.tsx'],
             },
           ],
         ],

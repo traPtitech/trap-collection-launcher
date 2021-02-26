@@ -24,7 +24,13 @@
   },
   "settings": {
     "import/resolver": {
-      "babel-module": {}
+      "babel-module": {
+        "alias": {
+          "@api": "./api",
+          "@": "./src"
+        },
+        "extensions": [".ts", ".tsx"]
+      }
     },
     "react": {
       "version": "detect"

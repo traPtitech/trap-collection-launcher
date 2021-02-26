@@ -12,6 +12,7 @@
     "resolveJsonModule": true,
     "paths": {
       "*": ["node_modules/*"],
+      "@api/*": ["api/*"],
       "@/*": ["src/*"]
     },
     "jsx": "react",
