@@ -1,11 +1,12 @@
 import React from 'react';
 import { MemoryRouter, Switch, Route } from 'react-router-dom';
+import GlobalStyle from '@/renderer/styles/GlobalStyle';
 import Title from '@/renderer/views/Title';
 import GameList from '@/renderer/views/GameList';
 import GameDetail from '@/renderer/views/GameDetail';
 import Setting from '@/renderer/views/Setting';
 
-const App: React.FC = () => (
+const Navigation: React.FC = () => (
   <MemoryRouter>
     <Switch>
       <Route exact path='/'>
@@ -25,6 +26,13 @@ const App: React.FC = () => (
       </Route>
     </Switch>
   </MemoryRouter>
+);
+
+const App: React.FC = () => (
+  <>
+    <GlobalStyle />
+    <Navigation />
+  </>
 );
 
 export default App;
