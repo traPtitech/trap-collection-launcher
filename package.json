@@ -11,7 +11,8 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts .",
     "postinstall": "husky install",
-    "api:build": "aspida"
+    "api:build": "aspida",
+    "open-content-directory-for-windows": "start %APPDATA%/trap-collection/content"
   },
   "keywords": [],
   "author": {
