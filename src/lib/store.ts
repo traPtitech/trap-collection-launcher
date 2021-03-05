@@ -1,15 +1,9 @@
 import Store = require('electron-store');
 
-export const store = new Store({
-  schema: {
-    seatId: {
-      type: 'number',
-      minimum: 0,
-      default: null,
-    },
-    productKey: {
-      type: 'string',
-      default: null,
-    },
-  },
-});
+export const store = new Store<{
+  seatId: number;
+  seatVersionId: number;
+  productKey: string;
+  games: traPCollection.Game[];
+  lastUpdate: Date;
+}>();
