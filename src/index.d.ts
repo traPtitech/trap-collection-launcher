@@ -9,10 +9,18 @@ declare namespace TraPCollection {
   type GameInfo = { type: GameType; url: string };
 
   type Game = {
+    id: string;
     name: string;
+    createdAt: string;
+    version: {
+      id: string;
+      name: string;
+      description: string;
+      createdAt: string;
+    };
     description: string;
     poster: string;
-    video: string;
+    video?: string;
   };
 
   type Platform = 'win32' | 'darwin';
