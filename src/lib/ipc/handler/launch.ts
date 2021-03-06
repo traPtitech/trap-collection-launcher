@@ -1,9 +1,9 @@
-import { ipcMain } from '@/common/typedIpc';
 import path from 'path';
 import childProcess from 'child_process';
 import { BrowserWindow } from 'electron';
+import { ipcMain } from '@/common/typedIpc';
 
-export default (window: BrowserWindow): void => {
+const launchListener = (window: BrowserWindow): void => {
   ipcMain.handle('launch', async (_event, game) => {
     const platform = process.platform;
     if (platform !== 'win32' && platform !== 'darwin') {
@@ -18,6 +18,8 @@ export default (window: BrowserWindow): void => {
     window.minimize();
   });
 };
+
+export default launchListener;
 
 const launch: Record<
   TraPCollection.Platform,
