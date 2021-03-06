@@ -28,7 +28,6 @@ const createWindow = (): void => {
     width: 800,
     webPreferences: {
       nodeIntegration: true,
-      nodeIntegrationInWorker: true,
       webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
     },
   });
