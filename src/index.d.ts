@@ -1,4 +1,4 @@
-declare namespace traPCollection {
+declare namespace TraPCollection {
   type GameType = 'app' | 'jar' | 'url';
   /**
    * @example

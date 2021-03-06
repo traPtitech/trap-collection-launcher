@@ -7,7 +7,7 @@ import {
 } from 'electron';
 
 type FromRenderer = {
-  launch(gameInfo: traPCollection.GameInfo): void;
+  launch(gameInfo: TraPCollection.GameInfo): void;
 };
 type FromMain = {
   /* example */

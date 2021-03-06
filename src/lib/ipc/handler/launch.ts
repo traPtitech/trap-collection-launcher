@@ -20,8 +20,8 @@ export default (window: BrowserWindow): void => {
 };
 
 const launch: Record<
-  traPCollection.Platform,
-  Record<traPCollection.GameType, (url: string) => childProcess.ChildProcess>
+  TraPCollection.Platform,
+  Record<TraPCollection.GameType, (url: string) => childProcess.ChildProcess>
 > = {
   win32: {
     app: (url) =>

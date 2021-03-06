@@ -4,6 +4,6 @@ export const store = new Store<{
   seatId: number;
   seatVersionId: number;
   productKey: string;
-  games: traPCollection.Game[];
+  games: TraPCollection.Game[];
   lastUpdate: Date;
 }>();
