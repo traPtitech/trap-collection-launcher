@@ -54,6 +54,10 @@ export const ipcMain = {
     );
   },
 
+  removeHandler<K extends keyof FromRenderer>(channel: K): void {
+    originalIpcMain.removeHandler(channel);
+  },
+
   send<K extends keyof FromMain>(
     window: BrowserWindow,
     channel: K,
