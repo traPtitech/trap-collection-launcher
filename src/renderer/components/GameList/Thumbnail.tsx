@@ -1,7 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ThumbnailContainer = styled.div`
+type WidthAndHeight = {
+  width?: number | string;
+  height?: number | string;
+};
+
+const ThumbnailContainer = styled.div<WidthAndHeight>`
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
   position: relative;
 `;
 
@@ -30,14 +37,20 @@ const ThumbnailVideo = styled.video`
   background-color: black;
 `;
 
-type Props = {
+type Props = WidthAndHeight & {
   imgSrc: string;
   videoSrc: string;
   showVideo: boolean;
 };
 
-const Thumbnail: React.FC<Props> = ({ imgSrc, videoSrc, showVideo }) => (
-  <ThumbnailContainer>
+const Thumbnail: React.FC<Props> = ({
+  width,
+  height,
+  imgSrc,
+  videoSrc,
+  showVideo,
+}) => (
+  <ThumbnailContainer width={width} height={height}>
     <ThumbnailImage src={imgSrc} />
     {showVideo && <ThumbnailVideo autoPlay src={videoSrc} />}
   </ThumbnailContainer>
