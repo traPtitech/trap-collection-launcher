@@ -43,17 +43,15 @@ type Props = WidthAndHeight & {
   showVideo: boolean;
 };
 
-const Thumbnail: React.FC<Props> = ({
-  width,
-  height,
-  imgSrc,
-  videoSrc,
-  showVideo,
-}) => (
-  <ThumbnailContainer width={width} height={height}>
-    <ThumbnailImage src={imgSrc} />
-    {showVideo && <ThumbnailVideo autoPlay src={videoSrc} />}
-  </ThumbnailContainer>
+const Thumbnail = React.forwardRef<HTMLDivElement, Props>(
+  function ThumbnailInner({ width, height, imgSrc, videoSrc, showVideo }, ref) {
+    return (
+      <ThumbnailContainer width={width} height={height} ref={ref}>
+        <ThumbnailImage src={imgSrc} />
+        {showVideo && <ThumbnailVideo autoPlay src={videoSrc} />}
+      </ThumbnailContainer>
+    );
+  }
 );
 
 export default Thumbnail;
