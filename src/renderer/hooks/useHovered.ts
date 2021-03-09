@@ -5,18 +5,28 @@ export const useHovered = <T extends HTMLElement>(): [Ref<T>, boolean] => {
   const ref = useRef<T | null>(null);
 
   useEffect(() => {
-    const handleMouseOver = () => setHovered(true);
-    const handleMouseOut = () => setHovered(false);
-
     const elem = ref.current;
-    if (elem) {
-      elem.addEventListener('mouseover', handleMouseOver);
-      elem.addEventListener('mouseout', handleMouseOut);
-      return () => {
-        elem.removeEventListener('mouseover', handleMouseOver);
-        elem.removeEventListener('mouseout', handleMouseOut);
-      };
-    }
+
+    const handleMouseOver = (e: MouseEvent) => {
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      if (elem && !elem.contains(e.relatedTarget as any)) {
+        setHovered(true);
+      }
+    };
+    const handleMouseOut = (e: MouseEvent) => {
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      if (elem && !elem.contains(e.relatedTarget as any)) {
+        setHovered(false);
+      }
+    };
+
+    elem?.addEventListener('mouseover', handleMouseOver);
+    elem?.addEventListener('mouseout', handleMouseOut);
+
+    return () => {
+      elem?.removeEventListener('mouseover', handleMouseOver);
+      elem?.removeEventListener('mouseout', handleMouseOut);
+    };
   }, []);
 
   return [ref, hovered];
