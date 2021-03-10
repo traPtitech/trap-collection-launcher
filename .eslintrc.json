@@ -14,6 +14,9 @@
     "plugin:react-hooks/recommended",
     "plugin:prettier/recommended"
   ],
+  "rules": {
+    "react/prop-types": 0
+  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",
