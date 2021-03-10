@@ -7,8 +7,7 @@ import {
 } from 'electron';
 
 type FromRenderer = {
-  /* example */
-  foo(x: number, y: string): boolean;
+  launch(gameInfo: TraPCollection.GameInfo): void;
 };
 type FromMain = {
   /* example */
@@ -53,6 +52,10 @@ export const ipcMain = {
         return listener(event, ...(args as Parameters<FromRenderer[K]>));
       }
     );
+  },
+
+  removeHandler<K extends keyof FromRenderer>(channel: K): void {
+    originalIpcMain.removeHandler(channel);
   },
 
   send<K extends keyof FromMain>(
