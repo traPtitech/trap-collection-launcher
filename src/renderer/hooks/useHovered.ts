@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, Ref } from 'react';
 
 export const useHovered = <T extends HTMLElement>(): [Ref<T>, boolean] => {
   const [hovered, setHovered] = useState(false);
-  const ref = useRef<T | null>(null);
+  const ref = useRef<T>(null);
 
   useEffect(() => {
     const elem = ref.current;
