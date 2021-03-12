@@ -12,7 +12,7 @@
     "lint": "eslint --ext .ts .",
     "postinstall": "husky install",
     "api:build": "aspida",
-    "open-content-directory-for-windows": "start %APPDATA%/trap-collection/content"
+    "open-content-directory-for-windows": "start %APPDATA%/trap-collection/contents"
   },
   "keywords": [],
   "author": {
@@ -55,7 +55,10 @@
                 {
                   "html": "./src/renderer/index.html",
                   "js": "./src/renderer/renderer.tsx",
-                  "name": "main_window"
+                  "name": "main_window",
+                  "preload": {
+                    "js": "./src/preload/preload.ts"
+                  }
                 }
               ]
             }
@@ -82,17 +85,18 @@
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@electron-forge/plugin-webpack": "6.0.0-beta.54",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
+    "@types/electron-store": "^3.2.0",
     "@types/nedb": "^1.8.11",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.2",
     "@types/react-router-dom": "^5.1.7",
-    "@types/styled-components": "^5.1.7",
+    "@types/styled-components": "^5.1.8",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-module-resolver": "^4.1.0",
-    "css-loader": "^5.1.1",
-    "electron": "12.0.0",
+    "css-loader": "^5.1.2",
+    "electron": "12.0.1",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-import-resolver-babel-module": "^5.2.0",
@@ -107,11 +111,12 @@
     "node-loader": "^1.0.2",
     "prettier": "^2.2.1",
     "style-loader": "^2.0.0",
-    "ts-loader": "^8.0.17",
+    "ts-loader": "^8.0.18",
     "typescript": "4.2.3"
   },
   "dependencies": {
     "@aspida/axios": "^1.6.3",
+    "ajv": "^7.2.1",
     "axios": "^0.21.1",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^7.0.2",
