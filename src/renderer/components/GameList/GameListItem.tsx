@@ -9,32 +9,33 @@ const Container = styled.li`
   height: 270px;
 `;
 
-type Props = TraPCollection.GameInfo & {
+type Props = {
+  game: TraPCollection.GameInfo;
   onGameHovered: (id: string) => void;
 };
 
-const GameListItem: React.FC<Props> = ({
-  id,
-  poster,
-  video,
-  onGameHovered,
-}) => {
+const GameListItem: React.FC<Props> = ({ game, onGameHovered }) => {
   const [ref, hovered] = useHovered<HTMLLIElement>();
 
   useEffect(() => {
     if (hovered) {
-      onGameHovered(id);
+      onGameHovered(game.id);
     }
-  }, [id, onGameHovered, hovered]);
+  }, [game.id, onGameHovered, hovered]);
 
   return (
     <Container ref={ref}>
-      <Link to='/game/1'>
+      <Link
+        to={{
+          pathname: '/game/detail',
+          state: { game },
+        }}
+      >
         <Thumbnail
           width='100%'
           height='100%'
-          imgSrc={poster}
-          videoSrc={video}
+          imgSrc={game.poster}
+          videoSrc={game.video}
           showVideo={hovered}
         />
       </Link>

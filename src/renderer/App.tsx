@@ -20,7 +20,7 @@ const Navigation: React.FC = () => (
         <GameList />
       </Route>
 
-      <Route exact path='/game/:id'>
+      <Route exact path='/game/detail'>
         <GameDetail />
       </Route>
 

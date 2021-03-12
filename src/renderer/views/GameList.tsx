@@ -1,8 +1,8 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import GameList from '@/renderer/components/GameList/GameList';
-import { BackgroundSetterContext } from '@/renderer/contexts/Background';
+import { useVideoAsBackground } from '@/renderer/hooks/useVideoAsBackground';
 
 const PageContainer = styled.div`
   max-width: 980px;
@@ -66,19 +66,10 @@ const useSelectedGame = (games: TraPCollection.GameInfo[]) => {
   return [game, setGameById, unsetGame] as const;
 };
 
-const useVideoAsBackground = (game: TraPCollection.GameInfo | null) => {
-  const setter = useContext(BackgroundSetterContext);
-  useEffect(() => {
-    game?.video
-      ? setter?.setBackground(game.video)
-      : setter?.setDefaultBackground();
-  }, [game?.video, setter]);
-};
-
 const GameListPage: React.FC = () => {
   const games = useGames();
   const [game, setGameById, unsetGame] = useSelectedGame(games);
-  useVideoAsBackground(game);
+  useVideoAsBackground(game?.video);
 
   return (
     <PageContainer>

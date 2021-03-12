@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { useVideoAsBackground } from '@/renderer/hooks/useVideoAsBackground';
 
 const PageContainer = styled.div`
   max-width: 980px;
@@ -19,15 +20,18 @@ const PageTitle = styled.h1``;
 const Content = styled.div``;
 
 const GameDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const {
+    state: { game },
+  } = useLocation<{ game: TraPCollection.GameInfo }>();
+  useVideoAsBackground(game.video);
 
   return (
     <PageContainer>
       <Header>
-        <PageTitle>こんにちは世界!</PageTitle>
+        <PageTitle>{game.name}</PageTitle>
       </Header>
       <Content>
-        <Link to='/game'>Link to game list</Link>
+        <Link to='/game'>Back to game list</Link>
       </Content>
     </PageContainer>
   );

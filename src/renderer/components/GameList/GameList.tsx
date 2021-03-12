@@ -22,7 +22,7 @@ const GameList: React.FC<Props> = ({
   return (
     <GameListContainer onMouseLeave={onGameUnhovered}>
       {games.map((game) => (
-        <GameListItem key={game.id} onGameHovered={onGameHovered} {...game} />
+        <GameListItem key={game.id} onGameHovered={onGameHovered} game={game} />
       ))}
     </GameListContainer>
   );
