@@ -34,7 +34,7 @@ const Background: React.FC = () => {
   return (
     <>
       <BackgroundMask />
-      <BackgroundVideo autoPlay loop src={video} />
+      <BackgroundVideo autoPlay muted loop src={video} />
     </>
   );
 };
