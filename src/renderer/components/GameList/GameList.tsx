@@ -14,13 +14,19 @@ type Props = {
     poster: string;
     video: string;
   }[];
+  onGameHovered: (id: string) => void;
+  onGameUnhovered: () => void;
 };
 
-const GameList: React.FC<Props> = ({ games }) => {
+const GameList: React.FC<Props> = ({
+  games,
+  onGameUnhovered,
+  onGameHovered,
+}) => {
   return (
-    <GameListContainer>
+    <GameListContainer onMouseLeave={onGameUnhovered}>
       {games.map((game) => (
-        <GameListItem key={game.id} {...game} />
+        <GameListItem key={game.id} onGameHovered={onGameHovered} {...game} />
       ))}
     </GameListContainer>
   );

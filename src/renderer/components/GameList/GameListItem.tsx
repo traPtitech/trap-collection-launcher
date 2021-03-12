@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useHovered } from '@/renderer/hooks/useHovered';
@@ -13,10 +13,22 @@ type Props = {
   id: string;
   poster: string;
   video: string;
+  onGameHovered: (id: string) => void;
 };
 
-const GameListItem: React.FC<Props> = ({ poster, video }) => {
+const GameListItem: React.FC<Props> = ({
+  id,
+  poster,
+  video,
+  onGameHovered,
+}) => {
   const [ref, hovered] = useHovered<HTMLLIElement>();
+
+  useEffect(() => {
+    if (hovered) {
+      onGameHovered(id);
+    }
+  }, [id, onGameHovered, hovered]);
 
   return (
     <Container ref={ref}>
