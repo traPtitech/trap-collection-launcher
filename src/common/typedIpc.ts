@@ -6,62 +6,57 @@ import {
   BrowserWindow,
 } from 'electron';
 
-type FromRenderer = {
-  launch(gameInfo: TraPCollection.GameInfo): void;
-};
-type FromMain = {
-  /* example */
-  bar(x: number, y: string): void;
-};
-
 export const ipcRenderer = {
-  invoke<K extends keyof FromRenderer>(
+  invoke<K extends keyof TraPCollection.FromRenderer>(
     channel: K,
-    ...args: Parameters<FromRenderer[K]>
-  ): Promise<ReturnType<FromRenderer[K]>> {
+    ...args: Parameters<TraPCollection.FromRenderer[K]>
+  ): Promise<ReturnType<TraPCollection.FromRenderer[K]>> {
     return originalIpcRenderer.invoke(channel, ...args);
   },
 
-  on<K extends keyof FromMain>(
+  on<K extends keyof TraPCollection.FromMain>(
     channel: K,
     listener: (
       event: IpcRendererEvent,
-      ...args: Parameters<FromMain[K]>
+      ...args: Parameters<TraPCollection.FromMain[K]>
     ) => void
   ): void {
     originalIpcRenderer.on(
       channel,
       (event: IpcRendererEvent, ...args: unknown[]) => {
-        listener(event, ...(args as Parameters<FromMain[K]>));
+        listener(event, ...(args as Parameters<TraPCollection.FromMain[K]>));
       }
     );
   },
 };
 
 export const ipcMain = {
-  handle<K extends keyof FromRenderer>(
+  handle<K extends keyof TraPCollection.FromRenderer>(
     channel: K,
     listener: (
       event: IpcMainInvokeEvent,
-      ...args: Parameters<FromRenderer[K]>
-    ) => Promise<ReturnType<FromRenderer[K]>>
+      ...args: Parameters<TraPCollection.FromRenderer[K]>
+    ) => ReturnType<TraPCollection.FromRenderer[K]>
   ): void {
     originalIpcMain.handle(
       channel,
       (event: IpcMainInvokeEvent, ...args: unknown[]) => {
-        return listener(event, ...(args as Parameters<FromRenderer[K]>));
+        return listener(
+          event,
+          ...(args as Parameters<TraPCollection.FromRenderer[K]>)
+        );
       }
     );
   },
 
-  removeHandler<K extends keyof FromRenderer>(channel: K): void {
+  removeHandler<K extends keyof TraPCollection.FromRenderer>(channel: K): void {
     originalIpcMain.removeHandler(channel);
   },
 
-  send<K extends keyof FromMain>(
+  send<K extends keyof TraPCollection.FromMain>(
     window: BrowserWindow,
     channel: K,
-    ...args: Parameters<FromMain[K]>
+    ...args: Parameters<TraPCollection.FromMain[K]>
   ): void {
     window.webContents.send(channel, ...args);
   },

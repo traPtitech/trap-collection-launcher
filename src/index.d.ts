@@ -1,4 +1,15 @@
 declare namespace TraPCollection {
+  // IPC通信用API
+  type API = FromRenderer & FromMain;
+  type FromRenderer = {
+    launch(launchTarget: LaunchTarget): Promise<void>;
+    getGameInfo(): Promise<GameInfo[]>;
+  };
+  type FromMain = {
+    /* example */
+    onReceiveExample(x: number, y: string): void;
+  };
+
   type GameType = 'app' | 'jar' | 'url';
   /**
    * @example
@@ -6,9 +17,9 @@ declare namespace TraPCollection {
    * `.jar`: { type: 'jar', url: filepath }
    * `.com`: { type: 'url', url: urlString }
    */
-  type GameInfo = { type: GameType; url: string };
+  type LaunchTarget = { type: GameType; url: string };
 
-  type Game = {
+  type GameInfo = {
     id: string;
     name: string;
     createdAt: string;

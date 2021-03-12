@@ -3,7 +3,7 @@ import childProcess from 'child_process';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
 
-const launchListener = (window: BrowserWindow): void => {
+const launchListener = async (window: BrowserWindow): Promise<void> => {
   ipcMain.handle('launch', async (_event, game) => {
     const platform = process.platform;
     if (platform !== 'win32' && platform !== 'darwin') {

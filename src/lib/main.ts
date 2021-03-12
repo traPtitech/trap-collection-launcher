@@ -30,6 +30,7 @@ const createWindow = (): void => {
     minWidth: 800,
     webPreferences: {
       webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
+      preload: process.env.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
   mainWindow.maximize();
