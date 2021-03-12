@@ -5,6 +5,17 @@ const GlobalStyle = createGlobalStyle`
     background-color: white;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Audiowide', cursive;
+    -webkit-text-stroke: 1px black;
+    color: white;
+  }
+
   /* reset */
 
   /* Box sizing rules */
