@@ -4,7 +4,8 @@ import GameListItem from './GameListItem';
 
 const GameListContainer = styled.ul`
   display: grid;
-  grid-template-columns: repeat(auto-fill, 480px);
+  grid-template-columns: repeat(auto-fill, 470px);
+  grid-gap: 5px;
   justify-content: center;
 `;
 

@@ -5,7 +5,7 @@ import { useHovered } from '@/renderer/hooks/useHovered';
 import Thumbnail from './Thumbnail';
 
 const Container = styled.li`
-  width: 480px;
+  width: 470px;
   height: 270px;
 `;
 

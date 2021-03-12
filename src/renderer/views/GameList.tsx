@@ -105,12 +105,14 @@ const GAMES: TraPCollection.GameInfo[] = Array.from({ length: 10 }, (_, i) => ({
     description: 'description',
     createdAt: '20210312',
   },
-  poster: `https://via.placeholder.com/1500/${Array(3)
-    .fill(Number(i).toString(16)[0])
-    .join('')}/88c0d0`,
+  poster: [
+    'https://images.freeimages.com/images/small-previews/f2c/effi-1-1366221.jpg',
+    'https://images.freeimages.com/images/large-previews/5da/coloured-paper-1421280.jpg',
+    'https://media.discordapp.net/attachments/792922594532655136/819864628489093140/mon.png?width=936&height=702',
+  ][i % 3],
   video: [
     'file:///C:/Users/cager/Videos/Captures/Hammer.mp4',
-    'file:///C:/Users/cager/Videos/PPPPV.mp4',
+    'file:///C:/Users/cager/Videos/Captures/flappybird.mp4',
     'file:///C:/Users/cager/Videos/Captures/Mobx.mp4',
   ][i % 3],
 }));
