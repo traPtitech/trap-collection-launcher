@@ -9,11 +9,7 @@ const GameListContainer = styled.ul`
 `;
 
 type Props = {
-  games: {
-    id: string;
-    poster: string;
-    video: string;
-  }[];
+  games: TraPCollection.GameInfo[];
   onGameHovered: (id: string) => void;
   onGameUnhovered: () => void;
 };

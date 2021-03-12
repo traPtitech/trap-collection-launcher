@@ -10,7 +10,7 @@ type Props = {
   width?: number | string;
   height?: number | string;
   imgSrc: string;
-  videoSrc: string;
+  videoSrc?: string;
   showVideo: boolean;
 };
 

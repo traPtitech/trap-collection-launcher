@@ -41,28 +41,17 @@ const FooterLinkContainer = styled.div`
   padding-right: 20px;
 `;
 
-type Game = {
-  id: string;
-  name: string;
-  poster: string;
-  video: string;
+const useGames = () => {
+  const [games, setGames] = useState<TraPCollection.GameInfo[]>([]);
+  useEffect(() => {
+    setGames(GAMES);
+  }, []);
+
+  return games;
 };
 
-const games = Array.from({ length: 10 }, (_, i) => ({
-  id: String(i),
-  name: `Game title ${i}`,
-  poster: `https://via.placeholder.com/1500/${Array(3)
-    .fill(Number(i).toString(16)[0])
-    .join('')}/88c0d0`,
-  video: [
-    'https://static.videezy.com/system/resources/previews/000/036/644/original/Fancy-1.mp4',
-    'https://static.videezy.com/system/resources/previews/000/012/979/original/record_player_011.mp4',
-    'https://static.videezy.com/system/resources/previews/000/041/209/original/clean04.mp4',
-  ][i % 3],
-}));
-
-const useSelectedGame = (games: Game[]) => {
-  const [game, setGame] = useState<Game | null>(null);
+const useSelectedGame = (games: TraPCollection.GameInfo[]) => {
+  const [game, setGame] = useState<TraPCollection.GameInfo | null>(null);
 
   const setGameById = useCallback(
     (id: string) => {
@@ -70,7 +59,6 @@ const useSelectedGame = (games: Game[]) => {
     },
     [games]
   );
-
   const unsetGame = useCallback(() => {
     setGame(null);
   }, []);
@@ -78,17 +66,19 @@ const useSelectedGame = (games: Game[]) => {
   return [game, setGameById, unsetGame] as const;
 };
 
-const GameListPage: React.FC = () => {
-  const [game, setGameById, unsetGame] = useSelectedGame(games);
+const useVideoAsBackground = (game: TraPCollection.GameInfo | null) => {
   const setter = useContext(BackgroundSetterContext);
-
   useEffect(() => {
-    if (game?.video) {
-      setter?.setBackground(game.video);
-    } else {
-      setter?.setDefaultBackground();
-    }
+    game?.video
+      ? setter?.setBackground(game.video)
+      : setter?.setDefaultBackground();
   }, [game?.video, setter]);
+};
+
+const GameListPage: React.FC = () => {
+  const games = useGames();
+  const [game, setGameById, unsetGame] = useSelectedGame(games);
+  useVideoAsBackground(game);
 
   return (
     <PageContainer>
@@ -112,3 +102,24 @@ const GameListPage: React.FC = () => {
 };
 
 export default GameListPage;
+
+const GAMES: TraPCollection.GameInfo[] = Array.from({ length: 10 }, (_, i) => ({
+  id: String(i),
+  name: `Game title ${i}`,
+  createdAt: '20210312',
+  description: 'description',
+  version: {
+    id: 'foo',
+    name: 'name',
+    description: 'description',
+    createdAt: '20210312',
+  },
+  poster: `https://via.placeholder.com/1500/${Array(3)
+    .fill(Number(i).toString(16)[0])
+    .join('')}/88c0d0`,
+  video: [
+    'file:///C:/Users/cager/Videos/Captures/Hammer.mp4',
+    'file:///C:/Users/cager/Videos/PPPPV.mp4',
+    'file:///C:/Users/cager/Videos/Captures/Mobx.mp4',
+  ][i % 3],
+}));

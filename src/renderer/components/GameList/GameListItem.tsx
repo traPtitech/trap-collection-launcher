@@ -9,10 +9,7 @@ const Container = styled.li`
   height: 270px;
 `;
 
-type Props = {
-  id: string;
-  poster: string;
-  video: string;
+type Props = TraPCollection.GameInfo & {
   onGameHovered: (id: string) => void;
 };
 
