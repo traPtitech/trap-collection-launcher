@@ -32,19 +32,19 @@ declare namespace TraPCollection {
     description: string;
     /**
      * @example
-     * "contents/games/UUIDv4/*.exe"
-     * "contents/games/UUIDv4/*.jar"
+     * "games/UUIDv4/*.exe"
+     * "games/UUIDv4/*.jar"
      * "*.trap.games"
      */
     url: string;
     /**
      * @example
-     * "contents/artworks/UUIDv4.png"
+     * "artworks/UUIDv4.png"
      */
     poster: string;
     /**
      * @example
-     * "contents/artworks/UUIDv4.mp4"
+     * "artworks/UUIDv4.mp4"
      */
     video?: string;
   };
