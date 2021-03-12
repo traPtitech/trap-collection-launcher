@@ -9,7 +9,7 @@ export const BackgroundStateContext = React.createContext<string>(
 
 type BackgroundSetter = {
   setBackground: (video: string) => void;
-  setDefaultBackground: () => void;
+  setBackgroundDefault: () => void;
 };
 
 export const BackgroundSetterContext = React.createContext<BackgroundSetter | null>(
@@ -33,7 +33,7 @@ const BackgroundProvider: React.FC = ({ children }) => {
           setBackground(video);
         }
       },
-      setDefaultBackground: () => {
+      setBackgroundDefault: () => {
         if (prevBackground.current !== DEFAULT_BACKGROUND_VIDEO) {
           setBackground(DEFAULT_BACKGROUND_VIDEO);
         }
