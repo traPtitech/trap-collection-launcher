@@ -85,7 +85,7 @@ const GameListPage: React.FC = () => {
       </Content>
       <Footer>
         <FooterLinkContainer>
-          <Link to='/questionnarie'>Finish</Link>
+          <Link to='/questionnaire'>Finish</Link>
         </FooterLinkContainer>
       </Footer>
     </PageContainer>
