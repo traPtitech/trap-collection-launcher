@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 
 const DEFAULT_BACKGROUND_VIDEO =
   'https://static.videezy.com/system/resources/previews/000/008/220/original/Triangles_01.mp4';
@@ -20,10 +20,24 @@ const BackgroundProvider: React.FC = ({ children }) => {
   const [background, setBackground] = useState<string>(
     DEFAULT_BACKGROUND_VIDEO
   );
+
+  const prevBackground = useRef<string>(DEFAULT_BACKGROUND_VIDEO);
+  useEffect(() => {
+    prevBackground.current = background;
+  }, [background]);
+
   const setters = useMemo(
     () => ({
-      setBackground,
-      setDefaultBackground: () => setBackground(DEFAULT_BACKGROUND_VIDEO),
+      setBackground: (video: string) => {
+        if (video !== prevBackground.current) {
+          setBackground(video);
+        }
+      },
+      setDefaultBackground: () => {
+        if (prevBackground.current !== DEFAULT_BACKGROUND_VIDEO) {
+          setBackground(DEFAULT_BACKGROUND_VIDEO);
+        }
+      },
     }),
     []
   );
