@@ -30,6 +30,7 @@ declare namespace TraPCollection {
       createdAt: string;
     };
     description: string;
+    type: GameType;
     /**
      * @example
      * "games/UUIDv4/*.exe"
