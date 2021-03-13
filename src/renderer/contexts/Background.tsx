@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useState,
-  useRef,
-  useEffect,
-} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 const DEFAULT_BACKGROUND_VIDEO =
   'https://static.videezy.com/system/resources/previews/000/008/220/original/Triangles_01.mp4';
@@ -36,16 +30,11 @@ const BackgroundProvider: React.FC = ({ children }) => {
     DEFAULT_BACKGROUND_VIDEO
   );
 
-  const prevBackground = useRef<string>(DEFAULT_BACKGROUND_VIDEO);
-  useEffect(() => {
-    prevBackground.current = background;
-  }, [background]);
-
-  const setBackground = useCallback((video: string) => {
-    if (video !== prevBackground.current) {
-      _setBackground(video);
+  const setBackground = (nextBackground: string) => {
+    if (background !== nextBackground) {
+      _setBackground(nextBackground);
     }
-  }, []);
+  };
 
   return (
     <BackgroundStateContext.Provider value={background}>

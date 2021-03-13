@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import GameList from '@/renderer/components/GameList/GameList';
@@ -50,22 +50,9 @@ const useGames = () => {
   return games;
 };
 
-const useSelectGame = () => {
-  const [game, setGame] = useState<TraPCollection.GameInfo | null>(null);
-  const unsetGame = useCallback(() => {
-    setGame(null);
-  }, []);
-
-  return [
-    game,
-    setGame as (game: TraPCollection.GameInfo) => void,
-    unsetGame,
-  ] as const;
-};
-
 const GameListPage: React.FC = () => {
   const games = useGames();
-  const [game, setGame, unsetGame] = useSelectGame();
+  const [game, setGame] = useState<TraPCollection.GameInfo | null>(null);
   useBackgroundVideo(game?.video);
 
   return (
@@ -76,7 +63,7 @@ const GameListPage: React.FC = () => {
       <Content>
         <GameList
           games={games}
-          onGameUnhovered={unsetGame}
+          onGameUnhovered={() => setGame(null)}
           onGameHovered={setGame}
         />
       </Content>
