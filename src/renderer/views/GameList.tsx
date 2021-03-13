@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import GameList from '@/renderer/components/GameList/GameList';
-import { useVideoAsBackground } from '@/renderer/hooks/useVideoAsBackground';
+import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
   max-width: 980px;
@@ -69,7 +69,7 @@ const useSelectedGame = (games: TraPCollection.GameInfo[]) => {
 const GameListPage: React.FC = () => {
   const games = useGames();
   const [game, setGameById, unsetGame] = useSelectedGame(games);
-  useVideoAsBackground(game?.video);
+  useBackgroundVideo(game?.video);
 
   return (
     <PageContainer>

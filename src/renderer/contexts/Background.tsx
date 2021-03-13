@@ -1,23 +1,38 @@
-import React, { useMemo, useState, useRef, useEffect } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 
 const DEFAULT_BACKGROUND_VIDEO =
   'https://static.videezy.com/system/resources/previews/000/008/220/original/Triangles_01.mp4';
 
-export const BackgroundStateContext = React.createContext<string>(
+const BackgroundStateContext = React.createContext<string>(
   DEFAULT_BACKGROUND_VIDEO
 );
 
-type BackgroundSetter = {
-  setBackground: (video: string) => void;
-  setBackgroundDefault: () => void;
+const BackgroundSetterContext = React.createContext<
+  ((video: string) => void) | null
+>(null);
+
+export const useBackgroundVideoState = (): string => {
+  return useContext(BackgroundStateContext);
 };
 
-export const BackgroundSetterContext = React.createContext<BackgroundSetter | null>(
-  null
-);
+export const useBackgroundVideo = (
+  video: string = DEFAULT_BACKGROUND_VIDEO
+): void => {
+  const setBackground = useContext(BackgroundSetterContext);
+
+  useEffect(() => {
+    setBackground?.(video);
+  }, [video, setBackground]);
+};
 
 const BackgroundProvider: React.FC = ({ children }) => {
-  const [background, setBackground] = useState<string>(
+  const [background, _setBackground] = useState<string>(
     DEFAULT_BACKGROUND_VIDEO
   );
 
@@ -26,25 +41,15 @@ const BackgroundProvider: React.FC = ({ children }) => {
     prevBackground.current = background;
   }, [background]);
 
-  const setters = useMemo(
-    () => ({
-      setBackground: (video: string) => {
-        if (video !== prevBackground.current) {
-          setBackground(video);
-        }
-      },
-      setBackgroundDefault: () => {
-        if (prevBackground.current !== DEFAULT_BACKGROUND_VIDEO) {
-          setBackground(DEFAULT_BACKGROUND_VIDEO);
-        }
-      },
-    }),
-    []
-  );
+  const setBackground = useCallback((video: string) => {
+    if (video !== prevBackground.current) {
+      _setBackground(video);
+    }
+  }, []);
 
   return (
     <BackgroundStateContext.Provider value={background}>
-      <BackgroundSetterContext.Provider value={setters}>
+      <BackgroundSetterContext.Provider value={setBackground}>
         {children}
       </BackgroundSetterContext.Provider>
     </BackgroundStateContext.Provider>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { useVideoAsBackground } from '@/renderer/hooks/useVideoAsBackground';
+import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
   max-width: 980px;
@@ -23,7 +23,7 @@ const GameDetail: React.FC = () => {
   const {
     state: { game },
   } = useLocation<{ game: TraPCollection.GameInfo }>();
-  useVideoAsBackground(game.video);
+  useBackgroundVideo(game.video);
 
   return (
     <PageContainer>

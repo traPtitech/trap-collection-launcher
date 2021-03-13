@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { BackgroundStateContext } from '@/renderer/contexts/Background';
+import { useBackgroundVideoState } from '@/renderer/contexts/Background';
 
 const BackgroundMask = styled.div`
   position: fixed;
@@ -29,7 +29,7 @@ const BackgroundVideo = styled.video`
 `;
 
 const Background: React.FC = () => {
-  const video = useContext(BackgroundStateContext);
+  const video = useBackgroundVideoState();
 
   return (
     <>
