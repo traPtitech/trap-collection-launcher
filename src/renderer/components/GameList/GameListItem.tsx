@@ -11,7 +11,7 @@ const Container = styled.li`
 
 type Props = {
   game: TraPCollection.GameInfo;
-  onGameHovered: (id: string) => void;
+  onGameHovered: (game: TraPCollection.GameInfo) => void;
 };
 
 const GameListItem: React.FC<Props> = ({ game, onGameHovered }) => {
@@ -19,9 +19,9 @@ const GameListItem: React.FC<Props> = ({ game, onGameHovered }) => {
 
   useEffect(() => {
     if (hovered) {
-      onGameHovered(game.id);
+      onGameHovered(game);
     }
-  }, [game.id, onGameHovered, hovered]);
+  }, [game, onGameHovered, hovered]);
 
   return (
     <Container ref={ref}>

@@ -50,25 +50,22 @@ const useGames = () => {
   return games;
 };
 
-const useSelectedGame = (games: TraPCollection.GameInfo[]) => {
+const useSelectGame = () => {
   const [game, setGame] = useState<TraPCollection.GameInfo | null>(null);
-
-  const setGameById = useCallback(
-    (id: string) => {
-      setGame(games.find((game) => game.id === id) ?? null);
-    },
-    [games]
-  );
   const unsetGame = useCallback(() => {
     setGame(null);
   }, []);
 
-  return [game, setGameById, unsetGame] as const;
+  return [
+    game,
+    setGame as (game: TraPCollection.GameInfo) => void,
+    unsetGame,
+  ] as const;
 };
 
 const GameListPage: React.FC = () => {
   const games = useGames();
-  const [game, setGameById, unsetGame] = useSelectedGame(games);
+  const [game, setGame, unsetGame] = useSelectGame();
   useBackgroundVideo(game?.video);
 
   return (
@@ -80,7 +77,7 @@ const GameListPage: React.FC = () => {
         <GameList
           games={games}
           onGameUnhovered={unsetGame}
-          onGameHovered={setGameById}
+          onGameHovered={setGame}
         />
       </Content>
       <Footer>
