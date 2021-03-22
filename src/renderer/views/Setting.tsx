@@ -11,7 +11,7 @@ const PageContainer = styled.div`
 `;
 
 const Header = styled.header`
-  margin: 20px 0;
+  padding: 20px 0;
 `;
 
 const Content = styled.div`
@@ -25,8 +25,8 @@ const Footer = styled.footer`
   left: 0;
   bottom: 0;
   width: 100%;
-  text-align: center;
-  background-color: lightgray;
+  padding: 20px;
+  text-align: right;
 `;
 
 const SettingPage: React.FC = () => {
