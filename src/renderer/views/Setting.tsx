@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
   max-width: 980px;
@@ -30,6 +31,8 @@ const Footer = styled.footer`
 `;
 
 const SettingPage: React.FC = () => {
+  useBackgroundVideo();
+
   return (
     <PageContainer>
       <Header>

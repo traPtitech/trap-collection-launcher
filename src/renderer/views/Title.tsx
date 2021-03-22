@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
   max-width: 980px;
@@ -65,6 +66,8 @@ const Footer = styled.footer`
 `;
 
 const TitlePage: React.FC = () => {
+  useBackgroundVideo();
+
   return (
     <PageContainer>
       <TitleContainer>
