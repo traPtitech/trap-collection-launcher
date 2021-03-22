@@ -59,6 +59,7 @@ const GlobalStyle = createGlobalStyle`
     scroll-behavior: smooth;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
+    font-family: 'M PLUS 1p', sans-serif;
   }
 
   /* Remove list styles on ul, ol elements with a class attribute */
