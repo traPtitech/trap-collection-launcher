@@ -5,8 +5,33 @@ import GameListItem from './GameListItem';
 const GameListContainer = styled.ul`
   display: grid;
   grid-template-columns: repeat(auto-fill, 470px);
-  grid-gap: 5px;
+  grid-gap: 10px;
   justify-content: center;
+
+  &:hover > * {
+    transition: 125ms transform;
+    transition-timing-function: ease-out;
+  }
+
+  &:hover > *:hover {
+    border: 2px solid white;
+    transform: scale(1.03);
+  }
+
+  &:hover > *:not(:hover) {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      opacity: 0.8;
+    }
+  }
 `;
 
 type Props = {

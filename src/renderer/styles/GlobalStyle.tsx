@@ -12,7 +12,6 @@ const GlobalStyle = createGlobalStyle`
   h5,
   h6 {
     font-family: 'Audiowide', cursive;
-    -webkit-text-stroke: 1px black;
     color: white;
   }
 

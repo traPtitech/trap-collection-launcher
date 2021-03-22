@@ -10,7 +10,7 @@ const BackgroundMask = styled.div`
   height: 100%;
   pointer-events: none;
 
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQI12NkYGDwYYACHwYGhv8ABscBmQkboJsAAAAASUVORK5CYII=');
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAUSURBVHgBY2RgYJgJxAxMDBCQBgAI+gEDgsXVkQAAAABJRU5ErkJggg==');
   z-index: -1;
 `;
 
