@@ -80,8 +80,8 @@ const GAMES: TraPCollection.GameInfo[] = Array.from({ length: 10 }, (_, i) => ({
     'https://media.discordapp.net/attachments/792922594532655136/819864628489093140/mon.png?width=936&height=702',
   ][i % 3],
   video: [
-    'file:///C:/Users/cager/Videos/Captures/Hammer.mp4',
-    'file:///C:/Users/cager/Videos/Captures/flappybird.mp4',
-    'file:///C:/Users/cager/Videos/Captures/Mobx.mp4',
+    'https://static.videezy.com/system/resources/previews/000/036/605/original/18_010_05.mp4',
+    'https://static.videezy.com/system/resources/previews/000/036/541/original/w5.mp4',
+    'https://static.videezy.com/system/resources/previews/000/018/793/original/Bacteria-blue.mp4',
   ][i % 3],
 }));
