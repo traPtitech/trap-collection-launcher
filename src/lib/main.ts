@@ -11,7 +11,7 @@ if (require('electron-squirrel-startup')) {
 app.whenReady().then(() => {
   // imgタグでローカルファイルを表示する
   /**
-   * Ref: https://github.com/electron/electron/issues/23757
+   * @see {@link https://github.com/electron/electron/issues/23757}
    */
   if (process.env.NODE_ENV === 'development') {
     protocol.registerFileProtocol('file', (request, callback) => {
