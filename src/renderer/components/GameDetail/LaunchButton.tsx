@@ -8,11 +8,10 @@ const Button = styled.button`
   padding: 8px 16px;
   border-radius: 4px;
   transition: 100ms transform;
+  cursor: pointer;
 
   &:hover {
-    padding: 6px 14px;
-    border: 2px solid white;
-    transform: scale(1.03);
+    transform: scale(1.1);
   }
 `;
 
