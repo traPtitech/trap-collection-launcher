@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Slider, { Settings } from 'react-slick';
 import GameListItem from './GameListItem';
@@ -26,14 +26,37 @@ const settings: Settings = {
   dots: true,
 };
 
+const useScrollToSlide = (): React.Ref<Slider> => {
+  const ref = useRef<Slider>(null);
+
+  useEffect(() => {
+    const listener = (ev: WheelEvent): void => {
+      if (ev.deltaY > 0) {
+        ref.current?.slickNext();
+      } else {
+        ref.current?.slickPrev();
+      }
+    };
+
+    window.addEventListener('wheel', listener);
+    return () => {
+      window.removeEventListener('wheel', listener);
+    };
+  }, []);
+
+  return ref;
+};
+
 const GameList: React.FC<Props> = ({
   games,
   onGameUnhovered,
   onGameHovered,
 }) => {
+  const ref = useScrollToSlide();
+
   return (
     <div onMouseLeave={onGameUnhovered}>
-      <Slider {...settings}>
+      <Slider ref={ref} {...settings}>
         {games.map((game) => (
           <div key={game.id}>
             <GameListItemContainer>
