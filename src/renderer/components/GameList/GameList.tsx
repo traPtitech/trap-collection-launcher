@@ -1,37 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import Slider, { Settings } from 'react-slick';
 import GameListItem from './GameListItem';
 
-const GameListContainer = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 470px);
-  grid-gap: 10px;
+const GameListItemContainer = styled.div`
+  display: flex;
   justify-content: center;
-
-  &:hover > * {
-    transition: 125ms transform;
-    transition-timing-function: ease-out;
-  }
-
-  &:hover > *:hover {
-    border: 2px solid white;
-    transform: scale(1.03);
-  }
-
-  &:hover > *:not(:hover) {
-    position: relative;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #000;
-      opacity: 0.8;
-    }
-  }
 `;
 
 type Props = {
@@ -40,17 +14,35 @@ type Props = {
   onGameUnhovered: () => void;
 };
 
+const settings: Settings = {
+  className: 'center',
+  centerPadding: '0px',
+  centerMode: true,
+  infinite: true,
+  slidesToShow: 1,
+  speed: 500,
+  rows: 2,
+  slidesPerRow: 2,
+  dots: true,
+};
+
 const GameList: React.FC<Props> = ({
   games,
   onGameUnhovered,
   onGameHovered,
 }) => {
   return (
-    <GameListContainer onMouseLeave={onGameUnhovered}>
-      {games.map((game) => (
-        <GameListItem key={game.id} onGameHovered={onGameHovered} game={game} />
-      ))}
-    </GameListContainer>
+    <div onMouseLeave={onGameUnhovered}>
+      <Slider {...settings}>
+        {games.map((game) => (
+          <div key={game.id}>
+            <GameListItemContainer>
+              <GameListItem onGameHovered={onGameHovered} game={game} />
+            </GameListItemContainer>
+          </div>
+        ))}
+      </Slider>
+    </div>
   );
 };
 

@@ -12,29 +12,12 @@ const PageContainer = styled.div`
   padding-right: 10px;
 `;
 
-const Header = styled.header`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  max-width: 960px;
-  padding: 20px 0;
-  margin-left: auto;
-  margin-right: auto;
-`;
-
-const Title = styled.h1``;
-
 const Content = styled.div`
-  padding-top: 100px;
+  padding-top: 60px;
+  margin-bottom: 20px;
 `;
 
-const Footer = styled.footer`
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  padding: 20px 0;
-`;
+const Footer = styled.footer``;
 
 const FooterLinkContainer = styled.div`
   float: right;
@@ -57,9 +40,6 @@ const GameListPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <Header>
-        <Title>{game?.name ?? 'Game List'}</Title>
-      </Header>
       <Content>
         <GameList
           games={games}
@@ -92,6 +72,8 @@ const GAMES: TraPCollection.GameInfo[] = Array.from({ length: 10 }, (_, i) => ({
     description: 'description',
     createdAt: '20210312',
   },
+  type: 'app',
+  url: 'unknown',
   poster: [
     'https://static.vecteezy.com/system/resources/previews/000/108/317/non_2x/free-everest-pattern-3-vector.jpg',
     'https://images.freeimages.com/images/large-previews/5da/coloured-paper-1421280.jpg',
