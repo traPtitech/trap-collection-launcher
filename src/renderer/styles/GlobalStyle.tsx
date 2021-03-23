@@ -1,9 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
+import { ReactSlickCSS } from './ReactSlick';
 
 const GlobalStyle = createGlobalStyle`
-  body {
-    background-color: white;
-  }
+  ${ReactSlickCSS}
 
   h1,
   h2,
