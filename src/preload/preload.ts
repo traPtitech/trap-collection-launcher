@@ -10,6 +10,10 @@ const api: TraPCollection.API = {
     const gameInfo = await ipcRenderer.invoke('getGameInfo');
     return gameInfo;
   },
+  checkJava: async () => {
+    const checkJava = await ipcRenderer.invoke('checkJava');
+    return checkJava;
+  },
   onReceiveExample: async () => {
     return;
   },
