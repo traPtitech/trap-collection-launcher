@@ -12,7 +12,6 @@ const GlobalStyle = createGlobalStyle`
   h5,
   h6 {
     font-family: 'Audiowide', cursive;
-    -webkit-text-stroke: 1px black;
     color: white;
   }
 
@@ -59,6 +58,7 @@ const GlobalStyle = createGlobalStyle`
     scroll-behavior: smooth;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
+    font-family: 'Noto Sans JP', sans-serif;
   }
 
   /* Remove list styles on ul, ol elements with a class attribute */

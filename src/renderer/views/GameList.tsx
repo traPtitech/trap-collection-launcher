@@ -1,8 +1,8 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import GameList from '@/renderer/components/GameList/GameList';
-import { BackgroundSetterContext } from '@/renderer/contexts/Background';
+import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
   max-width: 980px;
@@ -41,54 +41,19 @@ const FooterLinkContainer = styled.div`
   padding-right: 20px;
 `;
 
-type Game = {
-  id: string;
-  name: string;
-  poster: string;
-  video: string;
-};
-
-const games = Array.from({ length: 10 }, (_, i) => ({
-  id: String(i),
-  name: `Game title ${i}`,
-  poster: `https://via.placeholder.com/1500/${Array(3)
-    .fill(Number(i).toString(16)[0])
-    .join('')}/88c0d0`,
-  video: [
-    'https://static.videezy.com/system/resources/previews/000/036/644/original/Fancy-1.mp4',
-    'https://static.videezy.com/system/resources/previews/000/012/979/original/record_player_011.mp4',
-    'https://static.videezy.com/system/resources/previews/000/041/209/original/clean04.mp4',
-  ][i % 3],
-}));
-
-const useSelectedGame = (games: Game[]) => {
-  const [game, setGame] = useState<Game | null>(null);
-
-  const setGameById = useCallback(
-    (id: string) => {
-      setGame(games.find((game) => game.id === id) ?? null);
-    },
-    [games]
-  );
-
-  const unsetGame = useCallback(() => {
-    setGame(null);
+const useGames = () => {
+  const [games, setGames] = useState<TraPCollection.GameInfo[]>([]);
+  useEffect(() => {
+    setGames(GAMES);
   }, []);
 
-  return [game, setGameById, unsetGame] as const;
+  return games;
 };
 
 const GameListPage: React.FC = () => {
-  const [game, setGameById, unsetGame] = useSelectedGame(games);
-  const setter = useContext(BackgroundSetterContext);
-
-  useEffect(() => {
-    if (game?.video) {
-      setter?.setBackground(game.video);
-    } else {
-      setter?.setDefaultBackground();
-    }
-  }, [game?.video, setter]);
+  const games = useGames();
+  const [game, setGame] = useState<TraPCollection.GameInfo | null>(null);
+  useBackgroundVideo(game?.video);
 
   return (
     <PageContainer>
@@ -98,13 +63,13 @@ const GameListPage: React.FC = () => {
       <Content>
         <GameList
           games={games}
-          onGameUnhovered={unsetGame}
-          onGameHovered={setGameById}
+          onGameUnhovered={() => setGame(null)}
+          onGameHovered={setGame}
         />
       </Content>
       <Footer>
         <FooterLinkContainer>
-          <Link to='/questionnarie'>Finish</Link>
+          <Link to='/questionnaire'>Finish</Link>
         </FooterLinkContainer>
       </Footer>
     </PageContainer>
@@ -112,3 +77,29 @@ const GameListPage: React.FC = () => {
 };
 
 export default GameListPage;
+
+const GAMES: TraPCollection.GameInfo[] = Array.from({ length: 10 }, (_, i) => ({
+  id: String(i),
+  name: `Game title ${i}`,
+  createdAt: '20210312',
+  description: [
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    'あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。またそのなかでいっしょになったたくさんのひとたち、ファゼーロとロザーロ、羊飼のミーロや、顔の赤いこどもたち、地主のテーモ、山猫博士のボーガント・デストゥパーゴなど、いまこの暗い巨きな石の建物のなかで考えていると、みんなむかし風のなつかしい青い幻燈のように思われます。では、わたくしはいつかの小さなみだしをつけながら、しずかにあの年のイーハトーヴォの五月から十月までを書きつけましょう。',
+  ][i % 2],
+  version: {
+    id: 'foo',
+    name: 'name',
+    description: 'description',
+    createdAt: '20210312',
+  },
+  poster: [
+    'https://static.vecteezy.com/system/resources/previews/000/108/317/non_2x/free-everest-pattern-3-vector.jpg',
+    'https://images.freeimages.com/images/large-previews/5da/coloured-paper-1421280.jpg',
+    'https://media.discordapp.net/attachments/792922594532655136/819864628489093140/mon.png?width=936&height=702',
+  ][i % 3],
+  video: [
+    'file:///C:/Users/cager/Videos/Captures/Hammer.mp4',
+    'file:///C:/Users/cager/Videos/Captures/flappybird.mp4',
+    'file:///C:/Users/cager/Videos/Captures/Mobx.mp4',
+  ][i % 3],
+}));

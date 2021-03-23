@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { BackgroundStateContext } from '@/renderer/contexts/Background';
+import { useBackgroundVideoState } from '@/renderer/contexts/Background';
 
 const BackgroundMask = styled.div`
   position: fixed;
@@ -10,7 +10,7 @@ const BackgroundMask = styled.div`
   height: 100%;
   pointer-events: none;
 
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQI12NkYGDwYYACHwYGhv8ABscBmQkboJsAAAAASUVORK5CYII=');
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAUSURBVHgBY2RgYJgJxAxMDBCQBgAI+gEDgsXVkQAAAABJRU5ErkJggg==');
   z-index: -1;
 `;
 
@@ -29,12 +29,12 @@ const BackgroundVideo = styled.video`
 `;
 
 const Background: React.FC = () => {
-  const video = useContext(BackgroundStateContext);
+  const video = useBackgroundVideoState();
 
   return (
     <>
       <BackgroundMask />
-      <BackgroundVideo autoPlay loop src={video} />
+      <BackgroundVideo autoPlay muted loop src={video} />
     </>
   );
 };

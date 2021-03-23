@@ -15,11 +15,9 @@ const Header = styled.header`
   padding: 20px 0;
 `;
 
-const Content = styled.div`
-  min-height: calc(100vh - 100px);
-`;
-
 const PageTitle = styled.h1``;
+
+const Content = styled.div``;
 
 const Footer = styled.footer`
   position: fixed;
@@ -30,15 +28,15 @@ const Footer = styled.footer`
   text-align: right;
 `;
 
-const SettingPage: React.FC = () => {
+const QuestionnairePage: React.FC = () => {
   useBackgroundVideo();
 
   return (
     <PageContainer>
       <Header>
-        <PageTitle>Setting</PageTitle>
+        <PageTitle>Questionnaire</PageTitle>
       </Header>
-      <Content>content</Content>
+      <Content>Questionnaire</Content>
       <Footer>
         <Link to='/'>Link to title</Link>
       </Footer>
@@ -46,4 +44,4 @@ const SettingPage: React.FC = () => {
   );
 };
 
-export default SettingPage;
+export default QuestionnairePage;

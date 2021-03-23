@@ -5,7 +5,7 @@ import TitlePage from '@/renderer/views/Title';
 import GameList from '@/renderer/views/GameList';
 import GameDetail from '@/renderer/views/GameDetail';
 import SettingPage from '@/renderer/views/Setting';
-import Questionnarie from '@/renderer/views/Questionnarie';
+import Questionnaire from '@/renderer/views/Questionnaire';
 import Background from '@/renderer/components/Background';
 import BackgroundProvider from '@/renderer/contexts/Background';
 
@@ -20,7 +20,7 @@ const Navigation: React.FC = () => (
         <GameList />
       </Route>
 
-      <Route exact path='/game/:id'>
+      <Route exact path='/game/detail'>
         <GameDetail />
       </Route>
 
@@ -28,8 +28,8 @@ const Navigation: React.FC = () => (
         <SettingPage />
       </Route>
 
-      <Route exact path='/questionnarie'>
-        <Questionnarie />
+      <Route exact path='/questionnaire'>
+        <Questionnaire />
       </Route>
     </Switch>
   </MemoryRouter>

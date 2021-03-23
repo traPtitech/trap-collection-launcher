@@ -5,39 +5,37 @@ import { useHovered } from '@/renderer/hooks/useHovered';
 import Thumbnail from './Thumbnail';
 
 const Container = styled.li`
-  width: 480px;
+  width: 470px;
   height: 270px;
 `;
 
 type Props = {
-  id: string;
-  poster: string;
-  video: string;
-  onGameHovered: (id: string) => void;
+  game: TraPCollection.GameInfo;
+  onGameHovered: (game: TraPCollection.GameInfo) => void;
 };
 
-const GameListItem: React.FC<Props> = ({
-  id,
-  poster,
-  video,
-  onGameHovered,
-}) => {
+const GameListItem: React.FC<Props> = ({ game, onGameHovered }) => {
   const [ref, hovered] = useHovered<HTMLLIElement>();
 
   useEffect(() => {
     if (hovered) {
-      onGameHovered(id);
+      onGameHovered(game);
     }
-  }, [id, onGameHovered, hovered]);
+  }, [game, onGameHovered, hovered]);
 
   return (
     <Container ref={ref}>
-      <Link to='/game/1'>
+      <Link
+        to={{
+          pathname: '/game/detail',
+          state: { game },
+        }}
+      >
         <Thumbnail
           width='100%'
           height='100%'
-          imgSrc={poster}
-          videoSrc={video}
+          imgSrc={game.poster}
+          videoSrc={game.video}
           showVideo={hovered}
         />
       </Link>
