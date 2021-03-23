@@ -2,7 +2,7 @@ declare namespace TraPCollection {
   // IPC通信用API
   type API = FromRenderer & FromMain;
   type FromRenderer = {
-    launch(launchTarget: LaunchTarget): Promise<void>;
+    launch(gameId: string): Promise<void>;
     getGameInfo(): Promise<GameInfo[]>;
   };
   type FromMain = {
@@ -17,7 +17,6 @@ declare namespace TraPCollection {
    * `.jar`: { type: 'jar', url: filepath }
    * `.com`: { type: 'url', url: urlString }
    */
-  type LaunchTarget = { type: GameType; url: string };
 
   type GameInfo = {
     id: string;
@@ -51,4 +50,8 @@ declare namespace TraPCollection {
   };
 
   type Platform = 'win32' | 'darwin';
+}
+
+declare interface Window {
+  TraPCollectionAPI: TraPCollection.API;
 }

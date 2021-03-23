@@ -2,14 +2,21 @@ import path from 'path';
 import childProcess from 'child_process';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
+import { store } from '@/lib/store';
 
 const launchListener = async (window: BrowserWindow): Promise<void> => {
-  ipcMain.handle('launch', async (_event, game) => {
+  ipcMain.handle('launch', async (_event, gameId) => {
     const platform = process.platform;
     if (platform !== 'win32' && platform !== 'darwin') {
       return;
     }
-    const child = launch[platform][game.type](game.url);
+    const target = store
+      .get('gameInfo')
+      .find((gameInfo) => gameInfo.id === gameId);
+    if (!target) {
+      return;
+    }
+    const child = launch[platform][target.type](target.url);
     child.on('exit', () => {
       window.reload();
       window.restore();
