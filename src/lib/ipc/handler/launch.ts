@@ -4,7 +4,7 @@ import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
 import { store } from '@/lib/store';
 
-const launchListener = async (window: BrowserWindow): Promise<void> => {
+export const launchHandler = async (window: BrowserWindow): Promise<void> => {
   ipcMain.handle('launch', async (_event, gameId) => {
     const platform = process.platform;
     if (platform !== 'win32' && platform !== 'darwin') {
@@ -26,7 +26,7 @@ const launchListener = async (window: BrowserWindow): Promise<void> => {
   });
 };
 
-export default launchListener;
+export default launchHandler;
 
 const launch: Record<
   TraPCollection.Platform,

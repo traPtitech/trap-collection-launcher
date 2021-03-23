@@ -2,7 +2,7 @@ import { ipcMain } from '@/common/typedIpc';
 import { store } from '@/lib/store';
 import { generateAbsolutePath } from '@/lib/utils/generatePaths';
 
-const getGameProperties = (): void => {
+export const getGameInfoHandler = (): void => {
   ipcMain.handle('getGameInfo', async () => {
     const gameInfo = store.get('gameInfo');
     return gameInfo.map((v) => {
@@ -24,4 +24,4 @@ const getGameProperties = (): void => {
   });
 };
 
-export default getGameProperties;
+export default getGameInfoHandler;
