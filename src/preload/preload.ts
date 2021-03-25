@@ -3,16 +3,22 @@ import { ipcRenderer } from '@/common/typedIpc';
 
 const api: TraPCollection.API = {
   launch: async (launchTarget) => {
-    ipcRenderer.invoke('launch', launchTarget);
-    return;
+    return await ipcRenderer.invoke('launch', launchTarget);
   },
   getGameInfo: async () => {
-    const gameInfo = await ipcRenderer.invoke('getGameInfo');
-    return gameInfo;
+    return await ipcRenderer.invoke('getGameInfo');
   },
   checkJava: async () => {
-    const checkJava = await ipcRenderer.invoke('checkJava');
-    return checkJava;
+    return await ipcRenderer.invoke('checkJava');
+  },
+  setProductKey: async (productKey) => {
+    return await ipcRenderer.invoke('setProductKey', productKey);
+  },
+  setSeatId: async (seatId) => {
+    return await ipcRenderer.invoke('setSeatId', seatId);
+  },
+  setSeatVersionId: async (seatVersionId) => {
+    return await ipcRenderer.invoke('setSeatVersionId', seatVersionId);
   },
   onReceiveExample: async () => {
     return;
