@@ -56,3 +56,9 @@ declare namespace TraPCollection {
 declare interface Window {
   TraPCollectionAPI: TraPCollection.API;
 }
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    KOUDAISAI: boolean;
+  }
+}
