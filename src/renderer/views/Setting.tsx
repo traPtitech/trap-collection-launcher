@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
-  max-width: 980px;
+  width: 75vw;
+  height: 100vh;
   margin-left: auto;
   margin-right: auto;
   padding-left: 10px;
@@ -13,21 +14,27 @@ const PageContainer = styled.div`
 
 const Header = styled.header`
   padding: 20px 0;
+  height: 80px;
+`;
+
+const BackButton = styled(Link)`
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: -8px;
+  text-decoration: none;
+  color: white;
 `;
 
 const Content = styled.div`
-  min-height: calc(100vh - 100px);
+  min-height: calc(100% - 80px);
 `;
 
-const PageTitle = styled.h1``;
+const PageTitle = styled.h1`
+  margin-bottom: 15px;
+`;
 
-const Footer = styled.footer`
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  padding: 20px;
-  text-align: right;
+const P = styled.p`
+  color: white;
 `;
 
 const SettingPage: React.FC = () => {
@@ -36,12 +43,14 @@ const SettingPage: React.FC = () => {
   return (
     <PageContainer>
       <Header>
-        <PageTitle>Setting</PageTitle>
+        <BackButton to='/title'>
+          <ion-icon name='chevron-back' size='large' />
+        </BackButton>
       </Header>
-      <Content>content</Content>
-      <Footer>
-        <Link to='/title'>Link to title</Link>
-      </Footer>
+      <Content>
+        <PageTitle>Setting</PageTitle>
+        <P>content</P>
+      </Content>
     </PageContainer>
   );
 };
