@@ -5,35 +5,21 @@ import GameList from '@/renderer/components/GameList/GameList';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
-  max-width: 980px;
+  width: 75vw;
+  height: 100vh;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 `;
 
-const Header = styled.header`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  max-width: 960px;
-  padding: 20px 0;
-  margin-left: auto;
-  margin-right: auto;
-`;
-
-const Title = styled.h1``;
-
-const Content = styled.div`
-  padding-top: 100px;
+const Content = styled.main`
+  height: calc(100% - 50px);
+  position: relative;
 `;
 
 const Footer = styled.footer`
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  padding: 20px 0;
+  height: 50px;
 `;
 
 const FooterLinkContainer = styled.div`
@@ -57,9 +43,6 @@ const GameListPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <Header>
-        <Title>{game?.name ?? 'Game List'}</Title>
-      </Header>
       <Content>
         <GameList
           games={games}
@@ -92,14 +75,16 @@ const GAMES: TraPCollection.GameInfo[] = Array.from({ length: 10 }, (_, i) => ({
     description: 'description',
     createdAt: '20210312',
   },
+  type: 'app',
+  url: 'unknown',
   poster: [
     'https://static.vecteezy.com/system/resources/previews/000/108/317/non_2x/free-everest-pattern-3-vector.jpg',
     'https://images.freeimages.com/images/large-previews/5da/coloured-paper-1421280.jpg',
     'https://media.discordapp.net/attachments/792922594532655136/819864628489093140/mon.png?width=936&height=702',
   ][i % 3],
   video: [
-    'file:///C:/Users/cager/Videos/Captures/Hammer.mp4',
-    'file:///C:/Users/cager/Videos/Captures/flappybird.mp4',
-    'file:///C:/Users/cager/Videos/Captures/Mobx.mp4',
+    'https://static.videezy.com/system/resources/previews/000/036/605/original/18_010_05.mp4',
+    'https://static.videezy.com/system/resources/previews/000/036/541/original/w5.mp4',
+    'https://static.videezy.com/system/resources/previews/000/018/793/original/Bacteria-blue.mp4',
   ][i % 3],
 }));

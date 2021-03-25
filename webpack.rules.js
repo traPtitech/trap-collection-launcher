@@ -1,4 +1,8 @@
 module.exports = [
+  {
+    test: /\.(woff|ttf|svg|eot|gif)$/,
+    use: 'file-loader',
+  },
   // Add support for native node modules
   {
     test: /\.node$/,

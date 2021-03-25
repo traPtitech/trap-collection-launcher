@@ -34,7 +34,7 @@
           "@api": "./api",
           "@": "./src"
         },
-        "extensions": [".ts", ".tsx", ".js", "jsx"]
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     },
     "react": {

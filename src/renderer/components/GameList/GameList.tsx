@@ -1,37 +1,19 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import Slider, { Settings } from 'react-slick';
 import styled from 'styled-components';
 import GameListItem from './GameListItem';
 
-const GameListContainer = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 470px);
-  grid-gap: 10px;
+const GameListContainer = styled.div`
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const GameListItemContainer = styled.div`
+  display: flex;
   justify-content: center;
-
-  &:hover > * {
-    transition: 125ms transform;
-    transition-timing-function: ease-out;
-  }
-
-  &:hover > *:hover {
-    border: 2px solid white;
-    transform: scale(1.03);
-  }
-
-  &:hover > *:not(:hover) {
-    position: relative;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #000;
-      opacity: 0.8;
-    }
-  }
 `;
 
 type Props = {
@@ -40,16 +22,57 @@ type Props = {
   onGameUnhovered: () => void;
 };
 
+const settings: Settings = {
+  className: 'center',
+  centerPadding: '0px',
+  centerMode: true,
+  infinite: true,
+  slidesToShow: 1,
+  speed: 500,
+  rows: 2,
+  slidesPerRow: 2,
+  dots: true,
+};
+
+const useScrollToSlide = (): React.Ref<Slider> => {
+  const ref = useRef<Slider>(null);
+
+  useEffect(() => {
+    const listener = (ev: WheelEvent): void => {
+      if (ev.deltaY > 0) {
+        ref.current?.slickNext();
+      } else {
+        ref.current?.slickPrev();
+      }
+    };
+
+    window.addEventListener('wheel', listener);
+    return () => {
+      window.removeEventListener('wheel', listener);
+    };
+  }, []);
+
+  return ref;
+};
+
 const GameList: React.FC<Props> = ({
   games,
   onGameUnhovered,
   onGameHovered,
 }) => {
+  const ref = useScrollToSlide();
+
   return (
     <GameListContainer onMouseLeave={onGameUnhovered}>
-      {games.map((game) => (
-        <GameListItem key={game.id} onGameHovered={onGameHovered} game={game} />
-      ))}
+      <Slider ref={ref} {...settings}>
+        {games.map((game) => (
+          <div key={game.id}>
+            <GameListItemContainer>
+              <GameListItem onGameHovered={onGameHovered} game={game} />
+            </GameListItemContainer>
+          </div>
+        ))}
+      </Slider>
     </GameListContainer>
   );
 };
