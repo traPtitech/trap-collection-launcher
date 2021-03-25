@@ -59,6 +59,6 @@ declare interface Window {
 
 declare namespace NodeJS {
   interface ProcessEnv {
-    KOUDAISAI: boolean;
+    KOUDAISAI: 'true' | 'false';
   }
 }
