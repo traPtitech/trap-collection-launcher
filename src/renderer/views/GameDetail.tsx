@@ -5,11 +5,10 @@ import LaunchButton from '@/renderer/components/GameDetail/LaunchButton';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
-  max-width: 980px;
+  width: 75vw;
+  height: 100vh;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 10px;
-  padding-right: 10px;
 `;
 
 const Header = styled.header`

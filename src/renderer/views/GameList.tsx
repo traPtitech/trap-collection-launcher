@@ -9,8 +9,6 @@ const PageContainer = styled.div`
   height: 100vh;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
 `;
 
 const Content = styled.main`
