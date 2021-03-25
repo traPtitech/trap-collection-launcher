@@ -5,13 +5,18 @@ import { useHovered } from '@/renderer/hooks/useHovered';
 import Thumbnail from './Thumbnail';
 
 const Container = styled.li`
-  width: 470px;
-  height: 270px;
+  width: 36.25vw;
+  height: 20.5vw;
+  list-style: none;
 `;
 
 type Props = {
   game: TraPCollection.GameInfo;
   onGameHovered: (game: TraPCollection.GameInfo) => void;
+};
+
+const preventDefault = (e: React.SyntheticEvent): void => {
+  e.preventDefault();
 };
 
 const GameListItem: React.FC<Props> = ({ game, onGameHovered }) => {
@@ -30,6 +35,7 @@ const GameListItem: React.FC<Props> = ({ game, onGameHovered }) => {
           pathname: '/game/detail',
           state: { game },
         }}
+        onAuxClick={preventDefault}
       >
         <Thumbnail
           width='100%'

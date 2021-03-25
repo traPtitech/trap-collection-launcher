@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 const Button = styled.button`
   color: white;
-  background-color: dodgerblue;
-  border: none;
+  background-color: transparent;
   padding: 8px 16px;
+  border: 2px solid white;
   border-radius: 4px;
   transition: 100ms transform;
   cursor: pointer;

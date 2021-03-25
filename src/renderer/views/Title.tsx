@@ -26,6 +26,7 @@ const TitleContainer = styled.header`
 
 const Title = styled.h1`
   font-size: 50px;
+  margin-bottom: 15px;
 `;
 
 const Version = styled.span`
@@ -36,13 +37,14 @@ const Version = styled.span`
 const StartButton = styled(Link)`
   text-decoration: none;
   color: white;
-  font-size: 32px;
+  font-size: 20px;
+  padding: 6px 12px;
+  border: 2px solid white;
+  border-radius: 4px;
   transition: 100ms transform;
-  opacity: 0.75;
 
   &:hover {
     transform: scale(1.1);
-    opacity: 1;
   }
 `;
 

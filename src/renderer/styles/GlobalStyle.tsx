@@ -1,8 +1,11 @@
 import { createGlobalStyle } from 'styled-components';
+import { ReactSlickCSS } from './ReactSlick';
 
 const GlobalStyle = createGlobalStyle`
-  body {
-    background-color: white;
+  ${ReactSlickCSS}
+
+  html {
+    font-size: 100%;
   }
 
   h1,
@@ -110,6 +113,14 @@ const GlobalStyle = createGlobalStyle`
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+
+  /* 要素をdragしたときにlinkとかを引っ張れないようにする */
+  /* ref: https://gist.github.com/msuchodolski/41c9338f3a732379dc570142826ed76e */
+  *, *::before, *::after {
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-app-region: no-drag;
   }
 `;
 
