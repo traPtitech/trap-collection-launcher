@@ -73,7 +73,7 @@ const GameListPage: React.FC = () => {
         />
       </Content>
       <Footer>
-        <QuitButton to='/questionnaire'>
+        <QuitButton to='/title'>
           <QuitButtonIcon>
             <ion-icon name='exit-sharp' />
           </QuitButtonIcon>

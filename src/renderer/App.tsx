@@ -6,7 +6,6 @@ import GlobalStyle from '@/renderer/styles/GlobalStyle';
 import GameDetail from '@/renderer/views/GameDetail';
 import GameList from '@/renderer/views/GameList';
 import LoadingPage from '@/renderer/views/Loading';
-import Questionnaire from '@/renderer/views/Questionnaire';
 import SettingPage from '@/renderer/views/Setting';
 import TitlePage from '@/renderer/views/Title';
 
@@ -35,10 +34,6 @@ const Navigation: React.FC = () => (
 
       <Route exact path='/setting'>
         <SettingPage />
-      </Route>
-
-      <Route exact path='/questionnaire'>
-        <Questionnaire />
       </Route>
     </Switch>
   </MemoryRouter>
