@@ -64,7 +64,28 @@ const Footer = styled.footer`
   bottom: 0;
   width: 100%;
   padding: 20px;
-  text-align: right;
+`;
+
+const SettingButton = styled(Link)`
+  float: right;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  transition: 100ms transform;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const SettingButtonIcon = styled.span`
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+`;
+
+const SettingButtonText = styled.span`
+  margin-right: 10px;
 `;
 
 const TitlePage: React.FC = () => {
@@ -84,7 +105,12 @@ const TitlePage: React.FC = () => {
         </StartButton>
       </TitleContainer>
       <Footer>
-        <Link to='/setting'>Link to setting</Link>
+        <SettingButton to='/setting'>
+          <SettingButtonIcon>
+            <ion-icon name='settings-sharp' />
+          </SettingButtonIcon>
+          <SettingButtonText>Settings</SettingButtonText>
+        </SettingButton>
       </Footer>
     </PageContainer>
   );
