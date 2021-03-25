@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Slider, { Settings } from 'react-slick';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import GameListItem from './GameListItem';
 
 const GameListContainer = styled.div`
@@ -11,25 +11,38 @@ const GameListContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
+const fadeOpacity = keyframes`
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.8;
+  }
+`;
+
 const StyledSlider = styled(Slider)`
-  & .slick-current:hover .game-list-item:hover {
+  & .game-list-item {
     box-sizing: content-box;
-    border: 3px solid white;
+    border: 3px solid transparent;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+
+  & .slick-current:hover .game-list-item:hover {
+    border-color: white;
     z-index: 1;
   }
 
-  & .slick-current:hover .game-list-item:not(:hover) {
-    position: relative;
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      opacity: 0.8;
-    }
+  & .slick-current:hover .game-list-item:not(:hover)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    animation: ${fadeOpacity} 0.3s forwards;
   }
 `;
 
