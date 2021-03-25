@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter, Switch, Route } from 'react-router-dom';
 import GlobalStyle from '@/renderer/styles/GlobalStyle';
+import LoadingPage from '@/renderer/views/Loading';
 import TitlePage from '@/renderer/views/Title';
 import GameList from '@/renderer/views/GameList';
 import GameDetail from '@/renderer/views/GameDetail';
@@ -13,6 +14,10 @@ const Navigation: React.FC = () => (
   <MemoryRouter>
     <Switch>
       <Route exact path='/'>
+        <LoadingPage />
+      </Route>
+
+      <Route exact path='/title'>
         <TitlePage />
       </Route>
 
