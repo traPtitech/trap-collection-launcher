@@ -1,5 +1,5 @@
-import { ipcRenderer } from '@/common/typedIpc';
 import { contextBridge } from 'electron';
+import { ipcRenderer } from '@/common/typedIpc';
 
 const api: TraPCollection.API = {
   launch: async (launchTarget) => {
