@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import Thumbnail from './Thumbnail';
 import { useHovered } from '@/renderer/hooks/useHovered';
 
-const Container = styled.li`
+const Container = styled.li.attrs<{ className: string }>((props) => ({
+  className: props.className,
+}))`
   width: calc(37.5vw - 5px);
   height: 22vw;
   list-style: none;
@@ -29,7 +31,7 @@ const GameListItem: React.FC<Props> = ({ game, onGameHovered }) => {
   }, [game, onGameHovered, hovered]);
 
   return (
-    <Container ref={ref}>
+    <Container ref={ref} className='game-list-item'>
       <Link
         to={{
           pathname: '/game/detail',

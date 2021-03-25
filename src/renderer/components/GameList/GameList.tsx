@@ -11,6 +11,28 @@ const GameListContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
+const StyledSlider = styled(Slider)`
+  & .slick-current:hover .game-list-item:hover {
+    box-sizing: content-box;
+    border: 3px solid white;
+    z-index: 1;
+  }
+
+  & .slick-current:hover .game-list-item:not(:hover) {
+    position: relative;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      opacity: 0.8;
+    }
+  }
+`;
+
 const GameListItemContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -64,7 +86,7 @@ const GameList: React.FC<Props> = ({
 
   return (
     <GameListContainer onMouseLeave={onGameUnhovered}>
-      <Slider ref={ref} {...settings}>
+      <StyledSlider ref={ref} {...settings}>
         {games.map((game) => (
           <div key={game.id}>
             <GameListItemContainer>
@@ -72,7 +94,7 @@ const GameList: React.FC<Props> = ({
             </GameListItemContainer>
           </div>
         ))}
-      </Slider>
+      </StyledSlider>
     </GameListContainer>
   );
 };
