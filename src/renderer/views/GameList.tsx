@@ -5,19 +5,22 @@ import GameList from '@/renderer/components/GameList/GameList';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
-  max-width: 980px;
+  width: 75vw;
+  height: 100vh;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 `;
 
-const Content = styled.div`
-  padding-top: 60px;
-  margin-bottom: 20px;
+const Content = styled.main`
+  height: calc(100% - 50px);
+  position: relative;
 `;
 
-const Footer = styled.footer``;
+const Footer = styled.footer`
+  height: 50px;
+`;
 
 const FooterLinkContainer = styled.div`
   float: right;

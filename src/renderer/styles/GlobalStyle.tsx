@@ -4,6 +4,10 @@ import { ReactSlickCSS } from './ReactSlick';
 const GlobalStyle = createGlobalStyle`
   ${ReactSlickCSS}
 
+  html {
+    font-size: 100%;
+  }
+
   h1,
   h2,
   h3,

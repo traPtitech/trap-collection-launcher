@@ -3,6 +3,14 @@ import styled from 'styled-components';
 import Slider, { Settings } from 'react-slick';
 import GameListItem from './GameListItem';
 
+const GameListContainer = styled.div`
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
 const GameListItemContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -55,7 +63,7 @@ const GameList: React.FC<Props> = ({
   const ref = useScrollToSlide();
 
   return (
-    <div onMouseLeave={onGameUnhovered}>
+    <GameListContainer onMouseLeave={onGameUnhovered}>
       <Slider ref={ref} {...settings}>
         {games.map((game) => (
           <div key={game.id}>
@@ -65,7 +73,7 @@ const GameList: React.FC<Props> = ({
           </div>
         ))}
       </Slider>
-    </div>
+    </GameListContainer>
   );
 };
 
