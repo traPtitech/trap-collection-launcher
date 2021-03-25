@@ -56,6 +56,10 @@ const useGames = () => {
   return games;
 };
 
+const onQuit = (): void => {
+  alert('open questionnaire');
+};
+
 const GameListPage: React.FC = () => {
   const games = useGames();
   const [game, setGame] = useState<TraPCollection.GameInfo | null>(null);
@@ -71,7 +75,7 @@ const GameListPage: React.FC = () => {
         />
       </Content>
       <Footer>
-        <QuitButton to='/title'>
+        <QuitButton to='/title' onClick={onQuit}>
           <QuitButtonIcon>
             <ion-icon name='exit-sharp' />
           </QuitButtonIcon>
