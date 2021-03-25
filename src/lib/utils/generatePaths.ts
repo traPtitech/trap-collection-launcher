@@ -1,5 +1,5 @@
-import { app } from 'electron';
 import path from 'path';
+import { app } from 'electron';
 
 /**
  * ローカルファイルのパスを生成する

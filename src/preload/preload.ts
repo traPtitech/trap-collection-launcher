@@ -1,5 +1,5 @@
-import { ipcRenderer } from '@/common/typedIpc';
 import { contextBridge } from 'electron';
+import { ipcRenderer } from '@/common/typedIpc';
 
 const api: TraPCollection.API = {
   launch: async (launchTarget) => {
@@ -9,6 +9,10 @@ const api: TraPCollection.API = {
   getGameInfo: async () => {
     const gameInfo = await ipcRenderer.invoke('getGameInfo');
     return gameInfo;
+  },
+  checkJava: async () => {
+    const checkJava = await ipcRenderer.invoke('checkJava');
+    return checkJava;
   },
   onReceiveExample: async () => {
     return;

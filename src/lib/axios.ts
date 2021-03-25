@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import axios from '@aspida/axios';
-import api from '@api/$api';
 import { baseUrl } from '@/config';
+import api from '@api/$api';
 
 const client = api(
   axios(undefined, { baseURL: baseUrl, headers: { authorization: '' } })

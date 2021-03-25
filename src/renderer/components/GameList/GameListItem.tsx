@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useHovered } from '@/renderer/hooks/useHovered';
 import Thumbnail from './Thumbnail';
+import { useHovered } from '@/renderer/hooks/useHovered';
 
 const Container = styled.li`
   width: 36.25vw;

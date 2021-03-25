@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import styled from 'styled-components';
 import Slider, { Settings } from 'react-slick';
+import styled from 'styled-components';
 import GameListItem from './GameListItem';
 
 const GameListContainer = styled.div`

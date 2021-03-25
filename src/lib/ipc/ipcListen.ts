@@ -1,11 +1,14 @@
 import { BrowserWindow } from 'electron';
+import { checkJavaHandler } from './handler/checkJavaHandler';
+import { getGameInfoHandler } from './handler/getGameInfoHandler';
+import { launchHandler } from './handler/launchHandler';
 import { ipcMain } from '@/common/typedIpc';
-import launch from './handler/launch';
-import getGameInfo from './handler/getGameInfo';
 
 export default ({ window }: { window: BrowserWindow }): void => {
   ipcMain.removeHandler('launch');
   ipcMain.removeHandler('getGameInfo');
-  launch(window);
-  getGameInfo();
+  ipcMain.removeHandler('checkJava');
+  launchHandler(window);
+  getGameInfoHandler();
+  checkJavaHandler();
 };
