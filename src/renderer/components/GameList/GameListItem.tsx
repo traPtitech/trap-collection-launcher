@@ -15,6 +15,10 @@ type Props = {
   onGameHovered: (game: TraPCollection.GameInfo) => void;
 };
 
+const preventDefault = (e: React.SyntheticEvent): void => {
+  e.preventDefault();
+};
+
 const GameListItem: React.FC<Props> = ({ game, onGameHovered }) => {
   const [ref, hovered] = useHovered<HTMLLIElement>();
 
@@ -31,6 +35,7 @@ const GameListItem: React.FC<Props> = ({ game, onGameHovered }) => {
           pathname: '/game/detail',
           state: { game },
         }}
+        onAuxClick={preventDefault}
       >
         <Thumbnail
           width='100%'
