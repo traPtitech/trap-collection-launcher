@@ -28,11 +28,13 @@ const createWindow = (): void => {
     width: 800,
     minHeight: 600,
     minWidth: 800,
+    // fullscreen: true,
     webPreferences: {
       webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
       preload: process.env.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
+  mainWindow.setMenu(null);
   mainWindow.maximize();
 
   // and load the index.html of the app.
