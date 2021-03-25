@@ -19,12 +19,34 @@ const Content = styled.main`
 `;
 
 const Footer = styled.footer`
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 0 20px;
   height: 50px;
 `;
 
-const FooterLinkContainer = styled.div`
+const QuitButton = styled(Link)`
   float: right;
-  padding-right: 20px;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  transition: 100ms transform;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const QuitButtonIcon = styled.span`
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+`;
+
+const QuitButtonText = styled.span`
+  margin-right: 10px;
 `;
 
 const useGames = () => {
@@ -51,9 +73,12 @@ const GameListPage: React.FC = () => {
         />
       </Content>
       <Footer>
-        <FooterLinkContainer>
-          <Link to='/questionnaire'>Finish</Link>
-        </FooterLinkContainer>
+        <QuitButton to='/questionnaire'>
+          <QuitButtonIcon>
+            <ion-icon name='exit-sharp' />
+          </QuitButtonIcon>
+          <QuitButtonText>Quit</QuitButtonText>
+        </QuitButton>
       </Footer>
     </PageContainer>
   );

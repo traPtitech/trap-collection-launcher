@@ -13,8 +13,8 @@ const PageContainer = styled.div`
 `;
 
 const Header = styled.header`
-  padding-top: 20px;
-  margin-bottom: 20px;
+  padding: 20px 0;
+  height: 80px;
 `;
 
 const PageTitle = styled.h1`
