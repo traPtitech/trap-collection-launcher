@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemoryRouter, Switch, Route } from 'react-router-dom';
+import { MemoryRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Background from '@/renderer/components/Background';
 import BackgroundProvider from '@/renderer/contexts/Background';
 import GlobalStyle from '@/renderer/styles/GlobalStyle';
@@ -14,6 +14,10 @@ const Navigation: React.FC = () => (
   <MemoryRouter>
     <Switch>
       <Route exact path='/'>
+        <Redirect to='/loading' />
+      </Route>
+
+      <Route exact path='/loading'>
         <LoadingPage />
       </Route>
 

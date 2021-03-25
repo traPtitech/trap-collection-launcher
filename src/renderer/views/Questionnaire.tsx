@@ -38,7 +38,7 @@ const QuestionnairePage: React.FC = () => {
       </Header>
       <Content>Questionnaire</Content>
       <Footer>
-        <Link to='/'>Link to title</Link>
+        <Link to='/title'>Link to title</Link>
       </Footer>
     </PageContainer>
   );

@@ -40,7 +40,7 @@ const SettingPage: React.FC = () => {
       </Header>
       <Content>content</Content>
       <Footer>
-        <Link to='/'>Link to title</Link>
+        <Link to='/title'>Link to title</Link>
       </Footer>
     </PageContainer>
   );
