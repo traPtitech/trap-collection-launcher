@@ -35,6 +35,7 @@ const Thumbnail: React.FC<Props> = ({
 
   return (
     <ThumbnailVideo
+      preload='auto'
       ref={ref}
       width={width}
       height={height}
