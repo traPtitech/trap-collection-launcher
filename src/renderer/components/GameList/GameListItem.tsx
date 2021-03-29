@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Thumbnail from './Thumbnail';
@@ -15,20 +15,30 @@ const Container = styled.li.attrs<{ className: string }>((props) => ({
 type Props = {
   game: TraPCollection.GameInfo;
   onGameHovered: (game: TraPCollection.GameInfo) => void;
+  onGameUnhovered: () => void;
 };
 
 const preventDefault = (e: React.SyntheticEvent): void => {
   e.preventDefault();
 };
 
-const GameListItem: React.FC<Props> = ({ game, onGameHovered }) => {
+const GameListItem: React.FC<Props> = ({
+  game,
+  onGameHovered,
+  onGameUnhovered,
+}) => {
   const [ref, hovered] = useHovered<HTMLLIElement>();
+  const prevHovered = useRef<boolean>(hovered);
 
   useEffect(() => {
-    if (hovered) {
+    if (hovered && !prevHovered.current) {
       onGameHovered(game);
     }
-  }, [game, onGameHovered, hovered]);
+    if (!hovered && prevHovered.current) {
+      onGameUnhovered();
+    }
+    prevHovered.current = hovered;
+  }, [hovered, game, onGameHovered, onGameUnhovered]);
 
   return (
     <Container ref={ref} className='game-list-item'>
