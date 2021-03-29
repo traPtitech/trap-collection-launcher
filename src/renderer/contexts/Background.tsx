@@ -25,7 +25,7 @@ export const useBackgroundVideo = (
   }, [video, setBackground]);
 };
 
-const BackgroundProvider: React.FC = ({ children }) => {
+export const BackgroundProvider: React.FC = ({ children }) => {
   const [background, _setBackground] = useState<string>(
     DEFAULT_BACKGROUND_VIDEO
   );
@@ -44,5 +44,3 @@ const BackgroundProvider: React.FC = ({ children }) => {
     </BackgroundStateContext.Provider>
   );
 };
-
-export default BackgroundProvider;
