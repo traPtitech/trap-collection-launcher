@@ -5,7 +5,7 @@ import GameDetailPage from '@/renderer/views/GameDetail';
 import GameListPage from '@/renderer/views/GameList';
 import LoadingPage from '@/renderer/views/Loading';
 import SettingPage from '@/renderer/views/Setting';
-import TitlePage from '@/renderer/views/Title';
+import TitlePage from '@/renderer/views/Title/koudaisai';
 
 export const koudaisaiConfig: Config = {
   lng: 'ja',
