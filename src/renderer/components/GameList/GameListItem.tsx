@@ -12,14 +12,14 @@ const Container = styled.li.attrs<{ className: string }>((props) => ({
   list-style: none;
 `;
 
+const preventDefault = (e: React.SyntheticEvent): void => {
+  e.preventDefault();
+};
+
 type Props = {
   game: TraPCollection.GameInfo;
   onGameHovered: (game: TraPCollection.GameInfo) => void;
   onGameUnhovered: () => void;
-};
-
-const preventDefault = (e: React.SyntheticEvent): void => {
-  e.preventDefault();
 };
 
 const GameListItem: React.FC<Props> = ({
@@ -27,18 +27,18 @@ const GameListItem: React.FC<Props> = ({
   onGameHovered,
   onGameUnhovered,
 }) => {
-  const [ref, hovered] = useHovered<HTMLLIElement>();
-  const prevHovered = useRef<boolean>(hovered);
+  const [ref, isHovered] = useHovered<HTMLLIElement>();
+  const wasHovered = useRef<boolean>(isHovered);
 
   useEffect(() => {
-    if (hovered && !prevHovered.current) {
+    if (isHovered && !wasHovered.current) {
       onGameHovered(game);
     }
-    if (!hovered && prevHovered.current) {
+    if (!isHovered && wasHovered.current) {
       onGameUnhovered();
     }
-    prevHovered.current = hovered;
-  }, [hovered, game, onGameHovered, onGameUnhovered]);
+    wasHovered.current = isHovered;
+  }, [isHovered, game, onGameHovered, onGameUnhovered]);
 
   return (
     <Container ref={ref} className='game-list-item'>
@@ -54,7 +54,7 @@ const GameListItem: React.FC<Props> = ({
           height='100%'
           imgSrc={game.poster}
           videoSrc={game.video}
-          showVideo={hovered}
+          showVideo={isHovered}
         />
       </Link>
     </Container>
