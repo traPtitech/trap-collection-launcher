@@ -118,9 +118,7 @@ const GlobalStyle = createGlobalStyle`
   /* 要素をdragしたときにlinkとかを引っ張れないようにする */
   /* ref: https://gist.github.com/msuchodolski/41c9338f3a732379dc570142826ed76e */
   *, *::before, *::after {
-    -webkit-user-select: none;
     -webkit-user-drag: none;
-    -webkit-app-region: no-drag;
   }
 `;
 

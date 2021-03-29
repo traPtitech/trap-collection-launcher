@@ -98,12 +98,16 @@ const GameList: React.FC<Props> = ({
   const ref = useScrollToSlide();
 
   return (
-    <GameListContainer onMouseLeave={onGameUnhovered}>
+    <GameListContainer>
       <StyledSlider ref={ref} {...settings}>
         {games.map((game) => (
           <div key={game.id}>
             <GameListItemContainer>
-              <GameListItem onGameHovered={onGameHovered} game={game} />
+              <GameListItem
+                game={game}
+                onGameHovered={onGameHovered}
+                onGameUnhovered={onGameUnhovered}
+              />
             </GameListItemContainer>
           </div>
         ))}
