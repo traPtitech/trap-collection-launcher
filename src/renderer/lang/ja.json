@@ -1,6 +1,6 @@
 {
   "start": "はじめる",
-  "launch": "遊ぶ",
-  "quit": "遊ぶのをやめる",
-  "settings": "設定"
+  "launch": "あそぶ",
+  "quit": "あそぶのをやめる",
+  "setting": "設定"
 }

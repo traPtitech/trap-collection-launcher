@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
@@ -89,6 +90,8 @@ const SettingButtonText = styled.span`
 const TitlePage: React.FC = () => {
   useBackgroundVideo();
 
+  const { t } = useTranslation();
+
   return (
     <PageContainer>
       <TitleContainer>
@@ -99,7 +102,7 @@ const TitlePage: React.FC = () => {
           <StartButtonIcon>
             <ion-icon name='play' />
           </StartButtonIcon>
-          <StartButtonText>Start!</StartButtonText>
+          <StartButtonText>{t('start')}!</StartButtonText>
         </StartButton>
       </TitleContainer>
       <Footer>
@@ -107,7 +110,7 @@ const TitlePage: React.FC = () => {
           <SettingButtonIcon>
             <ion-icon name='settings-sharp' />
           </SettingButtonIcon>
-          <SettingButtonText>Settings</SettingButtonText>
+          <SettingButtonText>{t('setting')}</SettingButtonText>
         </SettingButton>
       </Footer>
     </PageContainer>

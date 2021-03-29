@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 const Button = styled.button`
@@ -28,14 +29,18 @@ export type Props = React.DetailedHTMLProps<
 
 /* eslint-disable-next-line react/display-name */
 const LaunchButton = React.forwardRef<HTMLButtonElement, Props>(
-  (props, ref) => (
-    <Button {...props} ref={ref}>
-      <ButtonIcon>
-        <ion-icon name='play' />
-      </ButtonIcon>
-      <ButtonText>Play!</ButtonText>
-    </Button>
-  )
+  (props, ref) => {
+    const { t } = useTranslation();
+
+    return (
+      <Button {...props} ref={ref}>
+        <ButtonIcon>
+          <ion-icon name='play' />
+        </ButtonIcon>
+        <ButtonText>{t('launch')}!</ButtonText>
+      </Button>
+    );
+  }
 );
 
 export default LaunchButton;
