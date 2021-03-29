@@ -34,14 +34,18 @@ const createWindow = (): void => {
       preload: process.env.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
-  mainWindow.setMenu(null);
   mainWindow.maximize();
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if (process.env.NODE_ENV === 'production') {
+    mainWindow.setMenu(null);
+  }
+  if (process.env.NODE_ENV === 'development') {
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+  }
 
   mainWindow.on('ready-to-show', () => {
     //ipc listen
