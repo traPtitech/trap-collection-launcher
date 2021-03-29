@@ -1,48 +1,26 @@
 import React from 'react';
-import { MemoryRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { MemoryRouter, Switch, Route } from 'react-router-dom';
 import Background from '@/renderer/components/Background';
+import * as config from '@/renderer/config';
 import BackgroundProvider from '@/renderer/contexts/Background';
 import GlobalStyle from '@/renderer/styles/GlobalStyle';
-import GameDetail from '@/renderer/views/GameDetail';
-import GameList from '@/renderer/views/GameList';
-import LoadingPage from '@/renderer/views/Loading';
-import SettingPage from '@/renderer/views/Setting';
-import TitlePage from '@/renderer/views/Title';
 
-const Navigation: React.FC = () => (
-  <MemoryRouter>
-    <Switch>
-      <Route exact path='/'>
-        <Redirect to='/loading' />
-      </Route>
+type Props = {
+  config: config.Config;
+};
 
-      <Route exact path='/loading'>
-        <LoadingPage />
-      </Route>
-
-      <Route exact path='/title'>
-        <TitlePage />
-      </Route>
-
-      <Route exact path='/game'>
-        <GameList />
-      </Route>
-
-      <Route exact path='/game/detail'>
-        <GameDetail />
-      </Route>
-
-      <Route exact path='/setting'>
-        <SettingPage />
-      </Route>
-    </Switch>
-  </MemoryRouter>
-);
-
-const App: React.FC = () => (
+const App: React.FC<Props> = ({ config }) => (
   <BackgroundProvider>
     <GlobalStyle />
-    <Navigation />
+    <MemoryRouter>
+      <Switch>
+        {config.routes.map(({ path, element }) => (
+          <Route key={path} exact path={path}>
+            {element}
+          </Route>
+        ))}
+      </Switch>
+    </MemoryRouter>
     <Background />
   </BackgroundProvider>
 );
