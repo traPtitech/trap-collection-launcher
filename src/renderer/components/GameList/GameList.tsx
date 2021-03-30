@@ -17,24 +17,24 @@ const fadeOpacity = keyframes`
   }
 
   to {
-    opacity: 0.8;
+    opacity: 0.7;
   }
 `;
 
 const StyledSlider = styled(Slider)`
-  & .game-list-item {
+  & ${GameListItem} {
     box-sizing: content-box;
     border: 3px solid transparent;
     transition: border-color 0.2s;
     position: relative;
   }
 
-  & .slick-current:hover .game-list-item:hover {
+  & .slick-current:hover ${GameListItem}:hover {
     border-color: white;
     z-index: 1;
   }
 
-  & .slick-current:hover .game-list-item:not(:hover)::after {
+  & .slick-current:hover ${GameListItem}:not(:hover)::after {
     content: '';
     position: absolute;
     top: 0;

@@ -20,12 +20,14 @@ type Props = {
   game: TraPCollection.GameInfo;
   onGameHovered: (game: TraPCollection.GameInfo) => void;
   onGameUnhovered: () => void;
+  className?: string;
 };
 
 const GameListItem: React.FC<Props> = ({
   game,
   onGameHovered,
   onGameUnhovered,
+  className,
 }) => {
   const [ref, isHovered] = useHovered<HTMLLIElement>();
   const wasHovered = useRef<boolean>(isHovered);
@@ -41,7 +43,7 @@ const GameListItem: React.FC<Props> = ({
   }, [isHovered, game, onGameHovered, onGameUnhovered]);
 
   return (
-    <Container ref={ref} className='game-list-item'>
+    <Container ref={ref} className={className}>
       <Link
         to={{
           pathname: '/game/detail',
@@ -61,4 +63,4 @@ const GameListItem: React.FC<Props> = ({
   );
 };
 
-export default GameListItem;
+export default styled(GameListItem)``;
