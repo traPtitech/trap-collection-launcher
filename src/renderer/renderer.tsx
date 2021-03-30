@@ -32,8 +32,6 @@ import ReactDOM from 'react-dom';
 import { initReactI18next } from 'react-i18next';
 import App from '@/renderer/App';
 import * as config from '@/renderer/config';
-import en from '@/renderer/lang/en.json';
-import ja from '@/renderer/lang/ja.json';
 
 const main = (): void => {
   const conf =
@@ -43,8 +41,8 @@ const main = (): void => {
 
   i18n.use(initReactI18next).init({
     resources: {
-      en: { translation: en },
-      ja: { translation: ja },
+      en: { translation: config.lang.en },
+      ja: { translation: config.lang.ja },
     },
     lng: conf.lng,
     interpolation: { escapeValue: false },
