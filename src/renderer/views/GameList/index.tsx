@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import GameList from '@/renderer/components/GameList/GameList';
@@ -65,6 +66,8 @@ const GameListPage: React.FC = () => {
   const [game, setGame] = useState<TraPCollection.GameInfo | null>(null);
   useBackgroundVideo(game?.video);
 
+  const { t } = useTranslation();
+
   return (
     <PageContainer>
       <Content>
@@ -79,7 +82,7 @@ const GameListPage: React.FC = () => {
           <QuitButtonIcon>
             <ion-icon name='exit-sharp' />
           </QuitButtonIcon>
-          <QuitButtonText>Quit</QuitButtonText>
+          <QuitButtonText>{t('quit')}</QuitButtonText>
         </QuitButton>
       </Footer>
     </PageContainer>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
@@ -40,6 +41,8 @@ const P = styled.p`
 const SettingPage: React.FC = () => {
   useBackgroundVideo();
 
+  const { t } = useTranslation();
+
   return (
     <PageContainer>
       <Header>
@@ -48,7 +51,7 @@ const SettingPage: React.FC = () => {
         </BackButton>
       </Header>
       <Content>
-        <PageTitle>Setting</PageTitle>
+        <PageTitle>{t('setting')}</PageTitle>
         <P>content</P>
       </Content>
     </PageContainer>
