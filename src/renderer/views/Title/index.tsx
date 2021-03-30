@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
+import { useConfig } from '@/renderer/contexts/Config';
 
 const PageContainer = styled.div`
   width: 75vw;
@@ -57,9 +58,40 @@ const StartButtonText = styled.span`
   margin-right: 10px;
 `;
 
+const Footer = styled.footer`
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+`;
+
+const SettingButton = styled(Link)`
+  float: right;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  transition: 100ms transform;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const SettingButtonIcon = styled.span`
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+`;
+
+const SettingButtonText = styled.span`
+  margin-right: 10px;
+`;
+
 const TitlePage: React.FC = () => {
   useBackgroundVideo();
 
+  const { hasSettingPage } = useConfig();
   const { t } = useTranslation();
 
   return (
@@ -75,6 +107,16 @@ const TitlePage: React.FC = () => {
           <StartButtonText>{t('start')}!</StartButtonText>
         </StartButton>
       </TitleContainer>
+      {hasSettingPage && (
+        <Footer>
+          <SettingButton to='/setting'>
+            <SettingButtonIcon>
+              <ion-icon name='settings-sharp' />
+            </SettingButtonIcon>
+            <SettingButtonText>{t('setting')}</SettingButtonText>
+          </SettingButton>
+        </Footer>
+      )}
     </PageContainer>
   );
 };
