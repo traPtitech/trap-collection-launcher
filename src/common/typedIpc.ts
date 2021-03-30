@@ -28,6 +28,12 @@ export const ipcRenderer = {
       }
     );
   },
+  removeListener<K extends keyof TraPCollection.FromMain>(
+    channel: K,
+    listener: (...args: unknown[]) => void
+  ): void {
+    originalIpcRenderer.removeListener(channel, listener);
+  },
 };
 
 export const ipcMain = {
