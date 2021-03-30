@@ -1,6 +1,6 @@
 declare namespace TraPCollection {
   // IPC通信用API
-  type API = FromRenderer & FromMain;
+  type API = { invoke: FromRenderer; on: FromMainReceiver };
   type FromRenderer = {
     launch(gameId: string): Promise<void>;
     getGameInfo(): Promise<GameInfo[]>;
@@ -10,8 +10,16 @@ declare namespace TraPCollection {
     setSeatVersionId(seatVersionId: number): Promise<void>;
   };
   type FromMain = {
-    /* example */
-    onReceiveExample(x: number, y: string): void;
+    progress(progress: Progress): void;
+  };
+
+  type FromMainReceiver = {
+    [K in keyof FromMain]: (
+      listener: (
+        event: Electron.IpcRendererEvent,
+        ...args: Parameters<FromMain[K]>
+      ) => void
+    ) => void;
   };
 
   type GameType = 'app' | 'jar' | 'url';
@@ -52,6 +60,12 @@ declare namespace TraPCollection {
      */
     video?: string;
   };
+
+  type Progress = {
+    title: string;
+    phase: 'fetch' | 'decompress' | 'verify' | 'genChecksum' | 'done';
+    progressRate: number; // 0-100
+  }[];
 
   type Platform = 'win32' | 'darwin';
 }
