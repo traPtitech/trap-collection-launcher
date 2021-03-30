@@ -8,6 +8,8 @@ declare namespace TraPCollection {
     setProductKey(productKey: string): Promise<void>;
     setSeatId(seatId: number): Promise<void>;
     setSeatVersionId(seatVersionId: number): Promise<void>;
+    sitDown(): Promise<void>;
+    sitUp(): Promise<void>;
   };
   type FromMain = {
     progress(progress: Progress): void;
