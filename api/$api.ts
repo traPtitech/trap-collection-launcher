@@ -27,10 +27,7 @@ import { Methods as Methods23 } from './versions/_launcherVersionID@number/seats
 import { Methods as Methods24 } from './versions/check';
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
-  const prefix = (baseURL === undefined
-    ? 'https://collection.trap.jp/api'
-    : baseURL
-  ).replace(/\/$/, '');
+  const prefix = (baseURL === undefined ? '' : baseURL).replace(/\/$/, '');
   const PATH0 = '/games';
   const PATH1 = '/image';
   const PATH2 = '/info';
