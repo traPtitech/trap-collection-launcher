@@ -44,7 +44,7 @@ const LoadingPage: React.FC = () => {
   useEffect(() => {
     setTimeout(() => {
       history.push('/title');
-    }, 5000);
+    }, 2500);
   }, [history]);
 
   return (

@@ -7,9 +7,8 @@ const BackgroundStateContext = React.createContext<string>(
   DEFAULT_BACKGROUND_VIDEO
 );
 
-const BackgroundSetterContext = React.createContext<
-  ((video: string) => void) | null
->(null);
+const BackgroundSetterContext =
+  React.createContext<((video: string) => void) | null>(null);
 
 export const useBackgroundVideoState = (): string => {
   return useContext(BackgroundStateContext);

@@ -7,6 +7,7 @@ import { ConfigProvider } from '@/renderer/contexts/Config';
 import GlobalStyle from '@/renderer/styles/GlobalStyle';
 import GameDetailPage from '@/renderer/views/GameDetail';
 import GameListPage from '@/renderer/views/GameList';
+import InitPage from '@/renderer/views/Init';
 import LoadingPage from '@/renderer/views/Loading';
 import SettingPage from '@/renderer/views/Setting';
 import TitlePage from '@/renderer/views/Title';
@@ -16,7 +17,11 @@ const Navigation: React.FC = () => {
     <MemoryRouter>
       <Switch>
         <Route exact path='/'>
-          <Redirect to='/loading' />
+          <Redirect to='/init' />
+        </Route>
+
+        <Route exact path='/init'>
+          <InitPage />
         </Route>
 
         <Route exact path='/loading'>
