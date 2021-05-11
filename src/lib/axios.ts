@@ -8,11 +8,11 @@ import api from '@api/$api';
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const productKey = store.get('productKey');
-    if (productKey) {
+    const token = store.get('token');
+    if (token) {
       config.headers = {
         ...config.headers,
-        Authorization: `Bearer ${await postLauncherLogin(productKey)}`,
+        Authorization: `Bearer ${token}`,
       };
     }
     return config;
@@ -20,7 +20,7 @@ axiosInstance.interceptors.request.use(
   (err) => Promise.reject(err)
 );
 
-const aspidaClient = aspida(undefined, {
+const aspidaClient = aspida(axiosInstance, {
   baseURL: baseUrl,
 });
 
@@ -30,7 +30,7 @@ const client = api(aspidaClient);
  * accessTokenの取得
  * @param key string
  */
-const postLauncherLogin = async (key: string) =>
+export const postLauncherLogin = async (key: string) =>
   api(aspida(undefined, { baseURL: baseUrl })).launcher.login.post({
     body: { key },
   });

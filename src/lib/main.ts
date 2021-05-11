@@ -1,6 +1,8 @@
 import { app, BrowserWindow, protocol } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 import ipcListen from '@/lib/ipc/ipcListen';
+import { store } from '@/lib/store';
+import { updateToken } from '@/lib/utils/updateToken';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -48,7 +50,12 @@ const createWindow = (): void => {
   }
 
   mainWindow.on('ready-to-show', () => {
-    //ipc listen
+    // update token
+    updateToken().catch(() => {
+      return;
+    });
+    store.onDidChange('productKey', updateToken);
+    // ipc listen
     ipcListen({ window: mainWindow });
   });
 };
