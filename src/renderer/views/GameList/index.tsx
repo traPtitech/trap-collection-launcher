@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import GameList from '@/renderer/components/GameList/GameList';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
+import { useConfig } from '@/renderer/contexts/Config';
 
 const PageContainer = styled.div`
   width: 75vw;
@@ -57,7 +58,7 @@ const useGames = () => {
   return games;
 };
 
-const onQuit = (): void => {
+const openQuestionnaire = (): void => {
   alert('open questionnaire');
 };
 
@@ -65,6 +66,7 @@ const GameListPage: React.FC = () => {
   const games = useGames();
   const [game, setGame] = useState<TraPCollection.GameInfo | null>(null);
   useBackgroundVideo(game?.video);
+  const { hasQuestionnaire } = useConfig();
 
   const { t } = useTranslation();
 
@@ -78,7 +80,10 @@ const GameListPage: React.FC = () => {
         />
       </Content>
       <Footer>
-        <QuitButton to='/title' onClick={onQuit}>
+        <QuitButton
+          to='/title'
+          onClick={hasQuestionnaire ? openQuestionnaire : undefined}
+        >
           <QuitButtonIcon>
             <ion-icon name='exit-sharp' />
           </QuitButtonIcon>

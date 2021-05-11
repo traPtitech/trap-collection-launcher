@@ -12,11 +12,20 @@ const api: TraPCollection.API = {
     checkJava: async () => {
       return await ipcRenderer.invoke('checkJava');
     },
+    getProductKey: async () => {
+      return await ipcRenderer.invoke('getProductKey');
+    },
     setProductKey: async (productKey) => {
       return await ipcRenderer.invoke('setProductKey', productKey);
     },
+    getSeatId: async () => {
+      return await ipcRenderer.invoke('getSeatId');
+    },
     setSeatId: async (seatId) => {
       return await ipcRenderer.invoke('setSeatId', seatId);
+    },
+    getSeatVersionId: async () => {
+      return await ipcRenderer.invoke('getSeatVersionId');
     },
     setSeatVersionId: async (seatVersionId) => {
       return await ipcRenderer.invoke('setSeatVersionId', seatVersionId);

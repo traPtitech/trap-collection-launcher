@@ -1,8 +1,14 @@
 import { store } from './store';
-import { getVersions } from '@/lib/axios';
+import { version } from '@/config';
+import { getGameFile, getVersion } from '@/lib/axios';
 
 export const fetch = async (): Promise<void> => {
-  const version = await getVersions(1);
-
-  console.log(version.body.games);
+  const { data } = await getVersion(0);
+  Promise.all(
+    data.games.map(({ id }) => {
+      getGameFile(id).then((res) => {
+        res.data.pipe;
+      });
+    })
+  );
 };

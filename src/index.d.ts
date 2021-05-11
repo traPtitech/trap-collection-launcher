@@ -5,8 +5,11 @@ declare namespace TraPCollection {
     launch(gameId: string): Promise<void>;
     getGameInfo(): Promise<GameInfo[]>;
     checkJava(): Promise<boolean>;
+    getProductKey(): Promise<string | undefined>;
     setProductKey(productKey: string): Promise<void>;
+    getSeatId(): Promise<number | undefined>;
     setSeatId(seatId: number): Promise<void>;
+    getSeatVersionId(): Promise<number | undefined>;
     setSeatVersionId(seatVersionId: number): Promise<void>;
     sitDown(): Promise<void>;
     sitUp(): Promise<void>;

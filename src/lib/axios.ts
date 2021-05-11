@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import aspida from '@aspida/axios';
 import axios from 'axios';
 import { store } from './store';
 import { baseUrl } from '@/config';
-import api from '@api/$api';
+import {
+  LauncherAuthApi,
+  GameApi,
+  VersionApi,
+  SeatApi,
+  Configuration,
+} from '@/lib/typescript-axios/index';
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use(
@@ -20,70 +25,85 @@ axiosInstance.interceptors.request.use(
   (err) => Promise.reject(err)
 );
 
-const aspidaClient = aspida(axiosInstance, {
-  baseURL: baseUrl,
-});
+const axiosStreamInstance = axios.create({ responseType: 'stream' });
+axiosStreamInstance.interceptors.request.use(
+  async (config) => {
+    const token = store.get('token');
+    if (token) {
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${token}`,
+      };
+    }
+    return config;
+  },
+  (err) => Promise.reject(err)
+);
 
-const client = api(aspidaClient);
+const config = new Configuration({ basePath: baseUrl });
+
+const API = {
+  LauncherAuthApi: new LauncherAuthApi(config),
+  GameApi: new GameApi(config, baseUrl, axiosInstance),
+  GameStreamApi: new GameApi(config, baseUrl, axiosStreamInstance),
+  VersionApi: new VersionApi(config, baseUrl, axiosInstance),
+  SeatApi: new SeatApi(config, baseUrl, axiosInstance),
+};
 
 /**
  * accessTokenの取得
  * @param key string
  */
 export const postLauncherLogin = async (key: string) =>
-  api(aspida(undefined, { baseURL: baseUrl })).launcher.login.post({
-    body: { key },
-  });
+  API.LauncherAuthApi.postLauncherLogin({ key });
 
 /**
  * ゲーム情報の取得
  * @param gameId string
  */
 export const getGameInfo = async (gameId: string) =>
-  client.games._gameID(gameId).info.get();
+  API.GameApi.getGame(gameId);
 
 /**
  * ゲーム画像の取得
  * @param gameId string
  */
 export const getGameImage = async (gameId: string) =>
-  client.games._gameID(gameId).image.get();
+  API.GameStreamApi.getImage(gameId);
 
 /**
  * ゲーム動画の取得
  * @param gameId string
  */
 export const getGameVideo = async (gameId: string) =>
-  client.games._gameID(gameId).video.get();
+  API.GameStreamApi.getVideo(gameId);
 
 /**
  * ゲームの最新バージョンのファイルの取得
  * @param gameId string
  */
 export const getGameFile = async (gameId: string) =>
-  client.games.asset
-    ._gameID(gameId)
-    .file.get({ query: { operatingSystem: process.platform } });
+  API.GameStreamApi.getGameFile(gameId, process.platform);
 
 /**
  * ゲームの最新バージョンのURLの取得
  * @param gameId string
  */
 export const getGameUrl = async (gameId: string) =>
-  client.games.asset._gameID(gameId).url.get();
+  API.GameApi.getGameURL(gameId);
 
 /**
  * バージョンの詳細情報の取得
  * @param launcherVersionId number
  */
-export const getVersions = async (launcherVersionId: number) =>
-  client.versions._launcherVersionID(launcherVersionId).get();
+export const getVersion = async (launcherVersionId: number) =>
+  API.VersionApi.getVersion(launcherVersionId);
 
 /**
  * ブラウザゲーム以外のゲームのID、MD5、ゲームの種類、更新日の一覧
  */
 export const getVersionsCheck = async () =>
-  client.versions.check.get({ query: { operatingSystem: process.platform } });
+  API.VersionApi.getCheckList(process.platform);
 
 /**
  * 着席
@@ -91,7 +111,7 @@ export const getVersionsCheck = async () =>
  * @param seatVersionId number
  */
 export const postSeats = async (seatId: number, seatVersionId: number) =>
-  client.seats.post({ body: { seatId, seatVersionId } });
+  API.SeatApi.postSeat({ seatId, seatVersionId });
 
 /**
  * 離席
@@ -99,4 +119,4 @@ export const postSeats = async (seatId: number, seatVersionId: number) =>
  * @param seatVersionId number
  */
 export const deleteSeats = async (seatId: number, seatVersionId: number) =>
-  client.seats.delete({ body: { seatId, seatVersionId } });
+  API.SeatApi.deleteSeat({ seatId, seatVersionId });

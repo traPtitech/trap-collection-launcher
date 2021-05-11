@@ -15,8 +15,8 @@
     "publish:koudaisai": "cross-env KOUDAISAI=true electron-forge publish",
     "lint": "eslint --ext .ts .",
     "postinstall": "husky install",
-    "api:build": "aspida",
-    "open-content-directory-for-windows": "start %APPDATA%/trap-collection/contents"
+    "open-content-directory-for-windows": "start %APPDATA%/trap-collection/contents",
+    "api:build": "openapi-generator-cli generate -g typescript-axios -i ./docs/openapi.yml -o ./src/lib/typescript-axios"
   },
   "keywords": [],
   "author": {
@@ -89,6 +89,7 @@
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@electron-forge/plugin-webpack": "6.0.0-beta.54",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
+    "@openapitools/openapi-generator-cli": "^2.2.6",
     "@types/electron-store": "^3.2.0",
     "@types/nedb": "^1.8.11",
     "@types/react": "^17.0.5",
@@ -120,7 +121,6 @@
     "typescript": "4.2.4"
   },
   "dependencies": {
-    "@aspida/axios": "^1.7.0",
     "ajv": "^8.3.0",
     "axios": "^0.21.1",
     "cross-env": "^7.0.3",

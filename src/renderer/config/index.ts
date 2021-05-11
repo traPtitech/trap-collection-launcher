@@ -2,15 +2,18 @@ export * as lang from './lang';
 
 export type Config = {
   lng: string;
-  hasSettingPage: boolean;
+  hasSeatSetting: boolean;
+  hasQuestionnaire: boolean;
 };
 
 export const generalConfig: Config = {
   lng: 'en',
-  hasSettingPage: false,
+  hasSeatSetting: false,
+  hasQuestionnaire: false,
 };
 
 export const koudaisaiConfig: Config = {
   lng: 'ja',
-  hasSettingPage: true,
+  hasSeatSetting: true,
+  hasQuestionnaire: true,
 };
