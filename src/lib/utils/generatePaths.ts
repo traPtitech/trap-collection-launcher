@@ -11,9 +11,9 @@ import { app } from 'electron';
 export const generateLocalPath = (
   type: 'artworks' | 'games',
   id: string,
-  file: string
+  file?: string
 ): string => {
-  return path.join(type, id, file);
+  return file ? path.join(type, id, file) : path.join(type, id);
 };
 
 /**
