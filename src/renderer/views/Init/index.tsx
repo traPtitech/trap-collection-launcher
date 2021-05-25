@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
+import { Config } from '@/renderer/config';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 import { useConfig } from '@/renderer/contexts/Config';
 
@@ -38,14 +39,14 @@ const Loading = styled.p`
   animation: ${changeOpacity} 3s ease-in-out infinite;
 `;
 
-const isInitialized = async (hasSeatSetting: boolean): Promise<boolean> => {
+const isInitialized = async (config: Config): Promise<boolean> => {
   const settings = await Promise.all([
     window.TraPCollectionAPI.invoke.getProductKey(),
     window.TraPCollectionAPI.invoke.getSeatId(),
     window.TraPCollectionAPI.invoke.getSeatVersionId(),
   ]);
 
-  if (!hasSeatSetting) {
+  if (!config.hasSeatSetting) {
     return settings[0] !== undefined;
   }
 
@@ -54,25 +55,23 @@ const isInitialized = async (hasSeatSetting: boolean): Promise<boolean> => {
 
 const LoadingPage: React.FC = () => {
   useBackgroundVideo();
-  const { hasSeatSetting } = useConfig();
+  const config = useConfig();
   const [loading, setLoading] = useState(true);
 
   const history = useHistory();
   useEffect(() => {
-    isInitialized(hasSeatSetting).then((b) => {
+    isInitialized(config).then((b) => {
       if (b) {
         history.push('/loading');
       } else {
         setLoading(false);
       }
     });
-  }, [history, hasSeatSetting]);
+  }, [history, config]);
 
-  let content: JSX.Element | null;
-  if (loading) {
-    content = null;
-  } else {
-    content = <Loading>Form</Loading>;
+  let content: JSX.Element | null = null;
+  if (!loading) {
+    content = <Link to='/loading'>Go to loading page</Link>;
   }
 
   return <PageContainer>{content}</PageContainer>;
