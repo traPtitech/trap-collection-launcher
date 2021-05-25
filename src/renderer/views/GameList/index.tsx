@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import GameList from '@/renderer/components/GameList/GameList';
+import GameList from './GameList';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 import { useConfig } from '@/renderer/contexts/Config';
 
