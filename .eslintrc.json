@@ -17,6 +17,7 @@
   ],
   "rules": {
     "react/prop-types": 0,
+    "react/display-name": 0,
     "import/order": ["error", { "alphabetize": { "order": "asc" } }]
   },
   "parser": "@typescript-eslint/parser",
