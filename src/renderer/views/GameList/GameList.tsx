@@ -6,6 +6,7 @@ import IconButton from '@/renderer/components/IconButton';
 
 const GameListContainer = styled.div`
   width: 100%;
+  position: relative;
 `;
 
 const fadeOpacity = keyframes`
@@ -48,6 +49,30 @@ const GameListItemContainer = styled.div`
   justify-content: center;
 `;
 
+const ArrowContainer = styled.div`
+  position: absolute;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+`;
+
+const NextArrow = styled(IconButton).attrs({
+  size: 48,
+})`
+  position: relative;
+  float: right;
+  top: calc(50% - 24px);
+  right: -48px;
+`;
+
+const PrevArrow = styled(IconButton).attrs({
+  size: 48,
+})`
+  position: relative;
+  top: calc(50% - 24px);
+  left: -48px;
+`;
+
 type Props = {
   games: TraPCollection.GameInfo[];
   onGameHovered: (game: TraPCollection.GameInfo) => void;
@@ -64,20 +89,10 @@ const settings: Settings = {
   rows: 2,
   slidesPerRow: 2,
   dots: true,
-  nextArrow: (
-    <IconButton
-      iconName='chevron-forward-outline'
-      style={{ display: 'block' }}
-    />
-  ),
-  prevArrow: (
-    <IconButton iconName='chevron-back-outline' style={{ display: 'block ' }} />
-  ),
+  arrows: false,
 };
 
-const useScrollToSlide = (): React.Ref<Slider> => {
-  const ref = useRef<Slider>(null);
-
+const useScrollToSlide = (ref: React.RefObject<Slider>): void => {
   useEffect(() => {
     const listener = (ev: WheelEvent): void => {
       if (ev.deltaY > 0) {
@@ -91,9 +106,7 @@ const useScrollToSlide = (): React.Ref<Slider> => {
     return () => {
       window.removeEventListener('wheel', listener);
     };
-  }, []);
-
-  return ref;
+  }, [ref]);
 };
 
 const GameList: React.FC<Props> = ({
@@ -101,10 +114,21 @@ const GameList: React.FC<Props> = ({
   onGameUnhovered,
   onGameHovered,
 }) => {
-  const ref = useScrollToSlide();
+  const ref = useRef<Slider>(null);
+  useScrollToSlide(ref);
 
   return (
     <GameListContainer>
+      <ArrowContainer>
+        <PrevArrow
+          iconName='chevron-back-outline'
+          onClick={ref.current?.slickPrev}
+        />
+        <NextArrow
+          iconName='chevron-forward-outline'
+          onClick={ref.current?.slickNext}
+        />
+      </ArrowContainer>
       <StyledSlider ref={ref} {...settings}>
         {games.map((game) => (
           <div key={game.id}>
