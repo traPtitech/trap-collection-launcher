@@ -1,7 +1,9 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import LaunchButton from '@/renderer/components/GameDetail/LaunchButton';
+import Button from '@/renderer/components/Button';
+import IconButton from '@/renderer/components/IconButton';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
@@ -27,18 +29,13 @@ const Description = styled.p`
   margin-bottom: 30px;
 `;
 
-const BackButton = styled(Link)`
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: -8px;
-  text-decoration: none;
-  color: white;
-`;
-
 const GameDetail: React.FC = () => {
   const {
     state: { game },
   } = useLocation<{ game: TraPCollection.GameInfo }>();
+  const history = useHistory();
+  const { t } = useTranslation();
+
   useBackgroundVideo(game.video);
 
   const launch = () => {
@@ -48,14 +45,18 @@ const GameDetail: React.FC = () => {
   return (
     <PageContainer>
       <Header>
-        <BackButton to='/game'>
-          <ion-icon name='chevron-back' size='large' />
-        </BackButton>
+        <IconButton
+          iconName='chevron-back'
+          size='large'
+          onClick={() => history.push('/game')}
+        />
       </Header>
       <Content>
         <PageTitle>{game.name}</PageTitle>
         <Description>{game.description}</Description>
-        <LaunchButton onClick={launch} />
+        <Button outlined iconName='play' onClick={launch}>
+          {t('launch')}!
+        </Button>
       </Content>
     </PageContainer>
   );

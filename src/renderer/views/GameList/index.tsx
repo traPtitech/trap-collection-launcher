@@ -5,18 +5,21 @@ import styled from 'styled-components';
 import GameList from './GameList';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 import { useConfig } from '@/renderer/contexts/Config';
+import { useDebounce } from '@/renderer/hooks/useDebounce';
 
 const PageContainer = styled.div`
   width: 75vw;
   height: 100vh;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+  padding-top: 50px;
 `;
 
-const Content = styled.main`
-  height: calc(100% - 50px);
-  position: relative;
+const Title = styled.h1`
+  height: 60px;
+  font-size: 36px;
 `;
+
+const Content = styled.main``;
 
 const Footer = styled.footer`
   position: fixed;
@@ -65,6 +68,7 @@ const openQuestionnaire = (): void => {
 const GameListPage: React.FC = () => {
   const games = useGames();
   const [game, setGame] = useState<TraPCollection.GameInfo | null>(null);
+  const gameName = useDebounce(game?.name, 25);
   useBackgroundVideo(game?.video);
   const { hasQuestionnaire } = useConfig();
 
@@ -72,6 +76,7 @@ const GameListPage: React.FC = () => {
 
   return (
     <PageContainer>
+      <Title>{gameName ?? 'Game detail'}</Title>
       <Content>
         <GameList
           games={games}

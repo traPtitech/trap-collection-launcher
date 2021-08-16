@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, Link } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
+import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
+import FormInput from '@/renderer/components/FormInput';
+import FormSubmitButton from '@/renderer/components/FormSubmitButton';
 import { Config } from '@/renderer/config';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 import { useConfig } from '@/renderer/contexts/Config';
@@ -15,28 +17,16 @@ const PageContainer = styled.div`
   position: relative;
 `;
 
-const changeOpacity = keyframes`
-  0% {
-    opacity: 0.5;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0.5;
-  }
+const Form = styled.form`
+  margin-top: 30px;
 `;
 
-const Loading = styled.p`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-size: 24px;
-  animation: ${changeOpacity} 3s ease-in-out infinite;
+const Input = styled(FormInput)`
+  margin: 8px 0px;
+`;
+
+const Submit = styled(FormSubmitButton)`
+  margin: 8px 0px;
 `;
 
 const isInitialized = async (config: Config): Promise<boolean> => {
@@ -69,12 +59,29 @@ const LoadingPage: React.FC = () => {
     });
   }, [history, config]);
 
-  let content: JSX.Element | null = null;
-  if (!loading) {
-    content = <Link to='/loading'>Go to loading page</Link>;
+  if (loading) {
+    return null;
   }
 
-  return <PageContainer>{content}</PageContainer>;
+  return (
+    <PageContainer>
+      <h1>Please input a product key and seat IDs.</h1>
+      <Form onSubmit={() => history.push('/loading')}>
+        <Input
+          label='Product key'
+          name='productKey'
+          placeholder='Product Key'
+        />
+        <Input label='Seat ID' name='seatId' placeholder='Seat ID' />
+        <Input
+          label='Seat Version ID'
+          name='seatVersionId'
+          placeholder='Seat Version ID'
+        />
+        <Submit outlined value='Submit' />
+      </Form>
+    </PageContainer>
+  );
 };
 
 export default LoadingPage;

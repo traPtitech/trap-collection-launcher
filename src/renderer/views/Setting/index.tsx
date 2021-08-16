@@ -1,7 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import IconButton from '@/renderer/components/IconButton';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
@@ -16,14 +17,6 @@ const PageContainer = styled.div`
 const Header = styled.header`
   padding: 20px 0;
   height: 80px;
-`;
-
-const BackButton = styled(Link)`
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: -8px;
-  text-decoration: none;
-  color: white;
 `;
 
 const Content = styled.div`
@@ -42,13 +35,16 @@ const SettingPage: React.FC = () => {
   useBackgroundVideo();
 
   const { t } = useTranslation();
+  const history = useHistory();
 
   return (
     <PageContainer>
       <Header>
-        <BackButton to='/title'>
-          <ion-icon name='chevron-back' size='large' />
-        </BackButton>
+        <IconButton
+          iconName='chevron-back'
+          size='large'
+          onClick={() => history.push('/title')}
+        />
       </Header>
       <Content>
         <PageTitle>{t('setting')}</PageTitle>

@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ButtonContainer = styled.button`
+const ButtonContainer = styled.button<{ outlined?: boolean }>`
   color: white;
+  text-decoration: none;
   background-color: transparent;
   padding: 4px 8px;
-  border: 2px solid white;
+  border-style: solid;
+  border-width: 2px;
+  border-color: ${(props) => (props.outlined ? 'white' : 'transparent')};
   border-radius: 4px;
   transition: 100ms transform;
   cursor: pointer;
@@ -16,6 +19,7 @@ const ButtonContainer = styled.button`
 `;
 
 const ButtonIcon = styled.span`
+  vertical-align: middle;
   margin-right: 4px;
 `;
 
@@ -27,15 +31,17 @@ export type Props = React.DetailedHTMLProps<
 > & {
   as?: keyof JSX.IntrinsicElements | React.ComponentType<unknown>;
   iconName?: string;
+  outlined?: boolean;
 };
 
 const Button = React.forwardRef<HTMLButtonElement, Props>(
-  ({ as, className, iconName, children, ...props }, ref) => (
+  ({ as, className, iconName, outlined, children, ...props }, ref) => (
     <ButtonContainer
       {...props}
       ref={ref}
       forwardedAs={as}
       className={className}
+      outlined={outlined}
     >
       {iconName && (
         <ButtonIcon>

@@ -2,13 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import Slider, { Settings } from 'react-slick';
 import styled, { keyframes } from 'styled-components';
 import GameListItem from './GameListItem';
+import IconButton from '@/renderer/components/IconButton';
 
 const GameListContainer = styled.div`
   width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 `;
 
 const fadeOpacity = keyframes`
@@ -67,6 +64,15 @@ const settings: Settings = {
   rows: 2,
   slidesPerRow: 2,
   dots: true,
+  nextArrow: (
+    <IconButton
+      iconName='chevron-forward-outline'
+      style={{ display: 'block' }}
+    />
+  ),
+  prevArrow: (
+    <IconButton iconName='chevron-back-outline' style={{ display: 'block ' }} />
+  ),
 };
 
 const useScrollToSlide = (): React.Ref<Slider> => {
