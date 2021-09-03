@@ -32,13 +32,7 @@ const Submit = styled(FormSubmitButton)`
 const isInitialized = async (config: Config): Promise<boolean> => {
   const settings = await Promise.all([
     window.TraPCollectionAPI.invoke.getProductKey(),
-    window.TraPCollectionAPI.invoke.getSeatId(),
-    window.TraPCollectionAPI.invoke.getSeatVersionId(),
   ]);
-
-  if (!config.hasSeatSetting) {
-    return settings[0] !== undefined;
-  }
 
   return settings.every((v) => v !== undefined);
 };
@@ -71,12 +65,6 @@ const LoadingPage: React.FC = () => {
           label='Product key'
           name='productKey'
           placeholder='Product Key'
-        />
-        <Input label='Seat ID' name='seatId' placeholder='Seat ID' />
-        <Input
-          label='Seat Version ID'
-          name='seatVersionId'
-          placeholder='Seat Version ID'
         />
         <Submit outlined value='Submit' />
       </Form>
