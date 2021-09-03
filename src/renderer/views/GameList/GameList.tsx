@@ -51,7 +51,6 @@ const GameListItemContainer = styled.div`
 
 const ArrowContainer = styled.div`
   position: absolute;
-  z-index: 1;
   height: 100%;
   width: 100%;
 `;
