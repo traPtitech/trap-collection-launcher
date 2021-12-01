@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
@@ -40,12 +40,12 @@ const Loading = styled.p`
 const LoadingPage: React.FC = () => {
   useBackgroundVideo();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
-      history.push('/title');
+      navigate('/title');
     }, 2500);
-  }, [history]);
+  }, [navigate]);
 
   return (
     <PageContainer>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '@/renderer/components/Button';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
@@ -48,7 +48,7 @@ const TitlePage: React.FC = () => {
   useBackgroundVideo();
 
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <PageContainer>
@@ -56,15 +56,12 @@ const TitlePage: React.FC = () => {
         <Title>
           traP Collection<Version>v3</Version>
         </Title>
-        <Button outlined iconName='play' onClick={() => history.push('/game')}>
+        <Button outlined iconName='play' onClick={() => navigate('/game')}>
           {t('start')}!
         </Button>
       </TitleContainer>
       <Footer>
-        <Button
-          iconName='settings-sharp'
-          onClick={() => history.push('/setting')}
-        >
+        <Button iconName='settings-sharp' onClick={() => navigate('/setting')}>
           {t('setting')}
         </Button>
       </Footer>

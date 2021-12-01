@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import IconButton from '@/renderer/components/IconButton';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
@@ -35,7 +35,7 @@ const SettingPage: React.FC = () => {
   useBackgroundVideo();
 
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <PageContainer>
@@ -43,7 +43,7 @@ const SettingPage: React.FC = () => {
         <IconButton
           iconName='chevron-back'
           size='large'
-          onClick={() => history.push('/title')}
+          onClick={() => navigate('/title')}
         />
       </Header>
       <Content>

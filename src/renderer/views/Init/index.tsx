@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import FormInput from '@/renderer/components/FormInput';
 import FormSubmitButton from '@/renderer/components/FormSubmitButton';
@@ -42,16 +42,16 @@ const LoadingPage: React.FC = () => {
   const config = useConfig();
   const [loading, setLoading] = useState(true);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   useEffect(() => {
     isInitialized(config).then((b) => {
       if (b) {
-        history.push('/loading');
+        navigate('/loading');
       } else {
         setLoading(false);
       }
     });
-  }, [history, config]);
+  }, [navigate, config]);
 
   if (loading) {
     return null;
@@ -60,7 +60,7 @@ const LoadingPage: React.FC = () => {
   return (
     <PageContainer>
       <h1>Please input a product key and seat IDs.</h1>
-      <Form onSubmit={() => history.push('/loading')}>
+      <Form onSubmit={() => navigate('/loading')}>
         <Input
           label='Product key'
           name='productKey'

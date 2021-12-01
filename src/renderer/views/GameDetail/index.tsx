@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '@/renderer/components/Button';
 import IconButton from '@/renderer/components/IconButton';
@@ -32,8 +32,8 @@ const Description = styled.p`
 const GameDetail: React.FC = () => {
   const {
     state: { game },
-  } = useLocation<{ game: TraPCollection.GameInfo }>();
-  const history = useHistory();
+  }: { state: { game: TraPCollection.GameInfo } } = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   useBackgroundVideo(game.video);
@@ -48,7 +48,7 @@ const GameDetail: React.FC = () => {
         <IconButton
           iconName='chevron-back'
           size='large'
-          onClick={() => history.push('/game')}
+          onClick={() => navigate('/game')}
         />
       </Header>
       <Content>
