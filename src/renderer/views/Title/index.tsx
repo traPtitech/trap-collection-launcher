@@ -1,7 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Button from '@/renderer/components/Button';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
 
 const PageContainer = styled.div`
@@ -33,64 +34,21 @@ const Version = styled.span`
   font-size: 32px;
 `;
 
-const StartButton = styled(Link)`
-  text-decoration: none;
-  color: white;
-  font-size: 20px;
-  padding: 6px 12px;
-  border: 2px solid white;
-  border-radius: 4px;
-  transition: 100ms transform;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
-
-const StartButtonIcon = styled.span`
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 10px;
-`;
-
-const StartButtonText = styled.span`
-  margin-right: 10px;
-`;
-
 const Footer = styled.footer`
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
   padding: 20px;
-`;
-
-const SettingButton = styled(Link)`
-  float: right;
-  text-decoration: none;
-  color: white;
-  font-size: 16px;
-  transition: 100ms transform;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
-
-const SettingButtonIcon = styled.span`
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 10px;
-`;
-
-const SettingButtonText = styled.span`
-  margin-right: 10px;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const TitlePage: React.FC = () => {
   useBackgroundVideo();
 
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <PageContainer>
@@ -98,20 +56,14 @@ const TitlePage: React.FC = () => {
         <Title>
           traP Collection<Version>v3</Version>
         </Title>
-        <StartButton to='/game'>
-          <StartButtonIcon>
-            <ion-icon name='play' />
-          </StartButtonIcon>
-          <StartButtonText>{t('start')}!</StartButtonText>
-        </StartButton>
+        <Button outlined iconName='play' onClick={() => navigate('/game')}>
+          {t('start')}!
+        </Button>
       </TitleContainer>
       <Footer>
-        <SettingButton to='/setting'>
-          <SettingButtonIcon>
-            <ion-icon name='settings-sharp' />
-          </SettingButtonIcon>
-          <SettingButtonText>{t('setting')}</SettingButtonText>
-        </SettingButton>
+        <Button iconName='settings-sharp' onClick={() => navigate('/setting')}>
+          {t('setting')}
+        </Button>
       </Footer>
     </PageContainer>
   );

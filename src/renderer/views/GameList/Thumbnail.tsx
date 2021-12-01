@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import { useDebounce } from '@/renderer/hooks/useDebounce';
 
 const ThumbnailVideo = styled.video`
   object-fit: cover;
@@ -19,9 +20,10 @@ const Thumbnail: React.FC<Props> = ({
   height,
   imgSrc,
   videoSrc,
-  showVideo,
+  showVideo: _showVideo,
 }) => {
   const ref = useRef<HTMLVideoElement>(null);
+  const showVideo = useDebounce(_showVideo, 100);
 
   useEffect(() => {
     const elem = ref?.current;

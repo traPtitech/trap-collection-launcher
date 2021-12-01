@@ -12,4 +12,6 @@ declare type IoniconProps = {
   name: string;
   size?: 'small' | 'large';
   color?: string;
+  className?: string;
+  style?: React.CSSProperties;
 };

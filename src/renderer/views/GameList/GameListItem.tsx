@@ -47,8 +47,8 @@ const GameListItem: React.FC<Props> = ({
       <Link
         to={{
           pathname: '/game/detail',
-          state: { game },
         }}
+        state={{ game }}
         onAuxClick={preventDefault}
       >
         <Thumbnail

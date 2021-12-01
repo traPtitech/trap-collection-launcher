@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemoryRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Background from '@/renderer/components/Background';
 import * as config from '@/renderer/config';
 import { BackgroundProvider } from '@/renderer/contexts/Background';
@@ -7,6 +7,7 @@ import { ConfigProvider } from '@/renderer/contexts/Config';
 import GlobalStyle from '@/renderer/styles/GlobalStyle';
 import GameDetailPage from '@/renderer/views/GameDetail';
 import GameListPage from '@/renderer/views/GameList';
+import InitPage from '@/renderer/views/Init';
 import LoadingPage from '@/renderer/views/Loading';
 import SettingPage from '@/renderer/views/Setting';
 import TitlePage from '@/renderer/views/Title';
@@ -14,31 +15,15 @@ import TitlePage from '@/renderer/views/Title';
 const Navigation: React.FC = () => {
   return (
     <MemoryRouter>
-      <Switch>
-        <Route exact path='/'>
-          <Redirect to='/loading' />
-        </Route>
-
-        <Route exact path='/loading'>
-          <LoadingPage />
-        </Route>
-
-        <Route exact path='/title'>
-          <TitlePage />
-        </Route>
-
-        <Route exact path='/game'>
-          <GameListPage />
-        </Route>
-
-        <Route exact path='/game/detail'>
-          <GameDetailPage />
-        </Route>
-
-        <Route exact path='/setting'>
-          <SettingPage />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path='/' element={<Navigate to='/init' />} />
+        <Route path='/init' element={<InitPage />} />
+        <Route path='/loading' element={<LoadingPage />} />
+        <Route path='/title' element={<TitlePage />} />
+        <Route path='/game' element={<GameListPage />} />
+        <Route path='/game/detail' element={<GameDetailPage />} />
+        <Route path='/setting' element={<SettingPage />} />
+      </Routes>
     </MemoryRouter>
   );
 };
