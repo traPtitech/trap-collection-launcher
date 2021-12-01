@@ -1,4 +1,5 @@
-import { WriteStream, createWriteStream } from 'fs';
+import { WriteStream, createWriteStream, promises } from 'fs';
+import decompress from 'decompress';
 import { version } from '@/config';
 import {
   getGameFile,
@@ -19,12 +20,23 @@ export const fetch = async (): Promise<void> => {
     ...data.games.map(async ({ id }) => {
       const { data } = await getGameFile(id);
       const { data: infoData } = await getGameInfo(id);
+
+      // mkdirp
+      await promises.mkdir(generateLocalPath('games', id), { recursive: true });
+
+      // stream
       if (!(data instanceof WriteStream))
         throw new Error('data is not WriteStream');
       data.pipe(
         createWriteStream(
           generateAbsolutePath(generateLocalPath('games', id, 'game.zip'))
         )
+      );
+
+      // decompress
+      decompress(
+        generateLocalPath('games', id, 'game.zip'),
+        generateLocalPath('games', id)
       );
     }),
     ...data.games.map(async ({ id }) => {
