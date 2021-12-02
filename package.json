@@ -73,14 +73,14 @@
         {
           "name": "@electron-forge/publisher-github",
           "platforms": [
-            "win32"
+            "win32",
+            "darwin"
           ],
           "config": {
             "repository": {
               "owner": "traPtitech",
               "name": "trap-collection-launcher"
-            },
-            "prerelease": true
+            }
           }
         }
       ]
