@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Overlay = styled.div`
+type OverlayProps = {
+  isOpen?: boolean;
+};
+
+const Overlay = styled.div<OverlayProps>`
   position: fixed;
   left: 0;
   right: 0;
@@ -13,7 +17,26 @@ const Overlay = styled.div`
   align-items: center;
   padding: 0;
   z-index: 2;
+  transition: opacity 0.08s, visibility 0.08s;
+  visibility: ${(props) => {
+    if (props.isOpen) {
+      return 'visible';
+    } else {
+      return 'hidden';
+    }
+  }};
+  opacity: ${(props) => {
+    if (props.isOpen) {
+      return '1';
+    } else {
+      return '0';
+    }
+  }};
 `;
+
+Overlay.defaultProps = {
+  isOpen: false,
+};
 
 const Display = styled.div`
   position: relative;
@@ -45,18 +68,27 @@ const buttonCustomProps = (props: ButtonProps) => {
 border-width: 0;
 background-color: #005bac;
 color: #ffffff;
+&:hover {
+  background-color: #002f58;
+}
 `;
     case 'warning':
       return `
 border-width: 0;
 background-color: #f26451;
 color: #ffffff;
+&:hover {
+  background-color:#bb3e2e;
+}
 `;
     case 'cancel':
       return `
 border-width: 0.125rem;
 background-color: #ffffff;
 color: #444444;
+&:hover {
+  background-color: #dadada;
+}
 `;
   }
 };
@@ -73,7 +105,10 @@ const Button = styled.button<ButtonProps>`
   align-items: center;
   border: solid;
   border-color: #444444;
-
+  &:hover {
+    cursor: pointer;
+  }
+  transition: background-color 0.06s;
   ${buttonCustomProps}
 `;
 
@@ -94,11 +129,19 @@ export type Props = {
   onOk?: React.MouseEventHandler<HTMLButtonElement> | undefined;
   okButtonText?: string;
   title?: string;
+  isOpen?: boolean;
 };
 
-const Modal = ({ children, onCancel, onOk, okButtonText, title }: Props) => {
+const Modal = ({
+  children,
+  onCancel,
+  onOk,
+  okButtonText,
+  title,
+  isOpen,
+}: Props) => {
   return (
-    <Overlay>
+    <Overlay isOpen={isOpen}>
       <Display>
         <Contents>
           <Title>{title}</Title>
