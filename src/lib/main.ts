@@ -26,10 +26,10 @@ app.whenReady().then(() => {
 const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    height: 600,
-    width: 800,
-    minHeight: 600,
-    minWidth: 800,
+    height: 720,
+    width: 1280,
+    minHeight: 720,
+    minWidth: 1280,
     // fullscreen: true,
     webPreferences: {
       webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
