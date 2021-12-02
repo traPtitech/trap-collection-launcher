@@ -68,6 +68,21 @@
             }
           }
         ]
+      ],
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "platforms": [
+            "win32"
+          ],
+          "config": {
+            "repository": {
+              "owner": "traPtitech",
+              "name": "trap-collection-launcher"
+            },
+            "prerelease": true
+          }
+        }
       ]
     }
   },
@@ -88,6 +103,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
     "@electron-forge/maker-zip": "^6.0.0-beta.61",
     "@electron-forge/plugin-webpack": "6.0.0-beta.61",
+    "@electron-forge/publisher-github": "^6.0.0-beta.61",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@openapitools/openapi-generator-cli": "^2.4.18",
     "@types/decompress": "^4.2.3",
