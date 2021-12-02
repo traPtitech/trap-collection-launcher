@@ -90,19 +90,13 @@ const Title = styled.div`
 export type Props = {
   children: React.ReactNode;
   modalType?: 'information' | 'warning';
-  onModalCancel?: React.MouseEventHandler<HTMLButtonElement> | undefined;
-  onModalOk?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  onCancel?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  onOk?: React.MouseEventHandler<HTMLButtonElement> | undefined;
   okButtonText?: string;
   title?: string;
 };
 
-const Modal = ({
-  children,
-  onModalCancel,
-  onModalOk,
-  okButtonText,
-  title,
-}: Props) => {
+const Modal = ({ children, onCancel, onOk, okButtonText, title }: Props) => {
   return (
     <Overlay>
       <Display>
@@ -110,10 +104,10 @@ const Modal = ({
           <Title>{title}</Title>
           <div>{children}</div>
           <Buttons>
-            <Button buttonType='cancel' onClick={onModalCancel}>
+            <Button buttonType='cancel' onClick={onCancel}>
               キャンセル
             </Button>
-            <Button buttonType='information' onClick={onModalOk}>
+            <Button buttonType='information' onClick={onOk}>
               {okButtonText}
             </Button>
           </Buttons>
