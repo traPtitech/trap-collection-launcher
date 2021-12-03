@@ -17,7 +17,7 @@ const Overlay = styled.div<OverlayProps>`
   align-items: center;
   padding: 0;
   z-index: 2;
-  transition: opacity 0.1s ease-out, visibility 0.1s;
+  transition: opacity 0.06s ease-out, visibility 0.06s;
 
   visibility: ${(props) => {
     if (props.isOpen) {
@@ -46,7 +46,7 @@ const Display = styled.div<OverlayProps>`
   width: 37.5rem; //600px
   height: auto;
   border-radius: 0.5rem; //8px
-  transition: transform 0.1s ease-out;
+  transition: transform 0.06s ease-out;
   z-index: 3;
 
   transform: scale(
@@ -54,7 +54,7 @@ const Display = styled.div<OverlayProps>`
       if (props.isOpen) {
         return '1.0';
       } else {
-        return '0.9';
+        return '0.98';
       }
     }}
   );
@@ -82,7 +82,7 @@ border-width: 0;
 background-color: #005bac;
 color: #ffffff;
 &:hover {
-  background-color: #002f58;
+  background-color: #004D93;
 }
 `;
     case 'warning':
@@ -91,7 +91,7 @@ border-width: 0;
 background-color: #f26451;
 color: #ffffff;
 &:hover {
-  background-color:#bb3e2e;
+  background-color:#CE5545;
 }
 `;
     case 'cancel':
@@ -150,14 +150,6 @@ export type Props = {
   isOpen?: boolean;
 };
 
-const stopPropagationHandler = (
-  e: React.MouseEvent<ModalElement, MouseEvent>,
-  handler: ModalEventHandler | undefined
-) => {
-  e.stopPropagation();
-  handler ? handler(e) : undefined;
-};
-
 const Modal = ({
   children,
   onCancel,
@@ -165,26 +157,25 @@ const Modal = ({
   okButtonText,
   title,
   isOpen,
+  modalType,
 }: Props) => {
   return (
-    <div onClick={(e) => stopPropagationHandler(e, onCancel)}>
+    <div onClick={onCancel}>
       <Overlay isOpen={isOpen}>
-        <div onClick={(e) => stopPropagationHandler(e, undefined)}>
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <Display isOpen={isOpen}>
             <Contents>
               <Title>{title}</Title>
               <div>{children}</div>
               <Buttons>
-                <Button
-                  buttonType='cancel'
-                  onClick={(e) => stopPropagationHandler(e, onCancel)}
-                >
+                <Button buttonType='cancel' onClick={onCancel}>
                   キャンセル
                 </Button>
-                <Button
-                  buttonType='information'
-                  onClick={(e) => stopPropagationHandler(e, onOk)}
-                >
+                <Button buttonType={modalType ?? 'information'} onClick={onOk}>
                   {okButtonText}
                 </Button>
               </Buttons>
