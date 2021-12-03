@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 type OverlayProps = {
@@ -19,20 +19,8 @@ const Overlay = styled.div<OverlayProps>`
   z-index: 2;
   transition: opacity 0.06s ease-out, visibility 0.06s;
 
-  visibility: ${(props) => {
-    if (props.isOpen) {
-      return 'visible';
-    } else {
-      return 'hidden';
-    }
-  }};
-  opacity: ${(props) => {
-    if (props.isOpen) {
-      return '1';
-    } else {
-      return '0';
-    }
-  }};
+  visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.isOpen ? '1' : '0')};
 `;
 
 Overlay.defaultProps = {
@@ -49,15 +37,7 @@ const Display = styled.div<OverlayProps>`
   transition: transform 0.06s ease-out;
   z-index: 3;
 
-  transform: scale(
-    ${(props) => {
-      if (props.isOpen) {
-        return '1.0';
-      } else {
-        return '0.98';
-      }
-    }}
-  );
+  transform: scale(${(props) => (props.isOpen ? '1.0' : '0.98')});
 `;
 
 const Contents = styled.div`
@@ -81,7 +61,7 @@ const buttonCustomProps = (props: ButtonProps) => {
 border-width: 0;
 background-color: #005bac;
 color: #ffffff;
-&:hover {
+&:hover, &:focus {
   background-color: #004D93;
 }
 `;
@@ -90,7 +70,7 @@ color: #ffffff;
 border-width: 0;
 background-color: #f26451;
 color: #ffffff;
-&:hover {
+&:hover, &:focus {
   background-color:#CE5545;
 }
 `;
@@ -99,7 +79,7 @@ color: #ffffff;
 border-width: 0.125rem;
 background-color: #ffffff;
 color: #444444;
-&:hover {
+&:hover, &:focus {
   background-color: #dadada;
 }
 `;
@@ -120,6 +100,9 @@ const Button = styled.button<ButtonProps>`
   border-color: #444444;
   &:hover {
     cursor: pointer;
+  }
+  &:focus {
+    outline: none;
   }
   transition: background-color 0.06s ease-out;
   ${buttonCustomProps}
@@ -159,6 +142,11 @@ const Modal = ({
   isOpen,
   modalType,
 }: Props) => {
+  useEffect(() => {
+    const active = document.activeElement as HTMLElement;
+    active && isOpen && active.blur();
+  }, [isOpen]);
+
   return (
     <div onClick={onCancel}>
       <Overlay isOpen={isOpen}>
