@@ -17,7 +17,8 @@ const Overlay = styled.div<OverlayProps>`
   align-items: center;
   padding: 0;
   z-index: 2;
-  transition: opacity 0.08s, visibility 0.08s;
+  transition: opacity 0.1s ease-out, visibility 0.1s;
+
   visibility: ${(props) => {
     if (props.isOpen) {
       return 'visible';
@@ -38,13 +39,25 @@ Overlay.defaultProps = {
   isOpen: false,
 };
 
-const Display = styled.div`
+const Display = styled.div<OverlayProps>`
   position: relative;
   background-color: #f3f3f3;
   padding: 1.69rem; //27px
   width: 37.5rem; //600px
   height: auto;
   border-radius: 0.5rem; //8px
+  transition: transform 0.1s ease-out;
+  z-index: 3;
+
+  transform: scale(
+    ${(props) => {
+      if (props.isOpen) {
+        return '1.0';
+      } else {
+        return '0.9';
+      }
+    }}
+  );
 `;
 
 const Contents = styled.div`
@@ -108,7 +121,7 @@ const Button = styled.button<ButtonProps>`
   &:hover {
     cursor: pointer;
   }
-  transition: background-color 0.06s;
+  transition: background-color 0.1s ease-out;
   ${buttonCustomProps}
 `;
 
@@ -122,14 +135,27 @@ const Title = styled.div`
   font-size: 1.5rem;
 `;
 
+export type ModalElement = HTMLButtonElement | HTMLDivElement;
+export type ModalEventHandler = (
+  event: React.MouseEvent<ModalElement, MouseEvent>
+) => void;
+
 export type Props = {
   children: React.ReactNode;
   modalType?: 'information' | 'warning';
-  onCancel?: React.MouseEventHandler<HTMLButtonElement> | undefined;
-  onOk?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  onCancel?: ModalEventHandler | undefined;
+  onOk?: ModalEventHandler | undefined;
   okButtonText?: string;
   title?: string;
   isOpen?: boolean;
+};
+
+const stopPropagationHandler = (
+  e: React.MouseEvent<ModalElement, MouseEvent>,
+  handler: ModalEventHandler | undefined
+) => {
+  e.stopPropagation();
+  handler ? handler(e) : undefined;
 };
 
 const Modal = ({
@@ -141,22 +167,32 @@ const Modal = ({
   isOpen,
 }: Props) => {
   return (
-    <Overlay isOpen={isOpen}>
-      <Display>
-        <Contents>
-          <Title>{title}</Title>
-          <div>{children}</div>
-          <Buttons>
-            <Button buttonType='cancel' onClick={onCancel}>
-              キャンセル
-            </Button>
-            <Button buttonType='information' onClick={onOk}>
-              {okButtonText}
-            </Button>
-          </Buttons>
-        </Contents>
-      </Display>
-    </Overlay>
+    <div onClick={(e) => stopPropagationHandler(e, onCancel)}>
+      <Overlay isOpen={isOpen}>
+        <div onClick={(e) => stopPropagationHandler(e, undefined)}>
+          <Display isOpen={isOpen}>
+            <Contents>
+              <Title>{title}</Title>
+              <div>{children}</div>
+              <Buttons>
+                <Button
+                  buttonType='cancel'
+                  onClick={(e) => stopPropagationHandler(e, onCancel)}
+                >
+                  キャンセル
+                </Button>
+                <Button
+                  buttonType='information'
+                  onClick={(e) => stopPropagationHandler(e, onOk)}
+                >
+                  {okButtonText}
+                </Button>
+              </Buttons>
+            </Contents>
+          </Display>
+        </div>
+      </Overlay>
+    </div>
   );
 };
 
