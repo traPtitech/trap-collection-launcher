@@ -121,7 +121,7 @@ const Button = styled.button<ButtonProps>`
   &:hover {
     cursor: pointer;
   }
-  transition: background-color 0.1s ease-out;
+  transition: background-color 0.06s ease-out;
   ${buttonCustomProps}
 `;
 
