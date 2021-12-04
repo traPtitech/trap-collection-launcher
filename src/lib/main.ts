@@ -1,5 +1,7 @@
-import { app, BrowserWindow, protocol } from 'electron';
+import { app, BrowserWindow, protocol, autoUpdater } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+import logger from 'electron-log';
+import updater from 'update-electron-app';
 import ipcListen from '@/lib/ipc/ipcListen';
 import { store } from '@/lib/store';
 import { updateToken } from '@/lib/utils/updateToken';
@@ -84,3 +86,18 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+// const server = 'https://update.electronjs.org';
+// const feed = `${server}/traPtitech/trap-collection-launcher/${
+//   process.platform
+// }-${process.arch}/${app.getVersion()}`;
+// autoUpdater.setFeedURL({ url: feed });
+
+// setInterval(() => {
+//   autoUpdater.checkForUpdates();
+// }, 30 * 60 * 1000);
+
+updater({
+  repo: 'traPtitech/trap-collection-launcher',
+  updateInterval: '1 hour',
+  logger: logger,
+});

@@ -149,6 +149,7 @@
     "axios": "^0.24.0",
     "cross-env": "^7.0.3",
     "decompress": "^4.2.1",
+    "electron-log": "^4.4.1",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
     "i18next": "^21.5.4",
@@ -157,6 +158,7 @@
     "react-i18next": "^11.14.3",
     "react-router-dom": "^6.0.2",
     "react-slick": "^0.28.1",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "update-electron-app": "^2.0.1"
   }
 }
