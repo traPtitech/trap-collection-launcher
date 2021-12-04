@@ -36,39 +36,16 @@ export type Props = {
 
 const computePos = (index: number, len: number) => {
   console.log(index);
-  switch (index) {
-    case 0:
-      return {
-        bottom: 3.25,
-        right: -10.125,
-        width: 12.5,
-        height: 12.5,
-      };
-    case 1:
-      return { bottom: 3.25, right: 4.875, width: 25, height: 25 };
-    case len - 1:
-      return {
-        bottom: 3.25,
-        right: -25.125,
-        width: 12.5,
-        height: 12.5,
-      };
-    case len - 2:
-      return {
-        bottom: 3.25,
-        right: (len - 4) * 15 + 32.375,
-        width: 12.5,
-        height: 12.5,
-        hidden: true,
-      };
-    default:
-      return {
-        bottom: 3.25,
-        right: (index - 2) * 15 + 32.375,
-        width: 12.5,
-        height: 12.5,
-      };
-  }
+  const right = 4.875 + 15 * (index - len) + (index >= len + 1 ? 12.5 : 0);
+  const hidden = index >= len * 2 + 1 || index <= 1;
+  const edge = index == len ? 25.0 : 12.5;
+  return {
+    bottom: 3.25,
+    right,
+    width: edge,
+    height: edge,
+    hidden,
+  };
 };
 
 const mod = (a: number, b: number) => {
@@ -76,12 +53,13 @@ const mod = (a: number, b: number) => {
 };
 
 const Slider = ({ selected, gameInfos }: Props) => {
-  const listImages = gameInfos?.map((gameInfo, index) => (
+  const gameInfos3 = gameInfos?.concat(gameInfos?.concat(gameInfos));
+  const listImages = gameInfos3?.map((gameInfo, index) => (
     <ImageWrapper
       key={index}
       {...computePos(
-        mod(selected - index + 1, gameInfos.length),
-        gameInfos.length
+        mod(selected - index + 1, gameInfos3.length),
+        gameInfos?.length || 0
       )}
     >
       <SliderImage src={gameInfo?.poster} />
