@@ -14,3 +14,16 @@ export const openQuestionnaireHandler = async (
     childWindow.loadURL(questionaireUrl);
   });
 };
+
+export const openHomePageHandler = async (
+  window: BrowserWindow
+): Promise<void> => {
+  ipcMain.handle('openHomePage', async () => {
+    const childWindow = new BrowserWindow({ parent: window });
+    const platform = process.platform;
+    if (platform !== 'win32' && platform !== 'darwin') {
+      return;
+    }
+    childWindow.loadURL(homePageUrl);
+  });
+};

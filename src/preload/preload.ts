@@ -39,6 +39,9 @@ const api: TraPCollection.API = {
     openQuestionnaire: async () => {
       return await ipcRenderer.invoke('openQuestionnaire');
     },
+    openHomePage: async () => {
+      return await ipcRenderer.invoke('openHomePage');
+    },
   },
   on: {
     progress: (listener) => {

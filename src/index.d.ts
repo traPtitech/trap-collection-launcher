@@ -4,6 +4,7 @@ declare namespace TraPCollection {
   type FromRenderer = {
     launch(gameId: string): Promise<void>;
     openQuestionnaire(): Promise<void>;
+    openHomePage(): Promise<void>;
     getGameInfo(): Promise<GameInfo[]>;
     checkJava(): Promise<boolean>;
     getProductKey(): Promise<string | undefined>;
