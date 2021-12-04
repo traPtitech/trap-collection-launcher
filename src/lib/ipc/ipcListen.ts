@@ -10,6 +10,7 @@ import setSeatIdHandler from './handler/setSeatIdHandler';
 import { setSeatVersionIdHandler } from './handler/setSeatVersionHandler';
 import { sitDownHandler } from './handler/sitDownHandler';
 import { sitUpHandler } from './handler/sitUpHandler';
+import { uninstallLauncherHandler } from './handler/uninstallLauncherHandler';
 import { ipcMain } from '@/common/typedIpc';
 import {
   openHomePageHandler,
@@ -30,6 +31,7 @@ export default ({ window }: { window: BrowserWindow }): void => {
   ipcMain.removeHandler('setSeatVersionId');
   ipcMain.removeHandler('sitDown');
   ipcMain.removeHandler('sitUp');
+  ipcMain.removeHandler('uninstallLauncher');
   launchHandler(window);
   openQuestionnaireHandler(window);
   openHomePageHandler(window);
@@ -43,4 +45,5 @@ export default ({ window }: { window: BrowserWindow }): void => {
   setSeatVersionIdHandler();
   sitDownHandler();
   sitUpHandler();
+  uninstallLauncherHandler();
 };

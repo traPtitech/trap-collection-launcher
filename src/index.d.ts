@@ -15,6 +15,7 @@ declare namespace TraPCollection {
     setSeatVersionId(seatVersionId: number): Promise<void>;
     sitDown(): Promise<void>;
     sitUp(): Promise<void>;
+    uninstallLauncher(): Promise<void>;
   };
   type FromMain = {
     progress(progress: Progress): void;

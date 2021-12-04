@@ -42,6 +42,9 @@ const api: TraPCollection.API = {
     openHomePage: async () => {
       return await ipcRenderer.invoke('openHomePage');
     },
+    uninstallLauncher: async () => {
+      return await ipcRenderer.invoke('uninstallLauncher');
+    },
   },
   on: {
     progress: (listener) => {
