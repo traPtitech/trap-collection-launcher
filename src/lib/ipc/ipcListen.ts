@@ -11,9 +11,11 @@ import { setSeatVersionIdHandler } from './handler/setSeatVersionHandler';
 import { sitDownHandler } from './handler/sitDownHandler';
 import { sitUpHandler } from './handler/sitUpHandler';
 import { ipcMain } from '@/common/typedIpc';
+import { openQuestionnaireHandler } from '@/lib/ipc/handler/openWebPageHandler';
 
 export default ({ window }: { window: BrowserWindow }): void => {
   ipcMain.removeHandler('launch');
+  ipcMain.removeHandler('openQuestionnaire');
   ipcMain.removeHandler('getGameInfo');
   ipcMain.removeHandler('checkJava');
   ipcMain.removeHandler('getProductKey');
@@ -25,6 +27,7 @@ export default ({ window }: { window: BrowserWindow }): void => {
   ipcMain.removeHandler('sitDown');
   ipcMain.removeHandler('sitUp');
   launchHandler(window);
+  openQuestionnaireHandler(window);
   getGameInfoHandler();
   checkJavaHandler();
   getProductKeyHandler();
