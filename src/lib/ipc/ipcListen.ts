@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron';
+import { postLauncherLoginHandler } from './handler/APIHandler';
 import { checkJavaHandler } from './handler/checkJavaHandler';
 import { getGameInfoHandler } from './handler/getGameInfoHandler';
 import { getProductKeyHandler } from './handler/getProductKeyHandler';
@@ -32,6 +33,7 @@ export default ({ window }: { window: BrowserWindow }): void => {
   ipcMain.removeHandler('sitDown');
   ipcMain.removeHandler('sitUp');
   ipcMain.removeHandler('uninstallLauncher');
+  ipcMain.removeHandler('postLauncherLogin');
   launchHandler(window);
   openQuestionnaireHandler(window);
   openHomePageHandler(window);
@@ -46,4 +48,5 @@ export default ({ window }: { window: BrowserWindow }): void => {
   sitDownHandler();
   sitUpHandler();
   uninstallLauncherHandler();
+  postLauncherLoginHandler();
 };
