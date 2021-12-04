@@ -66,7 +66,7 @@ const Slider = ({ selected, gameInfos }: Props) => {
     <ImageWrapper
       key={index}
       {...computePos(
-        mod(selected - index + 1, gameInfos4.length),
+        mod(selected - index, gameInfos4.length),
         gameInfos.length
       )}
     >
