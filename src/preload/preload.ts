@@ -45,6 +45,9 @@ const api: TraPCollection.API = {
     uninstallLauncher: async () => {
       return await ipcRenderer.invoke('uninstallLauncher');
     },
+    postLauncherLogin: async (productKey) => {
+      return await ipcRenderer.invoke('postLauncherLogin', productKey);
+    },
   },
   on: {
     progress: (listener) => {
