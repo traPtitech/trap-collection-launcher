@@ -7,8 +7,10 @@ import {
   getGameInfo,
   getGameVideo,
   getVersion,
+  getVersionsCheck,
 } from '@/lib/axios';
 import { store } from '@/lib/store';
+import { md5sumFile } from '@/lib/utils/checksum';
 import {
   generateAbsolutePath,
   generateLocalPath,
@@ -16,6 +18,8 @@ import {
 
 export const fetch = async (): Promise<void> => {
   const { data } = await getVersion(0);
+  const { data: versionsCheck } = await getVersionsCheck();
+
   Promise.all([
     ...data.games.map(async ({ id }) => {
       const { data } = await getGameFile(id);
@@ -32,6 +36,15 @@ export const fetch = async (): Promise<void> => {
           generateAbsolutePath(generateLocalPath('games', id, 'game.zip'))
         )
       );
+
+      // checksum
+      const md5sum = await md5sumFile(
+        generateAbsolutePath(generateLocalPath('games', id, 'game.zip'))
+      );
+      const versionCheck = versionsCheck.filter((v) => v.id === id);
+      if (versionCheck.length === 1 && versionCheck[0].md5 !== md5sum) {
+        throw new Error('the data does not match checksum');
+      }
 
       // decompress
       decompress(
