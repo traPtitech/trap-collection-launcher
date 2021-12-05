@@ -21,6 +21,20 @@ class IpcListener {
   window: BrowserWindow | null;
 
   constructor() {
+    this.window = null;
+  }
+
+  public init() {
+    this.removeListeners();
+    this.addListeners();
+  }
+
+  public setWindow(window: BrowserWindow) {
+    this.window = window;
+    this.init();
+  }
+
+  private removeListeners() {
     ipcMain.removeHandler('launch');
     ipcMain.removeHandler('openQuestionnaire');
     ipcMain.removeHandler('openHomePage');
@@ -35,10 +49,9 @@ class IpcListener {
     ipcMain.removeHandler('sitDown');
     ipcMain.removeHandler('sitUp');
     ipcMain.removeHandler('postLauncherLogin');
-    this.window = null;
   }
 
-  public init() {
+  private addListeners() {
     launchHandler(this.window);
     openQuestionnaireHandler(this.window);
     openHomePageHandler();
@@ -53,10 +66,6 @@ class IpcListener {
     sitDownHandler();
     sitUpHandler();
     postLauncherLoginHandler();
-  }
-
-  public setWindow(window: BrowserWindow) {
-    this.window = window;
   }
 }
 
