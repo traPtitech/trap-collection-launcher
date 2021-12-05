@@ -1,8 +1,8 @@
-import { app, BrowserWindow, protocol, autoUpdater } from 'electron';
+import { app, BrowserWindow, protocol } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 import logger from 'electron-log';
 import updater from 'update-electron-app';
-import ipcListen from '@/lib/ipc/ipcListen';
+import ipcListener from '@/lib/ipc/ipcListener';
 import { store } from '@/lib/store';
 import { updateToken } from '@/lib/utils/updateToken';
 
@@ -34,17 +34,19 @@ const createWindow = (): void => {
     minWidth: 1280,
     // fullscreen: true,
     webPreferences: {
-      webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
+      // webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
       preload: process.env.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
+  ipcListener.setWindow(mainWindow);
+
   mainWindow.maximize();
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   if (process.env.NODE_ENV === 'production') {
-    mainWindow.setMenu(null);
+    // mainWindow.setMenu(null);
   }
   if (process.env.NODE_ENV === 'development') {
     // Open the DevTools.
@@ -58,14 +60,17 @@ const createWindow = (): void => {
     });
     store.onDidChange('productKey', updateToken);
     // ipc listen
-    ipcListen({ window: mainWindow });
+    // ipcListener.setWindow(mainWindow);
   });
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  ipcListener.init();
+  createWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -80,6 +85,7 @@ app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
+    ipcListener.init();
     createWindow();
   }
 });

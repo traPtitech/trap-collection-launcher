@@ -4,7 +4,12 @@ import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
 import { store } from '@/lib/store';
 
-export const launchHandler = async (window: BrowserWindow): Promise<void> => {
+export const launchHandler = async (
+  window: BrowserWindow | null
+): Promise<void> => {
+  if (!window) {
+    return;
+  }
   ipcMain.handle('launch', async (_event, gameId) => {
     const platform = process.platform;
     if (platform !== 'win32' && platform !== 'darwin') {
