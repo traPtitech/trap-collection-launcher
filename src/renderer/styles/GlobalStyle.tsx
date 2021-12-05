@@ -2,6 +2,22 @@ import { createGlobalStyle } from 'styled-components';
 import { ReactSlickCSS } from './ReactSlick';
 
 const GlobalStyle = createGlobalStyle`
+  @font-face {
+      font-family: 'M PLUS Rounded 1c';
+      src: url("/assets/MPLUSRounded1c-Regular.ttf");
+      font-weight: 400;
+  }
+  @font-face {
+      font-family: 'M PLUS Rounded 1c';
+      src: url("/assets/MPLUSRounded1c-Medium.ttf");
+      font-weight: 500;
+  }
+  @font-face {
+      font-family: 'M PLUS Rounded 1c';
+      src: url("/assets/MPLUSRounded1c-Bold.ttf");
+      font-weight: 700;
+  }
+
   ${ReactSlickCSS}
 
   html {
@@ -14,7 +30,7 @@ const GlobalStyle = createGlobalStyle`
   h4,
   h5,
   h6 {
-    font-family: 'Audiowide', cursive;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
     color: white;
   }
 
@@ -61,7 +77,7 @@ const GlobalStyle = createGlobalStyle`
     scroll-behavior: smooth;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
-    font-family: 'Noto Sans JP', sans-serif;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
   }
 
   /* Remove list styles on ul, ol elements with a class attribute */
