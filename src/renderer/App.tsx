@@ -1,5 +1,7 @@
 import React from 'react';
 import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+import { createTheme } from './styles/theme';
 import Background from '@/renderer/components/Background';
 import * as config from '@/renderer/config';
 import { BackgroundProvider } from '@/renderer/contexts/Background';
@@ -35,9 +37,11 @@ type Props = {
 const App: React.FC<Props> = ({ config }) => (
   <ConfigProvider value={config}>
     <BackgroundProvider>
-      <GlobalStyle />
-      <Navigation />
-      <Background />
+      <ThemeProvider theme={createTheme({ dark: false })}>
+        <GlobalStyle />
+        <Navigation />
+        <Background />
+      </ThemeProvider>
     </BackgroundProvider>
   </ConfigProvider>
 );
