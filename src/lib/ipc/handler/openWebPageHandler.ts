@@ -8,10 +8,6 @@ export const openQuestionnaireHandler = async (
 ): Promise<void> => {
   ipcMain.handle('openQuestionnaire', async () => {
     const childWindow = new BrowserWindow({ parent: window });
-    const platform = process.platform;
-    if (platform !== 'win32' && platform !== 'darwin') {
-      return;
-    }
     childWindow.loadURL(questionaireUrl);
   });
 };
@@ -24,7 +20,7 @@ export const openHomePageHandler = async (): Promise<void> => {
     }
     if (platform === 'darwin') {
       childProcess.spawn('open', ['-W', homePageUrl]);
-      return;
     }
+    return;
   });
 };
