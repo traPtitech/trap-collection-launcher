@@ -1,20 +1,23 @@
 import { createGlobalStyle } from 'styled-components';
 import { ReactSlickCSS } from './ReactSlick';
+import bold from '@/renderer/assets/MPLUSRounded1c-Bold.ttf';
+import medium from '@/renderer/assets/MPLUSRounded1c-Medium.ttf';
+import regular from '@/renderer/assets/MPLUSRounded1c-Regular.ttf';
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
       font-family: 'M PLUS Rounded 1c';
-      src: url("/assets/MPLUSRounded1c-Regular.ttf");
+      src: url(${regular});
       font-weight: 400;
   }
   @font-face {
       font-family: 'M PLUS Rounded 1c';
-      src: url("/assets/MPLUSRounded1c-Medium.ttf");
+      src: url(${medium});
       font-weight: 500;
   }
   @font-face {
       font-family: 'M PLUS Rounded 1c';
-      src: url("/assets/MPLUSRounded1c-Bold.ttf");
+      src: url(${bold});
       font-weight: 700;
   }
 
