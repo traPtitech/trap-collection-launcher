@@ -1,3 +1,4 @@
+import childProcess from 'child_process';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
 import { questionaireUrl, homePageUrl } from '@/config';
@@ -7,10 +8,19 @@ export const openQuestionnaireHandler = async (
 ): Promise<void> => {
   ipcMain.handle('openQuestionnaire', async () => {
     const childWindow = new BrowserWindow({ parent: window });
-    const platform = process.platform;
-    if (platform !== 'win32' && platform !== 'darwin') {
-      return;
-    }
     childWindow.loadURL(questionaireUrl);
+  });
+};
+
+export const openHomePageHandler = async (): Promise<void> => {
+  ipcMain.handle('openHomePage', async () => {
+    const platform = process.platform;
+    if (platform === 'win32') {
+      childProcess.spawn(`cmd`, ['/C', `start /wait ${homePageUrl}`]);
+    }
+    if (platform === 'darwin') {
+      childProcess.spawn('open', ['-W', homePageUrl]);
+    }
+    return;
   });
 };
