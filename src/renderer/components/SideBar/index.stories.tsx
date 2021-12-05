@@ -31,5 +31,5 @@ Primary.args = {
   onCancel: () => {
     console.log('cancel');
   },
-  onlyTrap: false,
+  koudaisai: false,
 };

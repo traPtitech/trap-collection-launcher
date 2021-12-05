@@ -1,5 +1,8 @@
 import React, { MouseEvent, MouseEventHandler, useEffect } from 'react';
+import { MdClose, MdNavigateNext } from 'react-icons/md';
 import styled from 'styled-components';
+import { packageJson } from '@/config';
+import trap from '@/renderer/assets/trap.svg';
 
 const Div = ({ ...props }) => <div {...props}></div>;
 
@@ -23,7 +26,7 @@ const Overlay = styled(Div)<OverlayProps>`
 
 const Display = styled(Div)<OverlayProps>`
   position: absolute;
-  background-color: #f3f3f3;
+  background-color: ${(props) => props.theme.colors.panel.primary};
   padding: 0rem;
   left: 0;
   right: 0;
@@ -43,7 +46,7 @@ const Title = styled(Div)`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #212121;
+  color: ${(props) => props.theme.colors.text.header};
 `;
 
 const Contents = styled(Div)`
@@ -57,13 +60,20 @@ const Item = styled(Div)`
   box-sizing: border-box;
   height: auto;
   width: 100%;
-  padding: 1.25rem;
-  font-size: 1rem;
-  color: #212121;
   cursor: pointer;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: ${(props) => props.theme.colors.overlay};
   }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ItemText = styled(Div)`
+  padding: 1.25rem;
+  font-size: 1rem;
+  height: auto;
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 
 const Foot = styled(Div)`
@@ -80,14 +90,75 @@ const Foot = styled(Div)`
   gap: 0.5rem;
 `;
 
+const Collection = styled(Div)`
+  position: relative;
+  font-size: 1rem;
+  color: ${(props) => props.theme.colors.text.version};
+`;
+
+const Version = styled(Div)`
+  position: relative;
+  font-size: 0.75rem;
+  color: ${(props) => props.theme.colors.text.version};
+`;
+
+const MetaData = styled(Div)`
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 11rem;
+`;
+
+const Edition = styled(Div)`
+  position: relative;
+  font-size: 0.75rem;
+  color: ${(props) => props.theme.colors.text.version};
+`;
+
+const OnlyTrap = styled(Div)`
+  position: relative;
+  font-size: 1rem;
+  color: ${(props) => props.theme.colors.text.warn};
+`;
+
+const CloseButtonWrapper = styled(Div)`
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 4.5rem;
+  width: 4.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    background-color: ${(props) => props.theme.colors.overlay};
+  }
+`;
+
+const CloseButton = styled(MdClose)`
+  position: relative;
+  height: 3rem;
+  width: 3rem;
+  color: ${(props) => props.theme.colors.text.header};
+`;
+
+const NavigateButton = styled(MdNavigateNext)`
+  position: relative;
+  height: 2.5rem;
+  width: auto;
+  margin-right: 0.6rem;
+`;
+
 export type Props = {
   items: { text: string; onClick: MouseEventHandler<HTMLDivElement> }[];
   onCancel: MouseEventHandler<HTMLDivElement>;
   isOpen: boolean;
-  onlyTrap: boolean;
+  koudaisai: boolean;
 };
 
-const SideBar = ({ isOpen, items, onCancel, onlyTrap }: Props) => {
+const SideBar = ({ isOpen, items, onCancel, koudaisai }: Props) => {
   useEffect(() => {
     const active = document.activeElement as HTMLElement;
     active && isOpen && active.blur();
@@ -95,7 +166,8 @@ const SideBar = ({ isOpen, items, onCancel, onlyTrap }: Props) => {
 
   const itemsHTML = items.map(({ text, onClick }, index) => (
     <Item onClick={onClick} key={index}>
-      {text}
+      <ItemText>{text}</ItemText>
+      <NavigateButton />
     </Item>
   ));
 
@@ -107,11 +179,21 @@ const SideBar = ({ isOpen, items, onCancel, onlyTrap }: Props) => {
         }}
         isOpen={isOpen}
       >
+        <CloseButtonWrapper onClick={onCancel}>
+          <CloseButton />
+        </CloseButtonWrapper>
         <Title>設定一覧</Title>
         <Contents>{itemsHTML}</Contents>
         <Foot>
-          <div>test1</div>
-          <div>test2</div>
+          {koudaisai ? (
+            <OnlyTrap>このメニューは部員専用です</OnlyTrap>
+          ) : undefined}
+          <img src={trap} width='224' />
+          <MetaData>
+            <Collection>traP Collection</Collection>
+            <Version>{`ver. ${packageJson.version}`}</Version>
+          </MetaData>
+          {koudaisai ? <Edition> {'Kodaisai Edition'} </Edition> : undefined}
         </Foot>
       </Display>
     </Overlay>

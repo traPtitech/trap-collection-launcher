@@ -2,8 +2,18 @@ import 'styled-components';
 
 export interface Theme {
   colors: {
-    title: string;
-    text: string;
+    text: {
+      primary: string;
+      header: string;
+      warn: string;
+      placeholder: string;
+      version: string;
+      opposite: string;
+    };
+    overlay: string;
+    panel: {
+      primary: string;
+    };
   };
 }
 
