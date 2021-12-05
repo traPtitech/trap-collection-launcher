@@ -1,6 +1,5 @@
 import { ipcMain } from '@/common/typedIpc';
-import { postLauncherLogin, getVersion, getVersionsCheck } from '@/lib/axios';
-import { store } from '@/lib/store';
+import { postLauncherLogin } from '@/lib/axios';
 
 export const postLauncherLoginHandler = (): void => {
   ipcMain.handle('postLauncherLogin', async (event, productKey: string) => {
