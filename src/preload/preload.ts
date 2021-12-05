@@ -36,6 +36,15 @@ const api: TraPCollection.API = {
     sitUp: async () => {
       return await ipcRenderer.invoke('sitUp');
     },
+    openQuestionnaire: async () => {
+      return await ipcRenderer.invoke('openQuestionnaire');
+    },
+    openHomePage: async () => {
+      return await ipcRenderer.invoke('openHomePage');
+    },
+    postLauncherLogin: async (productKey) => {
+      return await ipcRenderer.invoke('postLauncherLogin', productKey);
+    },
   },
   on: {
     progress: (listener) => {

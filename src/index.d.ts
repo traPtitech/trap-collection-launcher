@@ -3,6 +3,8 @@ declare namespace TraPCollection {
   type API = { invoke: FromRenderer; on: FromMainReceiver };
   type FromRenderer = {
     launch(gameId: string): Promise<void>;
+    openQuestionnaire(): Promise<void>;
+    openHomePage(): Promise<void>;
     getGameInfo(): Promise<GameInfo[]>;
     checkJava(): Promise<boolean>;
     getProductKey(): Promise<string | undefined>;
@@ -13,6 +15,7 @@ declare namespace TraPCollection {
     setSeatVersionId(seatVersionId: number): Promise<void>;
     sitDown(): Promise<void>;
     sitUp(): Promise<void>;
+    postLauncherLogin(productKey: string): Promise<void>;
   };
   type FromMain = {
     progress(progress: Progress): void;

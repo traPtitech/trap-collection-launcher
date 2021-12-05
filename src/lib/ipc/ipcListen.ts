@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron';
+import { postLauncherLoginHandler } from './handler/APIHandler';
 import { checkJavaHandler } from './handler/checkJavaHandler';
 import { getGameInfoHandler } from './handler/getGameInfoHandler';
 import { getProductKeyHandler } from './handler/getProductKeyHandler';
@@ -11,9 +12,15 @@ import { setSeatVersionIdHandler } from './handler/setSeatVersionHandler';
 import { sitDownHandler } from './handler/sitDownHandler';
 import { sitUpHandler } from './handler/sitUpHandler';
 import { ipcMain } from '@/common/typedIpc';
+import {
+  openHomePageHandler,
+  openQuestionnaireHandler,
+} from '@/lib/ipc/handler/openWebPageHandler';
 
 export default ({ window }: { window: BrowserWindow }): void => {
   ipcMain.removeHandler('launch');
+  ipcMain.removeHandler('openQuestionnaire');
+  ipcMain.removeHandler('openHomePage');
   ipcMain.removeHandler('getGameInfo');
   ipcMain.removeHandler('checkJava');
   ipcMain.removeHandler('getProductKey');
@@ -24,7 +31,10 @@ export default ({ window }: { window: BrowserWindow }): void => {
   ipcMain.removeHandler('setSeatVersionId');
   ipcMain.removeHandler('sitDown');
   ipcMain.removeHandler('sitUp');
+  ipcMain.removeHandler('postLauncherLogin');
   launchHandler(window);
+  openQuestionnaireHandler(window);
+  openHomePageHandler();
   getGameInfoHandler();
   checkJavaHandler();
   getProductKeyHandler();
@@ -34,5 +44,6 @@ export default ({ window }: { window: BrowserWindow }): void => {
   getSeatVersionHandler();
   setSeatVersionIdHandler();
   sitDownHandler();
-  sitUpHandler;
+  sitUpHandler();
+  postLauncherLoginHandler();
 };

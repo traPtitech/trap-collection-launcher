@@ -62,7 +62,7 @@ const useGames = () => {
 };
 
 const openQuestionnaire = (): void => {
-  alert('open questionnaire');
+  window.TraPCollectionAPI.invoke.openQuestionnaire();
 };
 
 const GameListPage: React.FC = () => {

@@ -39,7 +39,7 @@ const GameDetail: React.FC = () => {
   useBackgroundVideo(game.video);
 
   const launch = () => {
-    alert('Launch!');
+    window.TraPCollectionAPI.invoke.launch(game.id);
   };
 
   return (
