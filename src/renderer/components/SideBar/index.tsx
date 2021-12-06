@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { packageJson } from '@/config';
 import trap from '@/renderer/assets/trap.svg';
 
-const Div = ({ ...props }) => <div {...props}></div>;
+const Div = ({ ...props }) => <div {...props} />;
 
 type OverlayProps = {
   isOpen?: boolean;
@@ -18,7 +18,8 @@ const Overlay = styled(Div)<OverlayProps>`
   bottom: 0;
   padding: 0;
   z-index: 2;
-  transition: opacity 0.06s ease-out, visibility 0.06s;
+  transition: opacity ${(props) => props.theme.transition.normal} ease-out,
+    visibility ${(props) => props.theme.transition.normal};
 
   visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.isOpen ? '1' : '0')};
@@ -33,7 +34,7 @@ const Display = styled(Div)<OverlayProps>`
   top: 0;
   bottom: 0;
   width: 22.5rem;
-  transition: transform 0.06s ease-out;
+  transition: transform ${(props) => props.theme.transition.normal} ease-out;
   z-index: 3;
 
   transform: translateX(${(props) => (props.isOpen ? '0rem' : '-0.6rem')});
@@ -61,12 +62,15 @@ const Item = styled(Div)`
   height: auto;
   width: 100%;
   cursor: pointer;
+  background-color: ${(props) => props.theme.colors.button.transparent.fill};
   &:hover {
-    background-color: ${(props) => props.theme.colors.overlay};
+    background-color: ${(props) => props.theme.colors.button.transparent.hover};
   }
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background-color ${(props) => props.theme.transition.normal}
+    ease-out;
 `;
 
 const ItemText = styled(Div)`
@@ -133,7 +137,7 @@ const CloseButtonWrapper = styled(Div)`
   align-items: center;
   cursor: pointer;
   &:hover {
-    background-color: ${(props) => props.theme.colors.overlay};
+    background-color: ${(props) => props.theme.colors.button.transparent.hover};
   }
 `;
 

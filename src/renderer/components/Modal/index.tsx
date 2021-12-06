@@ -1,46 +1,45 @@
-import React, { useEffect } from 'react';
+import React, { MouseEvent, useEffect } from 'react';
 import styled from 'styled-components';
+
+const Div = ({ ...props }) => <div {...props} />;
+const Button = ({ ...props }) => <button {...props} />;
 
 type OverlayProps = {
   isOpen?: boolean;
 };
 
-const Overlay = styled.div<OverlayProps>`
+const Overlay = styled(Div)<OverlayProps>`
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0;
   z-index: 2;
-  transition: opacity 0.06s ease-out, visibility 0.06s;
+  transition: opacity ${(props) => props.theme.transition.normal} ease-out,
+    visibility ${(props) => props.theme.transition.normal};
 
   visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.isOpen ? '1' : '0')};
 `;
 
-Overlay.defaultProps = {
-  isOpen: false,
-};
-
-const Display = styled.div<OverlayProps>`
+const Display = styled(Div)<OverlayProps>`
   position: relative;
-  background-color: #f3f3f3;
+  background-color: ${(props) => props.theme.colors.panel.primary};
   padding: 1.69rem; //27px
   width: 37.5rem; //600px
   height: auto;
   border-radius: 0.5rem; //8px
-  transition: transform 0.06s ease-out;
+  transition: transform ${(props) => props.theme.transition.normal} ease-out;
   z-index: 3;
 
   transform: scale(${(props) => (props.isOpen ? '1.0' : '0.98')});
 `;
 
-const Contents = styled.div`
+const Contents = styled(Div)`
   position: relative;
   padding: 0;
   width: 100%;
@@ -54,39 +53,7 @@ type ButtonProps = {
   buttonType: 'information' | 'warning' | 'cancel';
 };
 
-const buttonCustomProps = (props: ButtonProps) => {
-  switch (props.buttonType) {
-    case 'information':
-      return `
-border-width: 0;
-background-color: #005bac;
-color: #ffffff;
-&:hover, &:focus {
-  background-color: #004D93;
-}
-`;
-    case 'warning':
-      return `
-border-width: 0;
-background-color: #f26451;
-color: #ffffff;
-&:hover, &:focus {
-  background-color:#CE5545;
-}
-`;
-    case 'cancel':
-      return `
-border-width: 0.125rem;
-background-color: #ffffff;
-color: #444444;
-&:hover, &:focus {
-  background-color: #dadada;
-}
-`;
-  }
-};
-
-const Button = styled.button<ButtonProps>`
+const ModalButton = styled(Button)<ButtonProps>`
   width: 13.5rem; //216px
   height: 3.38rem; //54px
   font-size: 0.938rem; //15px
@@ -97,24 +64,56 @@ const Button = styled.button<ButtonProps>`
   justify-content: center;
   align-items: center;
   border: solid;
-  border-color: #444444;
   &:hover {
     cursor: pointer;
   }
   &:focus {
     outline: none;
   }
-  transition: background-color 0.06s ease-out;
-  ${buttonCustomProps}
+  transition: background-color ${(props) => props.theme.transition.normal}
+    ease-out;
+  background-color: ${(props) =>
+    props.theme.colors.button[props.buttonType].fill};
+  &:hover,
+  &:focus {
+    background-color: ${(props) =>
+      props.theme.colors.button[props.buttonType].hover};
+  }
+  color: ${(props) => {
+    switch (props.buttonType) {
+      case 'information':
+        return props.theme.colors.text.opposite;
+      case 'warning':
+        return props.theme.colors.text.opposite;
+      case 'cancel':
+        return props.theme.colors.text.primary;
+    }
+  }};
+  border-width: ${(props) => {
+    switch (props.buttonType) {
+      case 'information':
+        return '0';
+      case 'warning':
+        return '0';
+      case 'cancel':
+        return '0.125rem';
+    }
+  }};
+  ${(props) => {
+    if (props.buttonType === 'cancel') {
+      return `border-color: ${props.theme.colors.button.cancel.border}`;
+    }
+  }}
 `;
 
-const Buttons = styled.div`
+const Buttons = styled(Div)`
   display: flex;
   justify-content: space-between;
 `;
 
-const Title = styled.div`
+const Title = styled(Div)`
   text-align: center;
+  color: ${(props) => props.theme.colors.text.header};
   font-size: 1.5rem;
 `;
 
@@ -131,6 +130,15 @@ export type Props = {
   okButtonText?: string;
   title?: string;
   isOpen?: boolean;
+  noButton?: boolean;
+};
+
+const withBlur = (func: ModalEventHandler | undefined) => {
+  return (e: React.MouseEvent<ModalElement, MouseEvent>) => {
+    const active = document.activeElement as HTMLElement;
+    active && active.blur();
+    func && func(e);
+  };
 };
 
 const Modal = ({
@@ -141,6 +149,7 @@ const Modal = ({
   title,
   isOpen,
   modalType,
+  noButton,
 }: Props) => {
   useEffect(() => {
     const active = document.activeElement as HTMLElement;
@@ -148,30 +157,32 @@ const Modal = ({
   }, [isOpen]);
 
   return (
-    <div onClick={onCancel}>
-      <Overlay isOpen={isOpen}>
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          <Display isOpen={isOpen}>
-            <Contents>
-              <Title>{title}</Title>
-              <div>{children}</div>
-              <Buttons>
-                <Button buttonType='cancel' onClick={onCancel}>
-                  キャンセル
-                </Button>
-                <Button buttonType={modalType ?? 'information'} onClick={onOk}>
-                  {okButtonText}
-                </Button>
-              </Buttons>
-            </Contents>
-          </Display>
-        </div>
-      </Overlay>
-    </div>
+    <Overlay isOpen={isOpen} onClick={onCancel}>
+      <Display
+        isOpen={isOpen}
+        onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+          e.stopPropagation();
+        }}
+      >
+        <Contents>
+          <Title>{title}</Title>
+          <div>{children}</div>
+          {noButton ? undefined : (
+            <Buttons>
+              <ModalButton buttonType='cancel' onClick={withBlur(onCancel)}>
+                キャンセル
+              </ModalButton>
+              <ModalButton
+                buttonType={modalType ?? 'information'}
+                onClick={withBlur(onOk)}
+              >
+                {okButtonText}
+              </ModalButton>
+            </Buttons>
+          )}
+        </Contents>
+      </Display>
+    </Overlay>
   );
 };
 

@@ -10,10 +10,32 @@ export interface Theme {
       version: string;
       opposite: string;
     };
-    overlay: string;
     panel: {
       primary: string;
     };
+    button: {
+      cancel: {
+        border: string;
+        fill: string;
+        hover: string;
+      };
+      information: {
+        fill: string;
+        hover: string;
+      };
+      warning: {
+        fill: string;
+        hover: string;
+      };
+      transparent: {
+        fill: string;
+        hover: string;
+      };
+    };
+  };
+  transition: {
+    normal: string;
+    slider: string;
   };
 }
 
