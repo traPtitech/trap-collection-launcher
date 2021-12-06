@@ -10,7 +10,9 @@ type OverlayProps = {
   isOpen?: boolean;
 };
 
-const Overlay = styled(Div)<OverlayProps>`
+const Overlay = styled(({ isOpen, ...props }) => (
+  <div {...props} />
+))<OverlayProps>`
   position: fixed;
   left: 0;
   right: 0;
@@ -25,7 +27,9 @@ const Overlay = styled(Div)<OverlayProps>`
   opacity: ${(props) => (props.isOpen ? '1' : '0')};
 `;
 
-const Display = styled(Div)<OverlayProps>`
+const Display = styled(({ isOpen, ...props }) => (
+  <div {...props} />
+))<OverlayProps>`
   position: absolute;
   background-color: ${(props) => props.theme.colors.panel.primary};
   padding: 0rem;

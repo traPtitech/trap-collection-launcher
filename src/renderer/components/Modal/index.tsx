@@ -2,13 +2,14 @@ import React, { MouseEvent, useEffect } from 'react';
 import styled from 'styled-components';
 
 const Div = ({ ...props }) => <div {...props} />;
-const Button = ({ ...props }) => <button {...props} />;
 
 type OverlayProps = {
   isOpen?: boolean;
 };
 
-const Overlay = styled(Div)<OverlayProps>`
+const Overlay = styled(({ isOpen, ...props }) => (
+  <div {...props} />
+))<OverlayProps>`
   position: fixed;
   left: 0;
   right: 0;
@@ -26,7 +27,9 @@ const Overlay = styled(Div)<OverlayProps>`
   opacity: ${(props) => (props.isOpen ? '1' : '0')};
 `;
 
-const Display = styled(Div)<OverlayProps>`
+const Display = styled(({ isOpen, ...props }) => (
+  <div {...props} />
+))<OverlayProps>`
   position: relative;
   background-color: ${(props) => props.theme.colors.panel.primary};
   padding: 1.69rem; //27px
@@ -53,7 +56,9 @@ type ButtonProps = {
   buttonType: 'information' | 'warning' | 'cancel';
 };
 
-const ModalButton = styled(Button)<ButtonProps>`
+const ModalButton = styled(({ buttonType, ...props }) => (
+  <button {...props} />
+))<ButtonProps>`
   width: 13.5rem; //216px
   height: 3.38rem; //54px
   font-size: 0.938rem; //15px

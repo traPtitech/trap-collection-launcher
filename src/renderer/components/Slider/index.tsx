@@ -35,7 +35,6 @@ export type Props = {
 };
 
 const computePos = (index: number, len: number) => {
-  console.log(index);
   const right =
     4.875 + 15 * (index - 2 * len) + (index >= 2 * len + 1 ? 12.5 : 0);
   const hidden = index >= 3 * len || index <= len - 1;
