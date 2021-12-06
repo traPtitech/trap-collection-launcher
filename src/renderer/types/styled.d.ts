@@ -33,7 +33,7 @@ export interface Theme {
       };
     };
   };
-  transition: {
+  duration: {
     normal: string;
     slider: string;
   };

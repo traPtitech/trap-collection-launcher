@@ -25,7 +25,7 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
   bottom: ${(props) => props.bottom}rem;
   height: ${(props) => props.height}rem;
   width: ${(props) => props.width}rem;
-  transition: all ${(props) => props.theme.transition.slider} ease-out;
+  transition: all ${(props) => props.theme.duration.slider} ease-out;
   visibility: ${(props) => (props.hidden ? 'hidden' : 'visible')};
 `;
 

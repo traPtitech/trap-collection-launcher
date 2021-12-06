@@ -14,8 +14,8 @@ const Overlay = styled(Div)<{ $isOepn: boolean }>`
   bottom: 0;
   padding: 0;
   z-index: 2;
-  transition: opacity ${(props) => props.theme.transition.normal} ease-out,
-    visibility ${(props) => props.theme.transition.normal};
+  transition: opacity ${(props) => props.theme.duration.normal} ease-out,
+    visibility ${(props) => props.theme.duration.normal};
 
   visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.$isOpen ? '1' : '0')};
@@ -30,7 +30,7 @@ const Display = styled(Div)<{ $isOpen: boolean }>`
   top: 0;
   bottom: 0;
   width: 22.5rem;
-  transition: transform ${(props) => props.theme.transition.normal} ease-out;
+  transition: transform ${(props) => props.theme.duration.normal} ease-out;
   z-index: 3;
 
   transform: translateX(${(props) => (props.$isOpen ? '0rem' : '-0.6rem')});
@@ -65,7 +65,7 @@ const Item = styled(Div)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background-color ${(props) => props.theme.transition.normal}
+  transition: background-color ${(props) => props.theme.duration.normal}
     ease-out;
 `;
 

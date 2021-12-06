@@ -20,7 +20,7 @@ const StyledImage = styled(Image)<{ $isLoad: boolean }>`
   height: 100%;
   object-fit: cover;
   opacity: ${(props) => (props.$isLoad ? '100%' : '0%')};
-  transition: opacity ${(props) => props.theme.transition.slider} ease-out;
+  transition: opacity ${(props) => props.theme.duration.slider} ease-out;
 `;
 
 export type Props = React.DetailedHTMLProps<

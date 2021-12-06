@@ -35,7 +35,7 @@ export const createTheme = ({ dark }: { dark: boolean }): Theme => {
         },
       },
     },
-    transition: {
+    duration: {
       normal: '0.08s',
       slider: '0.3s',
     },
