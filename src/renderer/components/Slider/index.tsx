@@ -25,7 +25,7 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
   bottom: ${(props) => props.bottom}rem;
   height: ${(props) => props.height}rem;
   width: ${(props) => props.width}rem;
-  transition: all 0.2s ease-out;
+  transition: all ${(props) => props.theme.duration.slider} ease-out;
   visibility: ${(props) => (props.hidden ? 'hidden' : 'visible')};
 `;
 
@@ -35,7 +35,6 @@ export type Props = {
 };
 
 const computePos = (index: number, len: number) => {
-  console.log(index);
   const right =
     4.875 + 15 * (index - 2 * len) + (index >= 2 * len + 1 ? 12.5 : 0);
   const hidden = index >= 3 * len || index <= len - 1;

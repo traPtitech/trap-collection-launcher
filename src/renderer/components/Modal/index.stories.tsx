@@ -22,4 +22,5 @@ Primary.args = {
   onCancel: () => {
     console.log('Cancel');
   },
+  noButton: false,
 };
