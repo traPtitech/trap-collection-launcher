@@ -3,13 +3,7 @@ import styled from 'styled-components';
 
 const Div = ({ ...props }) => <div {...props} />;
 
-type OverlayProps = {
-  isOpen?: boolean;
-};
-
-const Overlay = styled(({ isOpen, ...props }) => (
-  <div {...props} />
-))<OverlayProps>`
+const Overlay = styled(Div)<{ $isOpen: boolean }>`
   position: fixed;
   left: 0;
   right: 0;
@@ -23,13 +17,11 @@ const Overlay = styled(({ isOpen, ...props }) => (
   transition: opacity ${(props) => props.theme.transition.normal} ease-out,
     visibility ${(props) => props.theme.transition.normal};
 
-  visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
-  opacity: ${(props) => (props.isOpen ? '1' : '0')};
+  visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.$isOpen ? '1' : '0')};
 `;
 
-const Display = styled(({ isOpen, ...props }) => (
-  <div {...props} />
-))<OverlayProps>`
+const Display = styled(Div)<{ $isOpen: boolean }>`
   position: relative;
   background-color: ${(props) => props.theme.colors.panel.primary};
   padding: 1.69rem; //27px
@@ -39,7 +31,7 @@ const Display = styled(({ isOpen, ...props }) => (
   transition: transform ${(props) => props.theme.transition.normal} ease-out;
   z-index: 3;
 
-  transform: scale(${(props) => (props.isOpen ? '1.0' : '0.98')});
+  transform: scale(${(props) => (props.$isOpen ? '1.0' : '0.98')});
 `;
 
 const Contents = styled(Div)`
@@ -52,13 +44,9 @@ const Contents = styled(Div)`
   gap: 1rem; //16px
 `;
 
-type ButtonProps = {
-  buttonType: 'information' | 'warning' | 'cancel';
-};
-
-const ModalButton = styled(({ buttonType, ...props }) => (
-  <button {...props} />
-))<ButtonProps>`
+const ModalButton = styled(Div)<{
+  $buttonType: 'cancel' | 'information' | 'warning';
+}>`
   width: 13.5rem; //216px
   height: 3.38rem; //54px
   font-size: 0.938rem; //15px
@@ -78,14 +66,14 @@ const ModalButton = styled(({ buttonType, ...props }) => (
   transition: background-color ${(props) => props.theme.transition.normal}
     ease-out;
   background-color: ${(props) =>
-    props.theme.colors.button[props.buttonType].fill};
+    props.theme.colors.button[props.$buttonType].fill};
   &:hover,
   &:focus {
     background-color: ${(props) =>
-      props.theme.colors.button[props.buttonType].hover};
+      props.theme.colors.button[props.$buttonType].hover};
   }
   color: ${(props) => {
-    switch (props.buttonType) {
+    switch (props.$buttonType) {
       case 'information':
         return props.theme.colors.text.opposite;
       case 'warning':
@@ -95,7 +83,7 @@ const ModalButton = styled(({ buttonType, ...props }) => (
     }
   }};
   border-width: ${(props) => {
-    switch (props.buttonType) {
+    switch (props.$buttonType) {
       case 'information':
         return '0';
       case 'warning':
@@ -105,7 +93,7 @@ const ModalButton = styled(({ buttonType, ...props }) => (
     }
   }};
   ${(props) => {
-    if (props.buttonType === 'cancel') {
+    if (props.$buttonType === 'cancel') {
       return `border-color: ${props.theme.colors.button.cancel.border}`;
     }
   }}
@@ -162,9 +150,9 @@ const Modal = ({
   }, [isOpen]);
 
   return (
-    <Overlay isOpen={isOpen} onClick={onCancel}>
+    <Overlay $isOpen={isOpen} onClick={onCancel}>
       <Display
-        isOpen={isOpen}
+        $isOpen={isOpen}
         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           e.stopPropagation();
         }}
@@ -174,11 +162,11 @@ const Modal = ({
           <div>{children}</div>
           {noButton ? undefined : (
             <Buttons>
-              <ModalButton buttonType='cancel' onClick={withBlur(onCancel)}>
+              <ModalButton $buttonType='cancel' onClick={withBlur(onCancel)}>
                 キャンセル
               </ModalButton>
               <ModalButton
-                buttonType={modalType ?? 'information'}
+                $buttonType={modalType ?? 'information'}
                 onClick={withBlur(onOk)}
               >
                 {okButtonText}

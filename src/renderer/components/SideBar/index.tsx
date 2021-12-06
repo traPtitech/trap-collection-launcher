@@ -6,13 +6,7 @@ import trap from '@/renderer/assets/trap.svg';
 
 const Div = ({ ...props }) => <div {...props} />;
 
-type OverlayProps = {
-  isOpen?: boolean;
-};
-
-const Overlay = styled(({ isOpen, ...props }) => (
-  <div {...props} />
-))<OverlayProps>`
+const Overlay = styled(Div)<{ $isOepn: boolean }>`
   position: fixed;
   left: 0;
   right: 0;
@@ -23,13 +17,11 @@ const Overlay = styled(({ isOpen, ...props }) => (
   transition: opacity ${(props) => props.theme.transition.normal} ease-out,
     visibility ${(props) => props.theme.transition.normal};
 
-  visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
-  opacity: ${(props) => (props.isOpen ? '1' : '0')};
+  visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.$isOpen ? '1' : '0')};
 `;
 
-const Display = styled(({ isOpen, ...props }) => (
-  <div {...props} />
-))<OverlayProps>`
+const Display = styled(Div)<{ $isOpen: boolean }>`
   position: absolute;
   background-color: ${(props) => props.theme.colors.panel.primary};
   padding: 0rem;
@@ -41,7 +33,7 @@ const Display = styled(({ isOpen, ...props }) => (
   transition: transform ${(props) => props.theme.transition.normal} ease-out;
   z-index: 3;
 
-  transform: translateX(${(props) => (props.isOpen ? '0rem' : '-0.6rem')});
+  transform: translateX(${(props) => (props.$isOpen ? '0rem' : '-0.6rem')});
 `;
 
 const Title = styled(Div)`
@@ -180,12 +172,12 @@ const SideBar = ({ isOpen, items, onCancel, koudaisai }: Props) => {
   ));
 
   return (
-    <Overlay onClick={onCancel} isOpen={isOpen}>
+    <Overlay onClick={onCancel} $isOpen={isOpen}>
       <Display
         onClick={(e: MouseEvent<HTMLDivElement>) => {
           e.stopPropagation();
         }}
-        isOpen={isOpen}
+        $isOpen={isOpen}
       >
         <CloseButtonWrapper onClick={onCancel}>
           <CloseButton />
