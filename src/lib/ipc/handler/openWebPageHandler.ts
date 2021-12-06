@@ -4,8 +4,11 @@ import { ipcMain } from '@/common/typedIpc';
 import { questionaireUrl, homePageUrl } from '@/config';
 
 export const openQuestionnaireHandler = async (
-  window: BrowserWindow
+  window: BrowserWindow | null
 ): Promise<void> => {
+  if (!window) {
+    return;
+  }
   ipcMain.handle('openQuestionnaire', async () => {
     const childWindow = new BrowserWindow({ parent: window });
     childWindow.loadURL(questionaireUrl);
