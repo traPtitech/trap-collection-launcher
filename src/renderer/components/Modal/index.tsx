@@ -14,8 +14,8 @@ const Overlay = styled(Div)<{ $isOpen: boolean }>`
   align-items: center;
   padding: 0;
   z-index: 2;
-  transition: opacity ${(props) => props.theme.transition.normal} ease-out,
-    visibility ${(props) => props.theme.transition.normal};
+  transition: opacity ${(props) => props.theme.duration.normal} ease-out,
+    visibility ${(props) => props.theme.duration.normal};
 
   visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.$isOpen ? '1' : '0')};
@@ -28,7 +28,7 @@ const Display = styled(Div)<{ $isOpen: boolean }>`
   width: 37.5rem; //600px
   height: auto;
   border-radius: 0.5rem; //8px
-  transition: transform ${(props) => props.theme.transition.normal} ease-out;
+  transition: transform ${(props) => props.theme.duration.normal} ease-out;
   z-index: 3;
 
   transform: scale(${(props) => (props.$isOpen ? '1.0' : '0.98')});
@@ -63,7 +63,7 @@ const ModalButton = styled(Div)<{
   &:focus {
     outline: none;
   }
-  transition: background-color ${(props) => props.theme.transition.normal}
+  transition: background-color ${(props) => props.theme.duration.normal}
     ease-out;
   background-color: ${(props) =>
     props.theme.colors.button[props.$buttonType].fill};
