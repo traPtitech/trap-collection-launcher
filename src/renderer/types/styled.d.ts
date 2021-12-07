@@ -31,6 +31,12 @@ export interface Theme {
         fill: string;
         hover: string;
       };
+      play: {
+        fill: string;
+      };
+    };
+    overlay: {
+      selectedSlide: string;
     };
   };
   duration: {
