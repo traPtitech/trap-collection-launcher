@@ -29,11 +29,6 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
   visibility: ${(props) => (props.hidden ? 'hidden' : 'visible')};
 `;
 
-export type Props = {
-  selected: number;
-  gameInfos: TraPCollection.GameInfo[];
-};
-
 const computePos = (index: number, len: number) => {
   const right =
     4.875 + 15 * (index - 2 * len) + (index >= 2 * len + 1 ? 12.5 : 0);
@@ -59,19 +54,32 @@ const mod = (a: number, b: number) => {
   return m + (a < 0 && m !== 0 ? b : 0);
 };
 
-const Slider = ({ selected, gameInfos }: Props) => {
+export type Props = {
+  selected: number;
+  gameInfos: TraPCollection.GameInfo[];
+  onClickGame?: (index: number) => void;
+};
+
+const Slider = ({ selected, gameInfos, onClickGame }: Props) => {
   const gameInfos4 = [...gameInfos, ...gameInfos, ...gameInfos, ...gameInfos];
-  const listImages = gameInfos4.map((gameInfo, index) => (
-    <ImageWrapper
-      key={index}
-      {...computePos(
-        mod(selected - index, gameInfos4.length),
-        gameInfos.length
-      )}
-    >
-      <SliderImage src={gameInfo.poster} />
-    </ImageWrapper>
-  ));
+  const listImages = gameInfos4.map((gameInfo, index) => {
+    const len = gameInfos.length;
+    return (
+      <ImageWrapper
+        key={index}
+        {...computePos(mod(selected - index, 4 * len), len)}
+        onClick={() =>
+          onClickGame &&
+          onClickGame(selected + 2 * len - mod(selected - index, 4 * len))
+        }
+      >
+        <SliderImage
+          src={gameInfo.poster}
+          isSelect={mod(selected - index, 4 * len) === len * 2}
+        />
+      </ImageWrapper>
+    );
+  });
   return <BackGround>{listImages}</BackGround>;
 };
 

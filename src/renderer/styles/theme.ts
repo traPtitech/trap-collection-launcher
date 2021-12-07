@@ -33,6 +33,12 @@ export const createTheme = ({ dark }: { dark: boolean }): Theme => {
           fill: 'rgba(0, 0, 0, 0)',
           hover: 'rgba(0, 0, 0, 0.2)',
         },
+        play: {
+          fill: '#e5e5e5',
+        },
+      },
+      overlay: {
+        selectedSlide: 'rgba(0, 0, 0, 0.5)',
       },
     },
     duration: {

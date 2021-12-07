@@ -46,4 +46,7 @@ Primary.args = {
     createGameInfo(14, 'https://via.placeholder.com/150?text=14'),
     createGameInfo(15, 'https://via.placeholder.com/150?text=15'),
   ],
+  onClickGame: (i) => {
+    console.log(i);
+  },
 };
