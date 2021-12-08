@@ -39,6 +39,11 @@ export const createTheme = ({ dark }: { dark: boolean }): Theme => {
       },
       overlay: {
         selectedSlide: 'rgba(0, 0, 0, 0.5)',
+        video: 'rgba(255, 255, 255, 0.8)',
+      },
+      background: {
+        selector: 'linear-gradient(0.25turn, rgba(255,255,255,0.8), #78D1FF)',
+        menu: 'rgba(0, 0, 0, 0.5)',
       },
     },
     duration: {

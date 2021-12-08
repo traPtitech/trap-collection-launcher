@@ -37,6 +37,11 @@ export interface Theme {
     };
     overlay: {
       selectedSlide: string;
+      video: string;
+    };
+    background: {
+      selector: string;
+      menu: string;
     };
   };
   duration: {
