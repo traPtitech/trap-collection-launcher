@@ -124,8 +124,8 @@ const GameSelect = ({ gameInfos }: Props) => {
           setSelectedGame(i);
         }}
       />
-      <MenuButtonWrapper>
-        <MenuButton onClick={() => setIsOpenMenu(true)} />
+      <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>
+        <MenuButton />
       </MenuButtonWrapper>
       <MenuBackground isOpen={isOpenMenu} />
       <SideBar
