@@ -29,6 +29,7 @@ const createGameInfo = (number: number, poster: string) => ({
 
 export const Primary = Template.bind({});
 Primary.args = {
+  koudaisai: true,
   gameInfos: [
     createGameInfo(0, 'https://via.placeholder.com/150?text=00'),
     createGameInfo(1, 'https://via.placeholder.com/150?text=01'),

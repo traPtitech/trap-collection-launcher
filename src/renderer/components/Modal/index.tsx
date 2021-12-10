@@ -110,6 +110,11 @@ const Title = styled(Div)`
   font-size: 1.5rem;
 `;
 
+const Children = styled(Div)`
+  font-size: 1rem;
+  color: ${(props) => props.theme.colors.text.primary};
+`;
+
 export type ModalElement = HTMLButtonElement | HTMLDivElement;
 export type ModalEventHandler = (
   event: React.MouseEvent<ModalElement, MouseEvent>
@@ -159,7 +164,7 @@ const Modal = ({
       >
         <Contents>
           <Title>{title}</Title>
-          <div>{children}</div>
+          <Children>{children}</Children>
           {noButton ? undefined : (
             <Buttons>
               <ModalButton $buttonType='cancel' onClick={withBlur(onCancel)}>

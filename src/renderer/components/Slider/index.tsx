@@ -12,34 +12,34 @@ const BackGround = styled.div`
 `;
 
 type ImageWrapperProps = {
-  bottom?: number;
-  right?: number;
-  width?: number;
-  height?: number;
-  hidden?: boolean;
+  $bottom?: number;
+  $right?: number;
+  $scale?: number;
+  $hidden?: boolean;
 };
 
 const ImageWrapper = styled.div<ImageWrapperProps>`
   position: absolute;
-  right: ${(props) => props.right}rem;
-  bottom: ${(props) => props.bottom}rem;
-  height: ${(props) => props.height}rem;
-  width: ${(props) => props.width}rem;
+  right: ${(props) => props.$right}rem;
+  bottom: ${(props) => props.$bottom}rem;
+  height: 25rem;
+  width: 25rem;
+  transform: scale(${(props) => props.$scale});
   transition: all ${(props) => props.theme.duration.slider} ease-out;
-  visibility: ${(props) => (props.hidden ? 'hidden' : 'visible')};
+  visibility: ${(props) => (props.$hidden ? 'hidden' : 'visible')};
+  transform-origin: bottom right;
 `;
 
 const computePos = (index: number, len: number) => {
-  const right =
+  const $right =
     4.875 + 15 * (index - 2 * len) + (index >= 2 * len + 1 ? 12.5 : 0);
-  const hidden = index >= 3 * len || index <= len - 1;
-  const edge = index == 2 * len ? 25.0 : 12.5;
+  const $hidden = index >= 3 * len || index <= len - 1;
+  const $scale = index == 2 * len ? 1.0 : 0.5;
   return {
-    bottom: 3.25,
-    right,
-    width: edge,
-    height: edge,
-    hidden,
+    $bottom: 3.25,
+    $right,
+    $scale,
+    $hidden,
   };
 };
 
