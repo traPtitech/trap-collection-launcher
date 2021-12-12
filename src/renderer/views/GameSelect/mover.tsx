@@ -20,9 +20,11 @@ const LRButton = styled(Div)`
   height: 100%;
   width: 5rem;
   background-color: ${(props) => props.theme.colors.button.transparent.fill};
+  color: ${(props) => props.theme.colors.overlay.selectedSlide};
   &:hover {
     cursor: pointer;
     background-color: ${(props) => props.theme.colors.overlay.selectedSlide};
+    color: ${(props) => props.theme.colors.button.transparent.fill};
   }
   display: flex;
   align-items: center;
@@ -38,7 +40,7 @@ const IconCircle = styled(Div)`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => props.theme.colors.overlay.selectedSlide};
+  background-color: currentColor;
 `;
 
 const Before = styled(MdNavigateBefore)`

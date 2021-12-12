@@ -112,6 +112,16 @@ const CollectionLogo = styled(Img)`
   height: auto;
 `;
 
+const Version = styled(Div)`
+  position: absolute;
+  right: 4.875rem;
+  bottom: 29.5rem;
+  width: 25rem;
+  height: auto;
+  text-align: center;
+  color: ${(props) => props.theme.colors.text.primary};
+`;
+
 /**
  * Returns the remainder of a divided by b.
  * @param a {number} Dividend
@@ -189,6 +199,9 @@ const GameSelect = ({ gameInfos, koudaisai }: Props) => {
           setSelectedGame(i);
         }}
       />
+      <Version>
+        version {gameInfos[mod(selectedGame, gameInfos.length)].version.id}
+      </Version>
       <Border />
       <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>
         <MenuButton />

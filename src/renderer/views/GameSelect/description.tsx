@@ -15,11 +15,13 @@ const Title = styled(Div)`
   width: 100%;
   font-size: 5rem;
   font-weight: bold;
+  color: ${(props) => props.theme.colors.text.header};
 `;
 
 const Primary = styled(Div)`
   width: 100%;
   font-size: 1.25rem;
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 
 export type Props = {
