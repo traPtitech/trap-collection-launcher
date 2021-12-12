@@ -36,6 +36,10 @@ export const createTheme = ({ dark }: { dark: boolean }): Theme => {
         play: {
           fill: '#e5e5e5',
         },
+        dot: {
+          fill: '#e2e2e2',
+          hover: '#FFFFFF',
+        },
       },
       overlay: {
         selectedSlide: 'rgba(0, 0, 0, 0.5)',
@@ -44,6 +48,9 @@ export const createTheme = ({ dark }: { dark: boolean }): Theme => {
       background: {
         selector: 'linear-gradient(0.25turn, rgba(255,255,255,0.8), #78D1FF)',
         menu: 'rgba(0, 0, 0, 0.5)',
+      },
+      shadow: {
+        dot: 'rgba(0, 0, 0, 0.2)',
       },
     },
     duration: {

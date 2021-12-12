@@ -32,6 +32,7 @@ const StyledImage = styled(Image)<{ $isLoad: boolean; $isSelect: boolean }>`
     transform: scale(${(props) => (props.$isSelect ? '1.0' : '1.1')});
   }
   cursor: pointer;
+  box-shadow: 0px 3px 10px ${(props) => props.theme.colors.background.menu};
 `;
 
 const ImageBorder = styled(Div)<{ $isSelect: boolean }>`

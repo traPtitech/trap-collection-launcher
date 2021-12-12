@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { MdMenu } from 'react-icons/md';
 import styled from 'styled-components';
+import Description from './description';
+import DotSelector from './dotSelector';
+import Modals from './modals';
 import Mover from './mover';
-import SendSeatNum from './sendSeatNum';
 import collectionLogo from '@/renderer/assets/logo.svg';
-import Modal from '@/renderer/components/Modal';
 import SideBar from '@/renderer/components/SideBar';
 import Slider from '@/renderer/components/Slider';
 
@@ -193,10 +194,19 @@ const GameSelect = ({ gameInfos, koudaisai }: Props) => {
         <MenuButton />
       </MenuButtonWrapper>
       <CollectionLogo src={collectionLogo} />
+      <Description gameInfo={gameInfos[mod(selectedGame, gameInfos.length)]} />
 
       <Mover
         onClickLeft={() => setSelectedGame(selectedGame - 1)}
         onClickRight={() => setSelectedGame(selectedGame + 1)}
+      />
+
+      <DotSelector
+        length={gameInfos.length}
+        selectedGame={selectedGame}
+        onClickGame={(i) => {
+          setSelectedGame(i);
+        }}
       />
 
       <MenuBackground $isOpen={isOpenMenu || openedModal !== undefined} />
@@ -206,36 +216,9 @@ const GameSelect = ({ gameInfos, koudaisai }: Props) => {
         koudaisai={koudaisai}
         onCancel={() => setIsOpenMenu(false)}
       />
-      <Modal
-        modalType='warning'
-        title='プロダクトキーをリセットします'
-        isOpen={openedModal === 'resetKey'}
-        okButtonText='リセット'
-        onCancel={() => setOpenedModal(undefined)}
-      >
-        再び本ランチャーを使用するためには、再度プロダクトキーを入力する必要があります。この操作は取り消せません。
-      </Modal>
-      <Modal
-        modalType='warning'
-        title='ゲーム本体のデータをリセットします'
-        isOpen={openedModal === 'resetData'}
-        okButtonText='リセット'
-        onCancel={() => setOpenedModal(undefined)}
-      >
-        ダウンロードしたゲーム本体のデータをリセットします。プレイデータも一緒にリセットされます。
-        この操作は取り消せません。
-      </Modal>
-      <Modal
-        modalType='information'
-        title='traPの公式ホームページに遷移します．'
-        isOpen={openedModal === 'goWeb'}
-        okButtonText='traP 公式ホームページ'
-        onCancel={() => setOpenedModal(undefined)}
-      >
-        traPの公式ホームページに遷移します．
-      </Modal>
-      <SendSeatNum
-        isOpen={openedModal === 'sendSeatNum'}
+
+      <Modals
+        openedModal={openedModal}
         onCancel={() => setOpenedModal(undefined)}
       />
     </Wrapper>

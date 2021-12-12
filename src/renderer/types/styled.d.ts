@@ -34,6 +34,10 @@ export interface Theme {
       play: {
         fill: string;
       };
+      dot: {
+        fill: string;
+        hover: string;
+      };
     };
     overlay: {
       selectedSlide: string;
@@ -42,6 +46,9 @@ export interface Theme {
     background: {
       selector: string;
       menu: string;
+    };
+    shadow: {
+      dot: string;
     };
   };
   duration: {

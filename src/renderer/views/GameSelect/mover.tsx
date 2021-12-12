@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdClose, MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
+import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
 import styled from 'styled-components';
 
 const Div = ({ ...props }) => <div {...props} />;
