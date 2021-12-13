@@ -11,10 +11,10 @@ export type ModalType =
 
 export type Props = {
   openedModal: ModalType;
-  onCancel: ModalEventHandler;
+  closeHandler: ModalEventHandler;
 };
 
-const Modals = ({ openedModal, onCancel }: Props) => {
+const Modals = ({ openedModal, closeHandler }: Props) => {
   return (
     <>
       <Modal
@@ -22,7 +22,11 @@ const Modals = ({ openedModal, onCancel }: Props) => {
         title='プロダクトキーをリセットします'
         isOpen={openedModal === 'resetKey'}
         okButtonText='リセット'
-        onCancel={onCancel}
+        onCancel={closeHandler}
+        onOk={(e) => {
+          closeHandler(e);
+          //resetProductKey();
+        }}
       >
         再び本ランチャーを使用するためには、再度プロダクトキーを入力する必要があります。この操作は取り消せません。
       </Modal>
@@ -31,7 +35,11 @@ const Modals = ({ openedModal, onCancel }: Props) => {
         title='ゲーム本体のデータをリセットします'
         isOpen={openedModal === 'resetData'}
         okButtonText='リセット'
-        onCancel={onCancel}
+        onCancel={closeHandler}
+        onOk={(e) => {
+          closeHandler(e);
+          //resetGameData();
+        }}
       >
         ダウンロードしたゲーム本体のデータをリセットします。プレイデータも一緒にリセットされます。
         この操作は取り消せません。
@@ -41,11 +49,18 @@ const Modals = ({ openedModal, onCancel }: Props) => {
         title='traPの公式ホームページに遷移します．'
         isOpen={openedModal === 'goWeb'}
         okButtonText='traP 公式ホームページ'
-        onCancel={onCancel}
+        onCancel={closeHandler}
+        onOk={(e) => {
+          closeHandler(e);
+          window.TraPCollectionAPI.invoke.openHomePage();
+        }}
       >
         traPの公式ホームページに遷移します．
       </Modal>
-      <SendSeatNum isOpen={openedModal === 'sendSeatNum'} onCancel={onCancel} />
+      <SendSeatNum
+        isOpen={openedModal === 'sendSeatNum'}
+        closeHandler={closeHandler}
+      />
     </>
   );
 };

@@ -58,9 +58,10 @@ export type Props = {
   selected: number;
   gameInfos: TraPCollection.GameInfo[];
   onClickGame?: (index: number) => void;
+  onPlayGame?: () => void;
 };
 
-const Slider = ({ selected, gameInfos, onClickGame }: Props) => {
+const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
   const gameInfos4 = [...gameInfos, ...gameInfos, ...gameInfos, ...gameInfos];
   const listImages = gameInfos4.map((gameInfo, index) => {
     const len = gameInfos.length;
@@ -68,10 +69,13 @@ const Slider = ({ selected, gameInfos, onClickGame }: Props) => {
       <ImageWrapper
         key={index}
         {...computePos(mod(selected - index, 4 * len), len)}
-        onClick={() =>
+        onClick={() => {
           onClickGame &&
-          onClickGame(selected + 2 * len - mod(selected - index, 4 * len))
-        }
+            onClickGame(selected + 2 * len - mod(selected - index, 4 * len));
+          if (mod(selected - index, 4 * len) === 2 * len) {
+            onPlayGame && onPlayGame();
+          }
+        }}
       >
         <SliderImage
           src={gameInfo.poster}

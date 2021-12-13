@@ -23,8 +23,11 @@ const StyledInput = styled.input`
 
 const SendSeatNum = ({
   isOpen,
-  onCancel,
-}: Pick<ModalComponent.Props, 'isOpen' | 'onCancel'>) => {
+  closeHandler,
+}: {
+  isOpen: boolean;
+  closeHandler: ModalComponent.ModalEventHandler;
+}) => {
   const [text, setText] = useState('');
 
   const setValidText = (str: string) => {
@@ -37,7 +40,12 @@ const SendSeatNum = ({
       title='座席データを送信します'
       isOpen={isOpen}
       okButtonText='回答する'
-      onCancel={onCancel}
+      onCancel={closeHandler}
+      onOk={(e) => {
+        const seatNum = Number(text);
+        seatNum && window.TraPCollectionAPI.invoke.setSeatId(seatNum);
+        closeHandler(e);
+      }}
     >
       <Wrapper>
         座席番号を入力してください。

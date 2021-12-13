@@ -195,6 +195,11 @@ const GameSelect = ({ gameInfos, koudaisai }: Props) => {
       <Slider
         selected={selectedGame}
         gameInfos={gameInfos}
+        onPlayGame={() => {
+          window.TraPCollectionAPI.invoke.launch(
+            gameInfos[mod(selectedGame, gameInfos.length)].id
+          );
+        }}
         onClickGame={(i) => {
           setSelectedGame(i);
         }}
@@ -232,7 +237,7 @@ const GameSelect = ({ gameInfos, koudaisai }: Props) => {
 
       <Modals
         openedModal={openedModal}
-        onCancel={() => setOpenedModal(undefined)}
+        closeHandler={() => setOpenedModal(undefined)}
       />
     </Wrapper>
   );
