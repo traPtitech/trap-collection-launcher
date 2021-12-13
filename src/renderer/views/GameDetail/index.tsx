@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { ipcRenderer } from '@/common/typedIpc';
 import Button from '@/renderer/components/Button';
 import IconButton from '@/renderer/components/IconButton';
 import { useBackgroundVideo } from '@/renderer/contexts/Background';
@@ -54,7 +55,13 @@ const GameDetail: React.FC = () => {
       <Content>
         <PageTitle>{game.name}</PageTitle>
         <Description>{game.description}</Description>
-        <Button outlined iconName='play' onClick={launch}>
+        <Button
+          outlined
+          iconName='play'
+          onClick={() => {
+            launch();
+          }}
+        >
           {t('launch')}!
         </Button>
       </Content>

@@ -1,7 +1,7 @@
 import childProcess from 'child_process';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
-import { questionaireUrl, homePageUrl } from '@/config';
+import { questionnaireUrl, homePageUrl } from '@/config';
 
 export const openQuestionnaireHandler = async (
   window: BrowserWindow | null
@@ -11,7 +11,7 @@ export const openQuestionnaireHandler = async (
   }
   ipcMain.handle('openQuestionnaire', async () => {
     const childWindow = new BrowserWindow({ parent: window });
-    childWindow.loadURL(questionaireUrl);
+    childWindow.loadURL(questionnaireUrl);
   });
 };
 
