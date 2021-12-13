@@ -3,7 +3,7 @@ import { MdMenu } from 'react-icons/md';
 import styled from 'styled-components';
 import Description from './description';
 import DotSelector from './dotSelector';
-import Modals from './modals';
+import Modals, { ModalType } from './modals';
 import Mover from './mover';
 import collectionLogo from '@/renderer/assets/logo.svg';
 import SideBar from '@/renderer/components/SideBar';
@@ -122,6 +122,17 @@ const Version = styled(Div)`
   color: ${(props) => props.theme.colors.text.primary};
 `;
 
+// マウスの動きを監視するようのdiv
+const WheelWatcher = styled(Div)`
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+`;
+// ゲームを切り替える最小の WheelEvent.deltaY の量
+const threshold = 20;
+
 /**
  * Returns the remainder of a divided by b.
  * @param a {number} Dividend
@@ -138,12 +149,11 @@ export type Props = {
   koudaisai: boolean;
 };
 
-type Modals = undefined | 'resetKey' | 'resetData' | 'sendSeatNum' | 'goWeb';
-
 const GameSelect = ({ gameInfos, koudaisai }: Props) => {
   const [selectedGame, setSelectedGame] = useState(0);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const [openedModal, setOpenedModal] = useState<Modals>(undefined);
+  const [openedModal, setOpenedModal] = useState<ModalType>(undefined);
+  const [canScroll, setCanScroll] = useState(true); //トラックパッドなどで非常に細かくwheelイベントが発生した際，処理落ちするのを防ぐ
 
   const menuItems = [
     {
@@ -151,13 +161,6 @@ const GameSelect = ({ gameInfos, koudaisai }: Props) => {
       onClick: () => {
         setIsOpenMenu(false);
         setOpenedModal('resetKey');
-      },
-    },
-    {
-      text: 'ゲーム本体データのリセット',
-      onClick: () => {
-        setIsOpenMenu(false);
-        setOpenedModal('resetData');
       },
     },
     ...(koudaisai
@@ -182,50 +185,66 @@ const GameSelect = ({ gameInfos, koudaisai }: Props) => {
 
   return (
     <Wrapper>
-      <VideoWrapper>
-        <BackgroundVideo
-          src={gameInfos[mod(selectedGame, gameInfos.length)].video}
-          poster={gameInfos[mod(selectedGame, gameInfos.length)].poster}
-          autoPlay
-          controls={false}
+      <WheelWatcher
+        onWheel={(e: { deltaY: number }) => {
+          if (canScroll) {
+            if (e.deltaY > threshold) {
+              setSelectedGame(selectedGame - 1);
+            } else if (e.deltaY < -threshold) {
+              setSelectedGame(selectedGame + 1);
+            }
+            setCanScroll(false);
+            setTimeout(() => setCanScroll(true), 100);
+          }
+        }}
+      >
+        <VideoWrapper>
+          <BackgroundVideo
+            src={gameInfos[mod(selectedGame, gameInfos.length)].video}
+            poster={gameInfos[mod(selectedGame, gameInfos.length)].poster}
+            autoPlay
+            controls={false}
+          />
+        </VideoWrapper>
+        <VideoOverlay />
+        <SelectorBackGround />
+        <Slider
+          selected={selectedGame}
+          gameInfos={gameInfos}
+          onPlayGame={() => {
+            window.TraPCollectionAPI.invoke.launch(
+              gameInfos[mod(selectedGame, gameInfos.length)].id
+            );
+          }}
+          onClickGame={(i) => {
+            setSelectedGame(i);
+          }}
         />
-      </VideoWrapper>
-      <VideoOverlay />
-      <SelectorBackGround />
-      <Slider
-        selected={selectedGame}
-        gameInfos={gameInfos}
-        onPlayGame={() => {
-          window.TraPCollectionAPI.invoke.launch(
-            gameInfos[mod(selectedGame, gameInfos.length)].id
-          );
-        }}
-        onClickGame={(i) => {
-          setSelectedGame(i);
-        }}
-      />
-      <Version>
-        version {gameInfos[mod(selectedGame, gameInfos.length)].version.id}
-      </Version>
-      <Border />
-      <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>
-        <MenuButton />
-      </MenuButtonWrapper>
-      <CollectionLogo src={collectionLogo} />
-      <Description gameInfo={gameInfos[mod(selectedGame, gameInfos.length)]} />
+        <Version>
+          {gameInfos[mod(selectedGame, gameInfos.length)].version.name}
+        </Version>
+        <Border />
+        <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>
+          <MenuButton />
+        </MenuButtonWrapper>
+        <CollectionLogo src={collectionLogo} />
+        <Description
+          gameInfo={gameInfos[mod(selectedGame, gameInfos.length)]}
+        />
 
-      <Mover
-        onClickLeft={() => setSelectedGame(selectedGame - 1)}
-        onClickRight={() => setSelectedGame(selectedGame + 1)}
-      />
+        <Mover
+          onClickLeft={() => setSelectedGame(selectedGame - 1)}
+          onClickRight={() => setSelectedGame(selectedGame + 1)}
+        />
 
-      <DotSelector
-        length={gameInfos.length}
-        selectedGame={selectedGame}
-        onClickGame={(i) => {
-          setSelectedGame(i);
-        }}
-      />
+        <DotSelector
+          length={gameInfos.length}
+          selectedGame={selectedGame}
+          onClickGame={(i) => {
+            setSelectedGame(i);
+          }}
+        />
+      </WheelWatcher>
 
       <MenuBackground $isOpen={isOpenMenu || openedModal !== undefined} />
       <SideBar

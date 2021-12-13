@@ -10,11 +10,16 @@ const Image = ({ ...props }) => {
   return <img {...props} />;
 };
 
-const Wrapper = styled(Div)`
+const Wrapper = styled(Div)<{ $isSelect: boolean }>`
   width: 100%;
   height: 100%;
   background-color: ${(props) => props.theme.colors.panel.primary};
   border-radius: 0.5rem;
+  transition: transform ${(props) => props.theme.duration.normal} ease-out;
+  &:hover {
+    transform: scale(${(props) => (props.$isSelect ? '1.0' : '1.1')});
+  }
+  cursor: pointer;
 `;
 
 const StyledImage = styled(Image)<{ $isLoad: boolean; $isSelect: boolean }>`
@@ -25,13 +30,8 @@ const StyledImage = styled(Image)<{ $isLoad: boolean; $isSelect: boolean }>`
   height: 100%;
   object-fit: cover;
   opacity: ${(props) => (props.$isLoad ? '100%' : '0%')};
-  transition: opacity ${(props) => props.theme.duration.normal} ease-out,
-    transform ${(props) => props.theme.duration.normal} ease-out;
+  transition: opacity ${(props) => props.theme.duration.normal} ease-out;
   border-radius: 0.5rem;
-  &:hover {
-    transform: scale(${(props) => (props.$isSelect ? '1.0' : '1.1')});
-  }
-  cursor: pointer;
   box-shadow: 0px 3px 10px ${(props) => props.theme.colors.background.menu};
 `;
 
