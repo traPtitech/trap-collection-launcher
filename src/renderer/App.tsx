@@ -1,49 +1,52 @@
-import React from 'react';
-import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { createContext, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { createTheme } from './styles/theme';
-import Background from '@/renderer/components/Background';
 import * as config from '@/renderer/config';
-import { BackgroundProvider } from '@/renderer/contexts/Background';
 import { ConfigProvider } from '@/renderer/contexts/Config';
 import GlobalStyle from '@/renderer/styles/GlobalStyle';
-import GameDetailPage from '@/renderer/views/GameDetail';
-import GameListPage from '@/renderer/views/GameList';
-import InitPage from '@/renderer/views/Init';
-import LoadingPage from '@/renderer/views/Loading';
-import SettingPage from '@/renderer/views/Setting';
+import GameSelect from '@/renderer/views/GameSelect';
 import TitlePage from '@/renderer/views/Title';
 
-const Navigation: React.FC = () => {
-  return (
-    <MemoryRouter>
-      <Routes>
-        <Route path='/' element={<Navigate to='/init' />} />
-        <Route path='/init' element={<InitPage />} />
-        <Route path='/loading' element={<LoadingPage />} />
-        <Route path='/title' element={<TitlePage />} />
-        <Route path='/game' element={<GameListPage />} />
-        <Route path='/game/detail' element={<GameDetailPage />} />
-        <Route path='/setting' element={<SettingPage />} />
-      </Routes>
-    </MemoryRouter>
-  );
+export type Page = 'title' | 'gameSelect';
+
+const Navigation = ({
+  page,
+  koudaisai,
+}: {
+  page: Page;
+  koudaisai: boolean;
+}) => {
+  switch (page) {
+    case 'title':
+      return <TitlePage></TitlePage>;
+    case 'gameSelect':
+      return <GameSelect koudaisai={koudaisai}></GameSelect>;
+  }
 };
 
 type Props = {
   config: config.Config;
+  koudaisai: boolean;
 };
 
-const App: React.FC<Props> = ({ config }) => (
-  <ConfigProvider value={config}>
-    <BackgroundProvider>
+const NavigateContext = createContext<((page: Page) => void) | undefined>(
+  undefined
+);
+
+const App = ({ config, koudaisai }: Props) => {
+  const [page, setPage] = useState<Page>('title');
+  const navigate = (page: Page) => setPage(page);
+
+  return (
+    <ConfigProvider value={config}>
       <ThemeProvider theme={createTheme({ dark: false })}>
         <GlobalStyle />
-        <Navigation />
-        <Background />
+        <NavigateContext.Provider value={navigate}>
+          <Navigation page={page} koudaisai={koudaisai} />
+        </NavigateContext.Provider>
       </ThemeProvider>
-    </BackgroundProvider>
-  </ConfigProvider>
-);
+    </ConfigProvider>
+  );
+};
 
 export default App;
