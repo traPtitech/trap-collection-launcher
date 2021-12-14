@@ -11,6 +11,7 @@ const Image = ({ ...props }) => {
 };
 
 const Wrapper = styled(Div)<{ $isSelect: boolean }>`
+  position: relative;
   width: 100%;
   height: 100%;
   background-color: ${(props) => props.theme.colors.panel.primary};
@@ -23,9 +24,6 @@ const Wrapper = styled(Div)<{ $isSelect: boolean }>`
 `;
 
 const StyledImage = styled(Image)<{ $isLoad: boolean; $isSelect: boolean }>`
-  position: absolute;
-  left: 0;
-  top: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;

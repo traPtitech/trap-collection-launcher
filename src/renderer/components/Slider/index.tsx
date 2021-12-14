@@ -18,11 +18,18 @@ type ImageWrapperProps = {
   $hidden?: boolean;
 };
 
+const Version = styled.div`
+  position: relative;
+  margin: 1rem;
+`;
+
 const ImageWrapper = styled.div<ImageWrapperProps>`
   position: absolute;
   right: ${(props) => props.$right}rem;
   bottom: ${(props) => props.$bottom}rem;
-  height: 25rem;
+  height: auto;
+  text-align: center;
+  font-size: 1rem;
   width: 25rem;
   transform: scale(${(props) => props.$scale});
   transition: all ${(props) => props.theme.duration.slider} ease-out;
@@ -77,6 +84,9 @@ const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
           }
         }}
       >
+        <Version>
+          {mod(selected - index, 4 * len) === 2 * len && gameInfo.version.name}
+        </Version>
         <SliderImage
           src={gameInfo.poster}
           isSelect={mod(selected - index, 4 * len) === len * 2}
