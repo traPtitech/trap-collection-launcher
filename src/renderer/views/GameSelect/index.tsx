@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdMenu } from 'react-icons/md';
 import styled from 'styled-components';
 import Description from './description';
@@ -135,15 +135,23 @@ const mod = (a: number, b: number) => {
 };
 
 export type Props = {
-  gameInfos: TraPCollection.GameInfo[];
   koudaisai: boolean;
 };
 
-const GameSelect = ({ gameInfos, koudaisai }: Props) => {
+const GameSelect = ({ koudaisai }: Props) => {
   const [selectedGame, setSelectedGame] = useState(0);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [openedModal, setOpenedModal] = useState<ModalType>(undefined);
   const [canScroll, setCanScroll] = useState(true); //トラックパッドなどで非常に細かくwheelイベントが発生した際，処理落ちするのを防ぐ
+  const [gameInfos, setGameInfos] = useState<TraPCollection.GameInfo[]>([]);
+
+  useEffect(() => {
+    const fetchGameInfo = async () => {
+      const res = await window.TraPCollectionAPI.invoke.getGameInfo();
+      setGameInfos(res);
+    };
+    fetchGameInfo();
+  }, []);
 
   const menuItems = [
     {

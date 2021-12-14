@@ -29,9 +29,9 @@ type Props = {
   koudaisai: boolean;
 };
 
-const NavigateContext = createContext<((page: Page) => void) | undefined>(
-  undefined
-);
+export const NavigateContext = createContext<
+  ((page: Page) => void) | undefined
+>(undefined);
 
 const App = ({ config, koudaisai }: Props) => {
   const [page, setPage] = useState<Page>('title');
