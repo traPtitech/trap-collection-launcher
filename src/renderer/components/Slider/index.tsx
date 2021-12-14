@@ -18,9 +18,11 @@ type ImageWrapperProps = {
   $hidden?: boolean;
 };
 
-const Version = styled.div`
+const Version = styled.div<{ $isSelected?: boolean }>`
   position: relative;
   margin: 1rem;
+  opacity: ${(props) => (props.$isSelected ? '100%' : '0%')};
+  transition: opacity ${(props) => props.theme.duration.slider};
 `;
 
 const ImageWrapper = styled.div<ImageWrapperProps>`
@@ -84,8 +86,8 @@ const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
           }
         }}
       >
-        <Version>
-          {mod(selected - index, 4 * len) === 2 * len && gameInfo.version.name}
+        <Version $isSelected={mod(selected - index, 4 * len) === 2 * len}>
+          {gameInfo.version.name}
         </Version>
         <SliderImage
           src={gameInfo.poster}
