@@ -12,34 +12,43 @@ const BackGround = styled.div`
 `;
 
 type ImageWrapperProps = {
-  bottom?: number;
-  right?: number;
-  width?: number;
-  height?: number;
-  hidden?: boolean;
+  $bottom?: number;
+  $right?: number;
+  $scale?: number;
+  $hidden?: boolean;
 };
+
+const Version = styled.div<{ $isSelected?: boolean }>`
+  position: relative;
+  margin: 1rem;
+  opacity: ${(props) => (props.$isSelected ? '100%' : '0%')};
+  transition: opacity ${(props) => props.theme.duration.slider};
+`;
 
 const ImageWrapper = styled.div<ImageWrapperProps>`
   position: absolute;
-  right: ${(props) => props.right}rem;
-  bottom: ${(props) => props.bottom}rem;
-  height: ${(props) => props.height}rem;
-  width: ${(props) => props.width}rem;
+  right: ${(props) => props.$right}rem;
+  bottom: ${(props) => props.$bottom}rem;
+  height: auto;
+  text-align: center;
+  font-size: 1rem;
+  width: 25rem;
+  transform: scale(${(props) => props.$scale});
   transition: all ${(props) => props.theme.duration.slider} ease-out;
-  visibility: ${(props) => (props.hidden ? 'hidden' : 'visible')};
+  visibility: ${(props) => (props.$hidden ? 'hidden' : 'visible')};
+  transform-origin: bottom right;
 `;
 
 const computePos = (index: number, len: number) => {
-  const right =
+  const $right =
     4.875 + 15 * (index - 2 * len) + (index >= 2 * len + 1 ? 12.5 : 0);
-  const hidden = index >= 3 * len || index <= len - 1;
-  const edge = index == 2 * len ? 25.0 : 12.5;
+  const $hidden = index >= 3 * len || index <= len - 1;
+  const $scale = index == 2 * len ? 1.0 : 0.5;
   return {
-    bottom: 3.25,
-    right,
-    width: edge,
-    height: edge,
-    hidden,
+    $bottom: 3.25,
+    $right,
+    $scale,
+    $hidden,
   };
 };
 
@@ -58,9 +67,10 @@ export type Props = {
   selected: number;
   gameInfos: TraPCollection.GameInfo[];
   onClickGame?: (index: number) => void;
+  onPlayGame?: () => void;
 };
 
-const Slider = ({ selected, gameInfos, onClickGame }: Props) => {
+const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
   const gameInfos4 = [...gameInfos, ...gameInfos, ...gameInfos, ...gameInfos];
   const listImages = gameInfos4.map((gameInfo, index) => {
     const len = gameInfos.length;
@@ -68,11 +78,17 @@ const Slider = ({ selected, gameInfos, onClickGame }: Props) => {
       <ImageWrapper
         key={index}
         {...computePos(mod(selected - index, 4 * len), len)}
-        onClick={() =>
+        onClick={() => {
           onClickGame &&
-          onClickGame(selected + 2 * len - mod(selected - index, 4 * len))
-        }
+            onClickGame(selected + 2 * len - mod(selected - index, 4 * len));
+          if (mod(selected - index, 4 * len) === 2 * len) {
+            onPlayGame && onPlayGame();
+          }
+        }}
       >
+        <Version $isSelected={mod(selected - index, 4 * len) === 2 * len}>
+          {gameInfo.version.name}
+        </Version>
         <SliderImage
           src={gameInfo.poster}
           isSelect={mod(selected - index, 4 * len) === len * 2}
