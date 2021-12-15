@@ -43,9 +43,12 @@ const BottomWrapper = styled(Div)`
   align-items: center;
 `;
 
-const ProductKeyText = styled(Div)`
+const ProductKeyText = styled(Div)<{ $invalidProductKey: boolean }>`
   position: relative;
-  color: ${(props) => props.theme.colors.text.primary};
+  color: ${(props) =>
+    props.$invalidProductKey
+      ? props.theme.colors.text.warn
+      : props.theme.colors.text.primary};
   font-size: 1rem;
   font-weight: bold;
 `;
@@ -157,6 +160,9 @@ const TitlePage = () => {
   }, []);
 
   const onEnterProductKey = () => {
+    if (!isValidProductKeyFormat(productKey)) {
+      return;
+    }
     window.TraPCollectionAPI.invoke.setProductKey(productKey);
     const tryLoginAndCheck = async () => {
       const res = await tryLogin(productKey);
@@ -181,7 +187,11 @@ const TitlePage = () => {
       <BottomWrapper>
         {needUserInput ? (
           <>
-            <ProductKeyText>プロダクトキーを入力して下さい</ProductKeyText>
+            <ProductKeyText $invalidProductKey={invalidProductKey}>
+              {invalidProductKey
+                ? 'プロダクトキーが誤っています'
+                : 'プロダクトキーを入力して下さい'}
+            </ProductKeyText>
             <ProductKeyInputWrapper>
               <ProductKeyInput
                 onKeyPress={onKeyPressHandler}
