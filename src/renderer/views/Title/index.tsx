@@ -1,6 +1,7 @@
 import Cleave from 'cleave.js/react';
 import React, { useContext, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import Loader from 'react-loader-spinner';
+import styled, { useTheme } from 'styled-components';
 import { NavigateContext } from '@/renderer/App';
 import collectionLogo from '@/renderer/assets/logo.svg';
 
@@ -78,7 +79,9 @@ const CollectionLogoWrapper = styled(Img)`
 `;
 
 const isValidProductKeyFormat = (str: string) => {
-  return str.split('-').every((s) => s.length === 5) && str.length === 29;
+  return /^[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}$/.test(
+    str
+  );
 };
 
 const TitlePage = () => {
@@ -86,14 +89,16 @@ const TitlePage = () => {
   const navigate = useContext(NavigateContext);
   const [invalidProductKey, setInvalidProductKey] = useState(false);
   const [needUserInput, setNeedUserInput] = useState(false);
+  const theme = useTheme();
 
   const tryLogin = async (key: string) => {
+    setNeedUserInput(false);
     if (isValidProductKeyFormat(key) === false) {
-      setInvalidProductKey(true);
+      setNeedUserInput(true);
       return false;
     }
     //Todo: const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(key);
-    const success = false; //Todo: delete
+    const success = false; //Todo: delete this line
     console.log(success);
     if (success) {
       //Todo: window.TraPCollectionAPI.invoke.syncGame();
@@ -139,24 +144,35 @@ const TitlePage = () => {
       <TitleContainer>
         <CollectionLogoWrapper src={collectionLogo} />
       </TitleContainer>
-      {needUserInput && (
-        <ProductKeyInputWrapper>
-          <ProductKeyText>プロダクトキーを入力して下さい</ProductKeyText>
-          <ProductKeyInput
-            onKeyPress={onKeyPressHandler}
-            $invalidProductKey={invalidProductKey}
-            placeholder='00000-00000-00000-00000-00000'
-            options={{
-              delimiter: '-',
-              blocks: [5, 5, 5, 5, 5],
-            }}
-            onChange={(e) => {
-              setInvalidProductKey(false);
-              setProductKey(e.target.value);
-            }}
-          />
-        </ProductKeyInputWrapper>
-      )}
+      <ProductKeyInputWrapper>
+        {needUserInput ? (
+          <>
+            <ProductKeyText>プロダクトキーを入力して下さい</ProductKeyText>
+            <ProductKeyInput
+              onKeyPress={onKeyPressHandler}
+              $invalidProductKey={invalidProductKey}
+              placeholder='00000-00000-00000-00000-00000'
+              options={{
+                delimiter: '-',
+                blocks: [5, 5, 5, 5, 5],
+              }}
+              onChange={(e) => {
+                setInvalidProductKey(false);
+                setProductKey(e.target.value);
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <Loader
+              type='Oval'
+              height='60'
+              width='60'
+              color={theme.colors.button.information.fill}
+            />
+          </>
+        )}
+      </ProductKeyInputWrapper>
     </Wrapper>
   );
 };
