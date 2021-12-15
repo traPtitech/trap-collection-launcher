@@ -1,5 +1,6 @@
 import Cleave from 'cleave.js/react';
 import React, { useContext, useEffect, useState } from 'react';
+import { MdArrowForward } from 'react-icons/md';
 import Loader from 'react-loader-spinner';
 import styled, { useTheme } from 'styled-components';
 import { NavigateContext } from '@/renderer/App';
@@ -7,7 +8,6 @@ import collectionLogo from '@/renderer/assets/logo.svg';
 
 const Div = ({ ...props }) => <div {...props} />;
 const Img = ({ ...props }) => <img {...props} />;
-const Input = ({ ...props }) => <input {...props} />;
 
 const Wrapper = styled(Div)`
   position: fixed;
@@ -30,7 +30,7 @@ const TitleContainer = styled(Div)`
   align-items: center;
 `;
 
-const ProductKeyInputWrapper = styled(Div)`
+const BottomWrapper = styled(Div)`
   position: absolute;
   height: 50%;
   left: 0;
@@ -50,9 +50,16 @@ const ProductKeyText = styled(Div)`
   font-weight: bold;
 `;
 
-const ProductKeyInput = styled(Cleave)<{ $invalidProductKey: boolean }>`
+const ProductKeyInputWrapper = styled(Div)`
+  position: relative;
   width: 23.5rem;
-  height: 1.75rem;
+  height: 2.5rem;
+`;
+
+const ProductKeyInput = styled(Cleave)<{ $invalidProductKey: boolean }>`
+  position: relative;
+  width: 100%;
+  height: 100%;
   outline: none;
   border: none;
   border-bottom: solid;
@@ -70,6 +77,33 @@ const ProductKeyInput = styled(Cleave)<{ $invalidProductKey: boolean }>`
   color: ${(props) => props.theme.colors.text.primary};
   background-color: transparent;
   text-align: center;
+`;
+
+const EnterButton = styled(Div)<{ $isValidProductKey: boolean }>`
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 2.5rem;
+  background-color: ${(props) => props.theme.colors.button.transparent.fill};
+  &:hover {
+    background-color: ${(props) =>
+      props.$isValidProductKey && props.theme.colors.button.transparent.hover};
+  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: ${(props) => props.$isValidProductKey && 'pointer'};
+  color: ${(props) =>
+    props.$isValidProductKey
+      ? props.theme.colors.text.primary
+      : props.theme.colors.text.placeholder};
+`;
+
+const EnterIcon = styled(MdArrowForward)`
+  position: relative;
+  height: 1.5rem;
+  width: 1.5rem;
 `;
 
 const CollectionLogoWrapper = styled(Img)`
@@ -144,23 +178,31 @@ const TitlePage = () => {
       <TitleContainer>
         <CollectionLogoWrapper src={collectionLogo} />
       </TitleContainer>
-      <ProductKeyInputWrapper>
+      <BottomWrapper>
         {needUserInput ? (
           <>
             <ProductKeyText>プロダクトキーを入力して下さい</ProductKeyText>
-            <ProductKeyInput
-              onKeyPress={onKeyPressHandler}
-              $invalidProductKey={invalidProductKey}
-              placeholder='00000-00000-00000-00000-00000'
-              options={{
-                delimiter: '-',
-                blocks: [5, 5, 5, 5, 5],
-              }}
-              onChange={(e) => {
-                setInvalidProductKey(false);
-                setProductKey(e.target.value);
-              }}
-            />
+            <ProductKeyInputWrapper>
+              <ProductKeyInput
+                onKeyPress={onKeyPressHandler}
+                $invalidProductKey={invalidProductKey}
+                placeholder='00000-00000-00000-00000-00000'
+                options={{
+                  delimiter: '-',
+                  blocks: [5, 5, 5, 5, 5],
+                }}
+                onChange={(e) => {
+                  setInvalidProductKey(false);
+                  setProductKey(e.target.value);
+                }}
+              />
+              <EnterButton
+                $isValidProductKey={isValidProductKeyFormat(productKey)}
+                onClick={onEnterProductKey}
+              >
+                <EnterIcon />
+              </EnterButton>
+            </ProductKeyInputWrapper>
           </>
         ) : (
           <>
@@ -172,7 +214,7 @@ const TitlePage = () => {
             />
           </>
         )}
-      </ProductKeyInputWrapper>
+      </BottomWrapper>
     </Wrapper>
   );
 };
