@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import Cleave from 'cleave.js/react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { NavigateContext } from '@/renderer/App';
 import collectionLogo from '@/renderer/assets/logo.svg';
@@ -48,16 +49,22 @@ const ProductKeyText = styled(Div)`
   font-weight: bold;
 `;
 
-const ProductKeyInput = styled(Input)`
+const ProductKeyInput = styled(Cleave)<{ $invalidProductKey: boolean }>`
   width: 23.5rem;
   height: 1.75rem;
   outline: none;
   border: none;
   border-bottom: solid;
   border-width: 0.125rem;
-  border-color: ${(props) => props.theme.colors.text.placeholder};
+  border-color: ${(props) =>
+    props.$invalidProductKey
+      ? props.theme.colors.text.warn
+      : props.theme.colors.text.placeholder};
   &:focus {
-    border-color: ${(props) => props.theme.colors.text.primary};
+    border-color: ${(props) =>
+      props.$invalidProductKey
+        ? props.theme.colors.text.warn
+        : props.theme.colors.text.primary};
   }
   color: ${(props) => props.theme.colors.text.primary};
   background-color: transparent;
@@ -70,16 +77,6 @@ const CollectionLogoWrapper = styled(Img)`
   height: auto;
 `;
 
-const makeProductKey: (str: string) => string = (str) => {
-  const loop = (str: string) => {
-    if (str.length > 5) {
-      return str.slice(0, 5) + '-' + makeProductKey(str.slice(5));
-    }
-    return str;
-  };
-  return loop(str.replace(/[^0-9]/gi, '').slice(0, 25));
-};
-
 const isValidProductKeyFormat = (str: string) => {
   return str.split('-').every((s) => s.length === 5) && str.length === 29;
 };
@@ -87,28 +84,78 @@ const isValidProductKeyFormat = (str: string) => {
 const TitlePage = () => {
   const [productKey, setProductKey] = useState<string>('');
   const navigate = useContext(NavigateContext);
+  const [invalidProductKey, setInvalidProductKey] = useState(false);
+  const [needUserInput, setNeedUserInput] = useState(false);
 
-  const onKeyPressHandler = (e: { keyCode: number }) => {
-    if (e.keyCode === 13 && isValidProductKeyFormat(productKey)) {
-      // window.TraPCollectionAPI.invoke.postLauncherLogin('productKey');
+  const tryLogin = async (key: string) => {
+    if (isValidProductKeyFormat(key) === false) {
+      setInvalidProductKey(true);
+      return false;
+    }
+    //Todo: const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(key);
+    const success = false; //Todo: delete
+    console.log(success);
+    if (success) {
+      //Todo: window.TraPCollectionAPI.invoke.syncGame();
       navigate && navigate('gameSelect');
+      return true;
+    } else {
+      setNeedUserInput(true);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    const fetchProductKeyAndLogin = async () => {
+      const res = await window.TraPCollectionAPI.invoke.getProductKey();
+      if (res === undefined) {
+        setNeedUserInput(true);
+      } else {
+        tryLogin(res);
+      }
+    };
+    fetchProductKeyAndLogin();
+  }, []);
+
+  const onEnterProductKey = () => {
+    const tryLoginAndCheck = async () => {
+      const res = await tryLogin(productKey);
+      if (res === false) {
+        setInvalidProductKey(true);
+      }
+    };
+    tryLoginAndCheck();
+  };
+
+  const onKeyPressHandler = (e: { code: string }) => {
+    if (e.code === 'Enter') {
+      onEnterProductKey();
     }
   };
 
   return (
-    <Wrapper onKeyPress={onKeyPressHandler}>
+    <Wrapper>
       <TitleContainer>
         <CollectionLogoWrapper src={collectionLogo} />
       </TitleContainer>
-      <ProductKeyInputWrapper>
-        <ProductKeyText>プロダクトキーを入力して下さい</ProductKeyText>
-        <ProductKeyInput
-          value={productKey}
-          onChange={(e: { target: { value: string } }) =>
-            setProductKey(makeProductKey(e.target.value))
-          }
-        />
-      </ProductKeyInputWrapper>
+      {needUserInput && (
+        <ProductKeyInputWrapper>
+          <ProductKeyText>プロダクトキーを入力して下さい</ProductKeyText>
+          <ProductKeyInput
+            onKeyPress={onKeyPressHandler}
+            $invalidProductKey={invalidProductKey}
+            placeholder='00000-00000-00000-00000-00000'
+            options={{
+              delimiter: '-',
+              blocks: [5, 5, 5, 5, 5],
+            }}
+            onChange={(e) => {
+              setInvalidProductKey(false);
+              setProductKey(e.target.value);
+            }}
+          />
+        </ProductKeyInputWrapper>
+      )}
     </Wrapper>
   );
 };

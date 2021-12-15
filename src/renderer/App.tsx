@@ -26,7 +26,7 @@ const Navigation = ({
 
 type Props = {
   config: config.Config;
-  koudaisai: boolean;
+  koudaisai?: boolean;
 };
 
 export const NavigateContext = createContext<
@@ -35,14 +35,16 @@ export const NavigateContext = createContext<
 
 const App = ({ config, koudaisai }: Props) => {
   const [page, setPage] = useState<Page>('title');
-  const navigate = (page: Page) => setPage(page);
+  const navigate = (page: Page) => {
+    setPage(page);
+  };
 
   return (
     <ConfigProvider value={config}>
       <ThemeProvider theme={createTheme({ dark: false })}>
         <GlobalStyle />
         <NavigateContext.Provider value={navigate}>
-          <Navigation page={page} koudaisai={koudaisai} />
+          <Navigation page={page} koudaisai={koudaisai ?? false} />
         </NavigateContext.Provider>
       </ThemeProvider>
     </ConfigProvider>
