@@ -118,6 +118,7 @@ const TitlePage = () => {
   }, []);
 
   const onEnterProductKey = () => {
+    window.TraPCollectionAPI.invoke.setProductKey(productKey);
     const tryLoginAndCheck = async () => {
       const res = await tryLogin(productKey);
       if (res === false) {
