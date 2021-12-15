@@ -101,6 +101,8 @@ const EnterButton = styled(Div)<{ $isValidProductKey: boolean }>`
     props.$isValidProductKey
       ? props.theme.colors.text.primary
       : props.theme.colors.text.placeholder};
+  transition: background-color ${(props) => props.theme.duration.normal}
+    ease-out;
 `;
 
 const EnterIcon = styled(MdArrowForward)`
