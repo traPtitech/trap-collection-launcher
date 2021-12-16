@@ -1,6 +1,7 @@
 import { BrowserWindow } from 'electron';
 import { postLauncherLoginHandler } from './handler/APIHandler';
 import { checkJavaHandler } from './handler/checkJavaHandler';
+import { fetchGameHandler } from './handler/fetchGame';
 import { getGameInfoHandler } from './handler/getGameInfoHandler';
 import { getProductKeyHandler } from './handler/getProductKeyHandler';
 import { getSeatIdHandler } from './handler/getSeatIdHandler';
@@ -49,6 +50,7 @@ class IpcListener {
     ipcMain.removeHandler('sitDown');
     ipcMain.removeHandler('sitUp');
     ipcMain.removeHandler('postLauncherLogin');
+    ipcMain.removeHandler('fetchGame');
   }
 
   private addListeners() {
@@ -66,6 +68,7 @@ class IpcListener {
     sitDownHandler();
     sitUpHandler();
     postLauncherLoginHandler();
+    fetchGameHandler();
   }
 }
 
