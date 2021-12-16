@@ -55,7 +55,9 @@ const API = {
  * @param key string
  */
 export const postLauncherLogin = async (key: string): Promise<boolean> =>
-  API.LauncherAuthApi.postLauncherLogin({ key });
+  API.LauncherAuthApi.postLauncherLogin({ key }).then(
+    (res) => res.status === 201
+  );
 
 /**
  * ゲーム情報の取得
