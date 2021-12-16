@@ -54,7 +54,7 @@ const API = {
  * accessTokenの取得
  * @param key string
  */
-export const postLauncherLogin = async (key: string) =>
+export const postLauncherLogin = async (key: string): Promise<boolean> =>
   API.LauncherAuthApi.postLauncherLogin({ key });
 
 /**

@@ -3204,10 +3204,14 @@ export class LauncherAuthApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof LauncherAuthApi
    */
-  public postLauncherLogin(productKey: ProductKey, options?: any) {
+  public postLauncherLogin(
+    productKey: ProductKey,
+    options?: any
+  ): Promise<boolean> {
     return LauncherAuthApiFp(this.configuration)
       .postLauncherLogin(productKey, options)
-      .then((request) => request(this.axios, this.basePath));
+      .then((request) => request(this.axios, this.basePath))
+      .then((res) => res.status === 200);
   }
 }
 
