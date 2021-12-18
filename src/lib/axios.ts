@@ -54,10 +54,8 @@ const API = {
  * accessTokenの取得
  * @param key string
  */
-export const postLauncherLogin = async (key: string): Promise<boolean> =>
-  API.LauncherAuthApi.postLauncherLogin({ key }).then(
-    (res) => res.status === 201
-  );
+export const postLauncherLogin = async (key: string) =>
+  API.LauncherAuthApi.postLauncherLogin({ key });
 
 /**
  * ゲーム情報の取得
