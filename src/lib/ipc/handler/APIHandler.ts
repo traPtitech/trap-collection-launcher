@@ -5,7 +5,7 @@ export const postLauncherLoginHandler = (): void => {
   ipcMain.handle(
     'postLauncherLogin',
     async (event, productKey: string): Promise<boolean> => {
-      return postLauncherLogin(productKey);
+      return postLauncherLogin(productKey).then((res) => res.status === 201);
     }
   );
 };
