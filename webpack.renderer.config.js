@@ -14,5 +14,5 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
   },
-  externals: ['electron', 'fs'],
+  externals: ['fs'],
 };
