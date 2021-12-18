@@ -7,6 +7,7 @@ import { getProductKeyHandler } from './handler/getProductKeyHandler';
 import { getSeatIdHandler } from './handler/getSeatIdHandler';
 import { getSeatVersionHandler } from './handler/getSeatVersionHandler';
 import { launchHandler } from './handler/launchHandler';
+import { resetProductKeyHandler } from './handler/resetProductKetHandler';
 import { setProductKeyHandler } from './handler/setProductKeyHandler';
 import setSeatIdHandler from './handler/setSeatIdHandler';
 import { setSeatVersionIdHandler } from './handler/setSeatVersionHandler';
@@ -43,6 +44,7 @@ class IpcListener {
     ipcMain.removeHandler('checkJava');
     ipcMain.removeHandler('getProductKey');
     ipcMain.removeHandler('setProductKey');
+    ipcMain.removeHandler('resetProductKey');
     ipcMain.removeHandler('getSeatId');
     ipcMain.removeHandler('setSeatId');
     ipcMain.removeHandler('getSeatVersionId');
@@ -61,6 +63,7 @@ class IpcListener {
     checkJavaHandler();
     getProductKeyHandler();
     setProductKeyHandler();
+    resetProductKeyHandler();
     getSeatIdHandler();
     setSeatIdHandler();
     getSeatVersionHandler();

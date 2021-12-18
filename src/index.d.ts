@@ -9,6 +9,7 @@ declare namespace TraPCollection {
     checkJava(): Promise<boolean>;
     getProductKey(): Promise<string | undefined>;
     setProductKey(productKey: string): Promise<void>;
+    resetProductKey(): Promise<void>;
     getSeatId(): Promise<number | undefined>;
     setSeatId(seatId: number): Promise<void>;
     getSeatVersionId(): Promise<number | undefined>;

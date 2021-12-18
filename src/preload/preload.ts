@@ -18,6 +18,9 @@ const api: TraPCollection.API = {
     setProductKey: async (productKey) => {
       return await ipcRenderer.invoke('setProductKey', productKey);
     },
+    resetProductKey: async () => {
+      return await ipcRenderer.invoke('resetProductKey');
+    },
     getSeatId: async () => {
       return await ipcRenderer.invoke('getSeatId');
     },
