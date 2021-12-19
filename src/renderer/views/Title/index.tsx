@@ -133,7 +133,6 @@ const TitlePage = () => {
   const tryLogin = async () => {
     setNeedUserInput(false);
     const success = await window.TraPCollectionAPI.invoke.postLauncherLogin();
-    console.log(success);
     if (success) {
       await window.TraPCollectionAPI.invoke.fetchGame();
       navigate && navigate('gameSelect');
