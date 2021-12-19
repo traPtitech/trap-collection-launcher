@@ -2,7 +2,8 @@ import { postLauncherLogin } from '@/lib/axios';
 import { store } from '@/lib/store';
 
 export const updateToken = async (): Promise<void> => {
-  const productKey = store.get('productKey');
+  const productKeys = store.get('productKey') ?? [];
+  const productKey = productKeys[0]?.id;
   if (!productKey) {
     return console.error(new Error('ProductKey is not set'));
   }
