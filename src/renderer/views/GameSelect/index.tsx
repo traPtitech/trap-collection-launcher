@@ -155,6 +155,13 @@ const GameSelect = ({ koudaisai }: Props) => {
 
   const menuItems = [
     {
+      text: 'プロダクトキーの確認',
+      onClick: () => {
+        setIsOpenMenu(false);
+        setOpenedModal('productKey');
+      },
+    },
+    {
       text: 'プロダクトキーのリセット',
       onClick: () => {
         setIsOpenMenu(false);

@@ -1,8 +1,14 @@
 import React from 'react';
 import SendSeatNum from './sendSeatNum';
 import Modal, { ModalEventHandler } from '@/renderer/components/Modal';
+import ProductModal from '@/renderer/components/ProductModal';
 
-export type ModalType = undefined | 'resetKey' | 'sendSeatNum' | 'goWeb';
+export type ModalType =
+  | undefined
+  | 'resetKey'
+  | 'sendSeatNum'
+  | 'productKey'
+  | 'goWeb';
 
 export type Props = {
   openedModal: ModalType;
@@ -12,6 +18,10 @@ export type Props = {
 const Modals = ({ openedModal, closeHandler }: Props) => {
   return (
     <>
+      <ProductModal
+        isOpen={openedModal === 'resetKey'}
+        onCancel={closeHandler}
+      />
       <Modal
         modalType='warning'
         title='プロダクトキーをリセットします'
