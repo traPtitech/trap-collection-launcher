@@ -139,9 +139,8 @@ const TitlePage = () => {
     const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(
       key
     );
-    console.log(success);
     if (success) {
-      window.TraPCollectionAPI.invoke.fetchGame();
+      await window.TraPCollectionAPI.invoke.fetchGame();
       navigate && navigate('gameSelect');
       return true;
     } else {
@@ -166,8 +165,8 @@ const TitlePage = () => {
     if (!isValidProductKeyFormat(productKey)) {
       return;
     }
-    window.TraPCollectionAPI.invoke.setProductKey(productKey);
     const tryLoginAndCheck = async () => {
+      await window.TraPCollectionAPI.invoke.setProductKey(productKey);
       const res = await tryLogin(productKey);
       if (res === false) {
         setInvalidProductKey(true);

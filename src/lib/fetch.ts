@@ -17,7 +17,7 @@ import {
 } from '@/lib/utils/generatePaths';
 
 export const fetch = async (): Promise<void> => {
-  const { data } = await getVersion(0);
+  const { data } = await getVersion('3c5ae2f1-28ae-43d3-b569-53788895a01c');
   const { data: versionsCheck } = await getVersionsCheck();
 
   Promise.all([
