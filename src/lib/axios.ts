@@ -96,7 +96,7 @@ export const getGameUrl = async (gameId: string) =>
  * バージョンの詳細情報の取得
  * @param launcherVersionId number
  */
-export const getVersion = async (launcherVersionId: number) =>
+export const getVersion = async (launcherVersionId: string) =>
   API.VersionApi.getVersion(launcherVersionId);
 
 /**

@@ -55,9 +55,11 @@ const createWindow = (): void => {
 
   mainWindow.on('ready-to-show', () => {
     // update token
-    updateToken().catch(() => {
-      return;
-    });
+    if (store.get('productKey')) {
+      updateToken().catch(() => {
+        return;
+      });
+    }
     store.onDidChange('productKey', updateToken);
     // ipc listen
     // ipcListener.setWindow(mainWindow);
