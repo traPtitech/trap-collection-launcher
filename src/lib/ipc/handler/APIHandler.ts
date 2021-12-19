@@ -6,11 +6,15 @@ export const postLauncherLoginHandler = (): void => {
   ipcMain.handle('postLauncherLogin', async () => {
     const productKey = store.get('productKey');
     if (productKey) {
-      const { data } = await postLauncherLogin(productKey);
-      if (data) {
-        store.set('token', data.accessToken);
-        return true;
-      }
+      const res = await postLauncherLogin(productKey)
+        .then(({ data }) => {
+          store.set('token', data.accessToken);
+          return true;
+        })
+        .catch(() => {
+          return false;
+        });
+      return res ?? false;
     }
     return false;
   });

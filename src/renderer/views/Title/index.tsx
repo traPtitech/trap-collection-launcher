@@ -130,15 +130,10 @@ const TitlePage = () => {
   const [needUserInput, setNeedUserInput] = useState(false);
   const theme = useTheme();
 
-  const tryLogin = async (key: string) => {
+  const tryLogin = async () => {
     setNeedUserInput(false);
-    if (isValidProductKeyFormat(key) === false) {
-      setNeedUserInput(true);
-      return false;
-    }
-    const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(
-      key
-    );
+    const success = await window.TraPCollectionAPI.invoke.postLauncherLogin();
+    console.log(success);
     if (success) {
       await window.TraPCollectionAPI.invoke.fetchGame();
       navigate && navigate('gameSelect');
@@ -150,29 +145,22 @@ const TitlePage = () => {
   };
 
   useEffect(() => {
-    const fetchProductKeyAndLogin = async () => {
-      const res = await window.TraPCollectionAPI.invoke.getProductKey();
-      if (res === undefined) {
-        setNeedUserInput(true);
-      } else {
-        tryLogin(res);
-      }
-    };
-    fetchProductKeyAndLogin();
+    (async () => {
+      await tryLogin();
+    })();
   }, []);
 
   const onEnterProductKey = () => {
     if (!isValidProductKeyFormat(productKey)) {
       return;
     }
-    const tryLoginAndCheck = async () => {
+    (async () => {
       await window.TraPCollectionAPI.invoke.setProductKey(productKey);
-      const res = await tryLogin(productKey);
-      if (res === false) {
+      const res = await tryLogin();
+      if (!res) {
         setInvalidProductKey(true);
       }
-    };
-    tryLoginAndCheck();
+    })();
   };
 
   const onKeyPressHandler = (e: { code: string }) => {
