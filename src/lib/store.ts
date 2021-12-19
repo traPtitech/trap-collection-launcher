@@ -3,7 +3,13 @@ import Store from 'electron-store';
 export const store = new Store<{
   gameInfo: TraPCollection.GameInfo[];
   lastUpdate?: Date;
-  productKey?: string;
+  productKey?: {
+    productKey: [
+      {
+        id: 'string';
+      }
+    ];
+  };
   token?: string;
   seatId?: number;
   seatVersionId?: number;
