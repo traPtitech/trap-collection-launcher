@@ -136,11 +136,12 @@ const TitlePage = () => {
       setNeedUserInput(true);
       return false;
     }
-    //Todo: const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(key);
-    const success = false; //Todo: delete this line
+    const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(
+      key
+    );
     console.log(success);
     if (success) {
-      //Todo: window.TraPCollectionAPI.invoke.syncGame();
+      window.TraPCollectionAPI.invoke.fetchGame();
       navigate && navigate('gameSelect');
       return true;
     } else {
