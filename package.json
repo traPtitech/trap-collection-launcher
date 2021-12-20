@@ -163,6 +163,7 @@
     "react-loader-spinner": "^4.0.0",
     "react-router-dom": "^6.0.2",
     "react-slick": "^0.28.1",
+    "react-spinners": "^0.11.0",
     "storybook-addon-styled-component-theme": "^2.0.0",
     "styled-components": "^5.3.3",
     "update-electron-app": "^2.0.1"
