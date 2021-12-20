@@ -16,6 +16,7 @@ const Wrapper = styled(Div)`
   right: 0;
   bottom: 0;
   background-color: ${(props) => props.theme.colors.panel.primary};
+  user-select: none;
 `;
 
 const TitleContainer = styled(Div)`
