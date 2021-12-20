@@ -16,6 +16,7 @@ import {
   getGameVideo,
   getVersion,
   getVersionsCheck,
+  getLauncherMe,
 } from '@/lib/axios';
 import { store } from '@/lib/store';
 import { md5sumFile } from '@/lib/utils/checksum';
@@ -25,7 +26,8 @@ import {
 } from '@/lib/utils/generatePaths';
 
 export const fetch = async (): Promise<void> => {
-  const { data } = await getVersion('3c5ae2f1-28ae-43d3-b569-53788895a01c');
+  const { data: version } = await getLauncherMe();
+  const { data } = await getVersion(version.id);
   const { data: versionsCheck } = await getVersionsCheck();
 
   await Promise.all([
@@ -33,20 +35,8 @@ export const fetch = async (): Promise<void> => {
       .filter(({ type }) => {
         return type !== 'url';
       })
-      .map(async ({ id }) => {
-        const res = await getGameFile(id);
-        const { data: infoData } = await getGameInfo(id);
-
-        // mkdirp
-        await promises.mkdir(generateLocalPath('games', id), {
-          recursive: true,
-        });
-
-        // stream
-        // if (!(res instanceof WriteStream))
-        //   throw new Error('getGameFile: data is not WriteStream');
-
-        const { data } = res;
+      .map(async ({ id, md5 }) => {
+        const { data } = await getGameFile(id);
 
         const absolutePath = generateAbsolutePath(
           generateLocalPath('games', id, 'game.zip')
@@ -57,27 +47,20 @@ export const fetch = async (): Promise<void> => {
           mkdirSync(absoluteDir, { recursive: true });
         }
 
-        await data.pipe(createWriteStream(absolutePath));
-
         // checksum
-        const md5sum = await md5sumFile(
-          generateAbsolutePath(generateLocalPath('games', id, 'game.zip'))
-        );
-        const versionCheck = versionsCheck.filter((v) => v.id === id);
-        if (versionCheck.length === 1 && versionCheck[0].md5 !== md5sum) {
-          throw new Error('the data does not match checksum');
-        }
+        const md5sum = await md5sumFile(absolutePath);
 
-        // decompress
-        decompress(
-          generateLocalPath('games', id, 'game.zip'),
-          generateLocalPath('games', id)
-        );
+        // checksum が異なるなら更新
+        if (md5sum === undefined || md5 !== md5sum) {
+          await data.pipe(createWriteStream(absolutePath));
+
+          // decompress
+          decompress(absolutePath, absoluteDir);
+        }
       }),
     ...data.games.map(async ({ id }) => {
-      const res = await getGameImage(id);
-      // if (!(res instanceof WriteStream))
-      //   throw new Error('getGameImage: data is not WriteStream');
+      const { data } = await getGameImage(id);
+
       const absolutePath = generateAbsolutePath(
         generateLocalPath('artworks', id, 'poster.png')
       );
@@ -87,13 +70,11 @@ export const fetch = async (): Promise<void> => {
         mkdirSync(absoluteDir, { recursive: true });
       }
 
-      await res.data.pipe(createWriteStream(absolutePath));
+      await data.pipe(createWriteStream(absolutePath));
     }),
     ...data.games.map(async ({ id }) => {
       try {
-        const res = await getGameVideo(id);
-        // if (!(res instanceof WriteStream))
-        //   throw new Error('getGameVideo: data is not WriteStream');
+        const { data } = await getGameVideo(id);
 
         const absolutePath = generateAbsolutePath(
           generateLocalPath('artworks', id, 'video.mp4')
@@ -104,7 +85,7 @@ export const fetch = async (): Promise<void> => {
           mkdirSync(absoluteDir, { recursive: true });
         }
 
-        await res.data.pipe(createWriteStream(absolutePath));
+        await data.pipe(createWriteStream(absolutePath));
       } catch {
         return;
       }
