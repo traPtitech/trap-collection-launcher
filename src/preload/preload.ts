@@ -45,8 +45,8 @@ const api: TraPCollection.API = {
     openHomePage: async () => {
       return await ipcRenderer.invoke('openHomePage');
     },
-    postLauncherLogin: async (productKey) => {
-      return ipcRenderer.invoke('postLauncherLogin', productKey);
+    postLauncherLogin: async () => {
+      return ipcRenderer.invoke('postLauncherLogin');
     },
     fetchGame: async () => {
       return await ipcRenderer.invoke('fetchGame');
