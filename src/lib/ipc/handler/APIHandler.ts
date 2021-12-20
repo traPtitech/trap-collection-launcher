@@ -1,19 +1,21 @@
 import { ipcMain } from '@/common/typedIpc';
 import { postLauncherLogin } from '@/lib/axios';
+import { store } from '@/lib/store';
 
 export const postLauncherLoginHandler = (): void => {
-  ipcMain.handle(
-    'postLauncherLogin',
-    async (event, productKey: string): Promise<boolean> => {
-      return postLauncherLogin(productKey)
-        .then((res) => {
-          console.log('status', res.status, 'data', res.data);
-          return res.status === 200;
+  ipcMain.handle('postLauncherLogin', async () => {
+    const productKey = store.get('productKey');
+    if (productKey) {
+      const res = await postLauncherLogin(productKey)
+        .then(({ data }) => {
+          store.set('token', data.accessToken);
+          return true;
         })
-        .catch((err) => {
-          console.error(err);
+        .catch(() => {
           return false;
         });
+      return res ?? false;
     }
-  );
+    return false;
+  });
 };
