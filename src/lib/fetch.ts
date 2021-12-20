@@ -114,35 +114,41 @@ export const fetch = async (): Promise<void> => {
     return;
   });
 
-  const gameInfos = await versionsCheck.map(async ({ id, type }) => {
-    const { data } = await getGameInfo(id);
-    const { id: gameId, name, description, createdAt, version } = data;
-    const { data: url } = await getGameUrl(id);
+  const gameInfos: TraPCollection.GameInfo[] = await Promise.all(
+    data.games.map(async ({ id }) => {
+      const { data } = await getGameInfo(id);
+      const { id: gameId, name, description, createdAt, version } = data;
+      const url = await getGameUrl(id)
+        .then(({ data: url }) => url)
+        .catch(() => generateLocalPath('games', id));
+      const tempType = versionsCheck.find(({ id: temp }) => temp === id)?.type;
+      const type: TraPCollection.GameType =
+        tempType !== 'app' && tempType !== 'jar' && tempType !== 'url'
+          ? 'url'
+          : tempType;
 
-    const absoluteImagePath = generateAbsolutePath(
-      generateLocalPath('artworks', id, 'poster.png')
-    );
-    const absoluteVideoPath = generateAbsolutePath(
-      generateLocalPath('artworks', id, 'video.mp4')
-    );
+      const absoluteVideoPath = generateAbsolutePath(
+        generateLocalPath('artworks', id, 'video.mp4')
+      );
 
-    const poster = existsSync(absoluteImagePath)
-      ? absoluteImagePath
-      : undefined;
-    const video = existsSync(absoluteVideoPath) ? absoluteVideoPath : undefined;
+      const poster = generateLocalPath('artworks', id, 'poster.png');
+      const video = existsSync(absoluteVideoPath)
+        ? generateLocalPath('artworks', id, 'video.mp4')
+        : undefined;
 
-    return {
-      id: gameId,
-      name,
-      createdAt,
-      version,
-      description,
-      type,
-      url,
-      poster,
-      video,
-    };
-  });
+      return {
+        id: gameId,
+        name,
+        createdAt,
+        version,
+        description: description ?? '',
+        type,
+        url,
+        poster,
+        video,
+      };
+    })
+  );
 
   store.set('gameInfo', gameInfos);
 };
