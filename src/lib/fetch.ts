@@ -1,10 +1,18 @@
-import { WriteStream, createWriteStream, promises } from 'fs';
+import {
+  WriteStream,
+  createWriteStream,
+  promises,
+  existsSync,
+  mkdirSync,
+} from 'fs';
+import path from 'path';
 import decompress from 'decompress';
 import { version } from '@/config';
 import {
   getGameFile,
   getGameImage,
   getGameInfo,
+  getGameUrl,
   getGameVideo,
   getVersion,
   getVersionsCheck,
@@ -20,59 +28,121 @@ export const fetch = async (): Promise<void> => {
   const { data } = await getVersion('3c5ae2f1-28ae-43d3-b569-53788895a01c');
   const { data: versionsCheck } = await getVersionsCheck();
 
-  Promise.all([
-    ...data.games.map(async ({ id }) => {
-      const { data } = await getGameFile(id);
-      const { data: infoData } = await getGameInfo(id);
+  await Promise.all([
+    ...versionsCheck
+      .filter(({ type }) => {
+        return type !== 'url';
+      })
+      .map(async ({ id }) => {
+        const res = await getGameFile(id);
+        const { data: infoData } = await getGameInfo(id);
 
-      // mkdirp
-      await promises.mkdir(generateLocalPath('games', id), { recursive: true });
+        // mkdirp
+        await promises.mkdir(generateLocalPath('games', id), {
+          recursive: true,
+        });
 
-      // stream
-      if (!(data instanceof WriteStream))
-        throw new Error('data is not WriteStream');
-      data.pipe(
-        createWriteStream(
+        // stream
+        // if (!(res instanceof WriteStream))
+        //   throw new Error('getGameFile: data is not WriteStream');
+
+        const { data } = res;
+
+        const absolutePath = generateAbsolutePath(
+          generateLocalPath('games', id, 'game.zip')
+        );
+        const absoluteDir = path.dirname(absolutePath);
+
+        if (!existsSync(absoluteDir)) {
+          mkdirSync(absoluteDir, { recursive: true });
+        }
+
+        await data.pipe(createWriteStream(absolutePath));
+
+        // checksum
+        const md5sum = await md5sumFile(
           generateAbsolutePath(generateLocalPath('games', id, 'game.zip'))
-        )
-      );
+        );
+        const versionCheck = versionsCheck.filter((v) => v.id === id);
+        if (versionCheck.length === 1 && versionCheck[0].md5 !== md5sum) {
+          throw new Error('the data does not match checksum');
+        }
 
-      // checksum
-      const md5sum = await md5sumFile(
-        generateAbsolutePath(generateLocalPath('games', id, 'game.zip'))
+        // decompress
+        decompress(
+          generateLocalPath('games', id, 'game.zip'),
+          generateLocalPath('games', id)
+        );
+      }),
+    ...data.games.map(async ({ id }) => {
+      const res = await getGameImage(id);
+      // if (!(res instanceof WriteStream))
+      //   throw new Error('getGameImage: data is not WriteStream');
+      const absolutePath = generateAbsolutePath(
+        generateLocalPath('artworks', id, 'poster.png')
       );
-      const versionCheck = versionsCheck.filter((v) => v.id === id);
-      if (versionCheck.length === 1 && versionCheck[0].md5 !== md5sum) {
-        throw new Error('the data does not match checksum');
+      const absoluteDir = path.dirname(absolutePath);
+
+      if (!existsSync(absoluteDir)) {
+        mkdirSync(absoluteDir, { recursive: true });
       }
 
-      // decompress
-      decompress(
-        generateLocalPath('games', id, 'game.zip'),
-        generateLocalPath('games', id)
-      );
+      await res.data.pipe(createWriteStream(absolutePath));
     }),
     ...data.games.map(async ({ id }) => {
-      const { data } = await getGameImage(id);
-      if (!(data instanceof WriteStream))
-        throw new Error('data is not WriteStream');
-      data.pipe(
-        createWriteStream(
-          generateAbsolutePath(generateLocalPath('artworks', id, 'poster.png'))
-        )
-      );
-    }),
-    ...data.games.map(async ({ id }) => {
-      const { data } = await getGameVideo(id);
-      if (!(data instanceof WriteStream))
-        throw new Error('data is not WriteStream');
-      data.pipe(
-        createWriteStream(
-          generateAbsolutePath(generateLocalPath('artworks', id, 'video.mp4'))
-        )
-      );
+      try {
+        const res = await getGameVideo(id);
+        // if (!(res instanceof WriteStream))
+        //   throw new Error('getGameVideo: data is not WriteStream');
+
+        const absolutePath = generateAbsolutePath(
+          generateLocalPath('artworks', id, 'video.mp4')
+        );
+        const absoluteDir = path.dirname(absolutePath);
+
+        if (!existsSync(absoluteDir)) {
+          mkdirSync(absoluteDir, { recursive: true });
+        }
+
+        await res.data.pipe(createWriteStream(absolutePath));
+      } catch {
+        return;
+      }
     }),
   ]).catch((reason) => {
     console.error(reason);
+    return;
   });
+
+  const gameInfos = await versionsCheck.map(async ({ id, type }) => {
+    const { data } = await getGameInfo(id);
+    const { id: gameId, name, description, createdAt, version } = data;
+    const { data: url } = await getGameUrl(id);
+
+    const absoluteImagePath = generateAbsolutePath(
+      generateLocalPath('artworks', id, 'poster.png')
+    );
+    const absoluteVideoPath = generateAbsolutePath(
+      generateLocalPath('artworks', id, 'video.mp4')
+    );
+
+    const poster = existsSync(absoluteImagePath)
+      ? absoluteImagePath
+      : undefined;
+    const video = existsSync(absoluteVideoPath) ? absoluteVideoPath : undefined;
+
+    return {
+      id: gameId,
+      name,
+      createdAt,
+      version,
+      description,
+      type,
+      url,
+      poster,
+      video,
+    };
+  });
+
+  store.set('gameInfo', gameInfos);
 };
