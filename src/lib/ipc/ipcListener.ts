@@ -7,6 +7,7 @@ import { getProductKeyHandler } from './handler/getProductKeyHandler';
 import { getSeatIdHandler } from './handler/getSeatIdHandler';
 import { getSeatVersionHandler } from './handler/getSeatVersionHandler';
 import { launchHandler } from './handler/launchHandler';
+import { quitAppHandler } from './handler/quitAppHandler';
 import { resetProductKeyHandler } from './handler/resetProductKetHandler';
 import { setProductKeyHandler } from './handler/setProductKeyHandler';
 import setSeatIdHandler from './handler/setSeatIdHandler';
@@ -53,6 +54,7 @@ class IpcListener {
     ipcMain.removeHandler('sitUp');
     ipcMain.removeHandler('postLauncherLogin');
     ipcMain.removeHandler('fetchGame');
+    ipcMain.removeHandler('quitApp');
   }
 
   private addListeners() {
@@ -72,6 +74,7 @@ class IpcListener {
     sitUpHandler();
     postLauncherLoginHandler();
     fetchGameHandler();
+    quitAppHandler();
   }
 }
 
