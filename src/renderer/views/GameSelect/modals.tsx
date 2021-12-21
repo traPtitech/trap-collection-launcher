@@ -31,6 +31,7 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
         onOk={(e) => {
           closeHandler(e);
           window.TraPCollectionAPI.invoke.resetProductKey();
+          window.TraPCollectionAPI.invoke.reloadWindow();
         }}
       >
         再び本ランチャーを使用するためには、再度プロダクトキーを入力する必要があります。この操作は取り消せません。
