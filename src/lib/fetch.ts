@@ -1,4 +1,4 @@
-import { createWriteStream, promises, existsSync, writeFile } from 'fs';
+import { createWriteStream, promises, existsSync, readdir } from 'fs';
 import path from 'path';
 import decompress from 'decompress';
 import {
@@ -103,7 +103,14 @@ export const fetch = async (): Promise<void> => {
       const { id: gameId, name, description, createdAt, version } = data;
       const url = await getGameUrl(id)
         .then(({ data: url }) => url)
-        .catch(() => generateLocalPath('games', id));
+        .catch(() => {
+          const parentPath =
+            generateAbsolutePath(generateLocalPath('games', id)) + '\\dist';
+          const gamefile = showFiles(parentPath);
+          if (gamefile === undefined) return '';
+          return gamefile;
+        });
+      console.log(url);
       const tempType = versionsCheck.find(({ id: temp }) => temp === id)?.type;
       const type: TraPCollection.GameType =
         tempType !== 'app' && tempType !== 'jar' && tempType !== 'url'
@@ -134,4 +141,31 @@ export const fetch = async (): Promise<void> => {
   );
 
   store.set('gameInfo', gameInfos);
+};
+
+const showFiles = (dirpath: any): string | undefined => {
+  readdir(dirpath, { withFileTypes: true }, (err, dirents) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    dirents.map((dirent) => {
+      const name = dirent.name;
+      const fp = path.join(dirpath, name);
+      if (
+        (name.includes('.exe') || name.includes('.app')) &&
+        !name.includes('UnityCrashHandler')
+      ) {
+        console.log(name);
+        return fp;
+      }
+      if (dirent.isDirectory()) {
+        const gamefile = showFiles(fp);
+        console.log(fp, gamefile);
+        if (gamefile !== undefined) return gamefile;
+      }
+    });
+  });
+  return undefined;
 };
