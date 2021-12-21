@@ -1,7 +1,6 @@
-import { createWriteStream, promises, existsSync } from 'fs';
+import { createWriteStream, promises, existsSync, writeFile } from 'fs';
 import path from 'path';
 import decompress from 'decompress';
-import { promiseExists } from './utils/promiseExists';
 import {
   getGameFile,
   getGameImage,
@@ -18,6 +17,7 @@ import {
   generateAbsolutePath,
   generateLocalPath,
 } from '@/lib/utils/generatePaths';
+import { promiseExists } from '@/lib/utils/promiseExists';
 
 export const fetch = async (): Promise<void> => {
   const { data: version } = await getLauncherMe();
@@ -43,14 +43,19 @@ export const fetch = async (): Promise<void> => {
         }
 
         // checksum
-        const md5sum = await md5sumFile(absolutePath).catch(undefined);
+        const md5sum = await md5sumFile(absolutePath).catch(() => undefined);
 
         // checksum が異なるなら更新
         if (md5sum === undefined || md5 !== md5sum) {
-          await data.pipe(createWriteStream(absolutePath));
+          const stream = await createWriteStream(absolutePath);
+          await data.pipe(stream);
 
           // decompress
-          decompress(absolutePath, absoluteDir);
+          stream.on('finish', () => {
+            decompress(absolutePath, absoluteDir + '/dist').catch(
+              console.error
+            );
+          });
         }
       }),
     ...data.games.map(async ({ id }) => {
