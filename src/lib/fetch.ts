@@ -43,8 +43,8 @@ export const fetch = async (): Promise<void> => {
         );
         const absoluteDir = path.dirname(absolutePath);
 
-        if (!existsSync(absoluteDir)) {
-          mkdirSync(absoluteDir, { recursive: true });
+        if (!promises.access(absoluteDir)) {
+          await promises.mkdir(absoluteDir, { recursive: true });
         }
 
         // checksum
@@ -66,8 +66,8 @@ export const fetch = async (): Promise<void> => {
       );
       const absoluteDir = path.dirname(absolutePath);
 
-      if (!existsSync(absoluteDir)) {
-        mkdirSync(absoluteDir, { recursive: true });
+      if (!promises.access(absoluteDir)) {
+        await promises.mkdir(absoluteDir, { recursive: true });
       }
 
       await data.pipe(createWriteStream(absolutePath));
@@ -81,8 +81,8 @@ export const fetch = async (): Promise<void> => {
         );
         const absoluteDir = path.dirname(absolutePath);
 
-        if (!existsSync(absoluteDir)) {
-          mkdirSync(absoluteDir, { recursive: true });
+        if (!promises.access(absoluteDir)) {
+          await promises.mkdir(absoluteDir, { recursive: true });
         }
 
         await data.pipe(createWriteStream(absolutePath));
