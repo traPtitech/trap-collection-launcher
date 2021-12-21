@@ -23,10 +23,10 @@ const NetworkErrorModal = ({
   return (
     <Modal
       title='サーバーの接続に失敗しました'
-      noButton
       {...props}
       onOk={() => window.TraPCollectionAPI.invoke.quitApp()}
       onCancel={() => window.TraPCollectionAPI.invoke.reloadWindow()}
+      modalType='warning'
     >
       <Content>ランチャーを終了しますか？</Content>
     </Modal>
