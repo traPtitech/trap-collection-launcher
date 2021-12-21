@@ -44,20 +44,16 @@ export const fetch = async (): Promise<void> => {
 
         // checksum
         const md5sum = await md5sumFile(absolutePath).catch(() => undefined);
-        console.log(md5sum, md5);
 
         // checksum が異なるなら更新
         if (md5sum === undefined || md5 !== md5sum) {
-          // await writeFile(absolutePath, data, console.log);
-          {
-            const stream = await createWriteStream(absolutePath);
-            await data.pipe(stream);
-          }
+          const stream = await createWriteStream(absolutePath);
+          await data.pipe(stream);
 
           // decompress
-          await decompress(absolutePath, absoluteDir + '/dist').catch(
-            console.log
-          );
+          stream.on('close', () => {
+            decompress(absolutePath, absoluteDir + '/dist').catch(console.log);
+          });
         }
       }),
     ...data.games.map(async ({ id }) => {
@@ -134,6 +130,8 @@ export const fetch = async (): Promise<void> => {
       };
     })
   );
+
+  console.log(gameInfos);
 
   store.set('gameInfo', gameInfos);
 };
