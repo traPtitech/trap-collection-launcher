@@ -6,6 +6,7 @@ import { getSeatIdHandler } from './handler/getSeatIdHandler';
 import { getSeatVersionHandler } from './handler/getSeatVersionHandler';
 import { launchHandler } from './handler/launchHandler';
 import { quitAppHandler } from './handler/quitAppHandler';
+import { reloadWindowHandler } from './handler/reloadWindowHandler';
 import { resetProductKeyHandler } from './handler/resetProductKetHandler';
 import { setProductKeyHandler } from './handler/setProductKeyHandler';
 import setSeatIdHandler from './handler/setSeatIdHandler';
@@ -34,6 +35,7 @@ export default ({ window }: { window: BrowserWindow }): void => {
   ipcMain.removeHandler('sitDown');
   ipcMain.removeHandler('sitUp');
   ipcMain.removeHandler('quitApp');
+  ipcMain.removeHandler('reloadWindow');
   launchHandler(window);
   getGameInfoHandler();
   checkJavaHandler();
@@ -49,4 +51,5 @@ export default ({ window }: { window: BrowserWindow }): void => {
   openQuestionnaireHandler(window);
   openHomePageHandler(window);
   quitAppHandler();
+  reloadWindowHandler(window);
 };

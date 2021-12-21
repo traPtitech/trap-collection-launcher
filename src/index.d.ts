@@ -19,6 +19,7 @@ declare namespace TraPCollection {
     postLauncherLogin(): Promise<boolean>;
     fetchGame(): Promise<void>;
     quitApp(): Promise<void>;
+    reloadWindow(): Promise<void>;
   };
   type FromMain = {
     progress(progress: Progress): void;
