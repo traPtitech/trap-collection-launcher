@@ -43,7 +43,15 @@ export const fetch = async (): Promise<void> => {
         );
         const absoluteDir = path.dirname(absolutePath);
 
-        if (!promises.access(absoluteDir)) {
+        const existDir = await promises
+          .access(absoluteDir)
+          .then(() => {
+            return true;
+          })
+          .catch(() => {
+            return false;
+          });
+        if (!existDir) {
           await promises.mkdir(absoluteDir, { recursive: true });
         }
 
@@ -53,6 +61,7 @@ export const fetch = async (): Promise<void> => {
         // checksum が異なるなら更新
         if (md5sum === undefined || md5 !== md5sum) {
           await data.pipe(createWriteStream(absolutePath));
+          console.log(promises.access(absoluteDir));
 
           // decompress
           decompress(absolutePath, absoluteDir);
@@ -66,7 +75,15 @@ export const fetch = async (): Promise<void> => {
       );
       const absoluteDir = path.dirname(absolutePath);
 
-      if (!promises.access(absoluteDir)) {
+      const existDir = await promises
+        .access(absoluteDir)
+        .then(() => {
+          return true;
+        })
+        .catch(() => {
+          return false;
+        });
+      if (!existDir) {
         await promises.mkdir(absoluteDir, { recursive: true });
       }
 
@@ -81,7 +98,15 @@ export const fetch = async (): Promise<void> => {
         );
         const absoluteDir = path.dirname(absolutePath);
 
-        if (!promises.access(absoluteDir)) {
+        const existDir = await promises
+          .access(absoluteDir)
+          .then(() => {
+            return true;
+          })
+          .catch(() => {
+            return false;
+          });
+        if (!existDir) {
           await promises.mkdir(absoluteDir, { recursive: true });
         }
 
