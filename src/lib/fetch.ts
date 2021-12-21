@@ -37,7 +37,7 @@ export const fetch = async (): Promise<void> => {
         );
         const absoluteDir = path.dirname(absolutePath);
 
-        const existDir = await promiseExists;
+        const existDir = await promiseExists(absoluteDir);
         if (!existDir) {
           await promises.mkdir(absoluteDir, { recursive: true });
         }
@@ -65,7 +65,7 @@ export const fetch = async (): Promise<void> => {
       );
       const absoluteDir = path.dirname(absolutePath);
 
-      const existDir = await promiseExists;
+      const existDir = await promiseExists(absoluteDir);
       if (!existDir) {
         await promises.mkdir(absoluteDir, { recursive: true });
       }
@@ -81,7 +81,7 @@ export const fetch = async (): Promise<void> => {
         );
         const absoluteDir = path.dirname(absolutePath);
 
-        const existDir = await promiseExists;
+        const existDir = await promiseExists(absoluteDir);
         if (!existDir) {
           await promises.mkdir(absoluteDir, { recursive: true });
         }
