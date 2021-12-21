@@ -34,6 +34,10 @@ export const NavigateContext = createContext<
   ((page: Page) => void) | undefined
 >(undefined);
 
+export const ShowNetworkErrorContext = createContext<(() => void) | undefined>(
+  undefined
+);
+
 const App = ({ config, koudaisai }: Props) => {
   const [page, setPage] = useState<Page>('title');
   const [isOpenNetworkErrorModal, setIsOpenNetworkErrorModal] = useState(false);
@@ -42,13 +46,19 @@ const App = ({ config, koudaisai }: Props) => {
     setPage(page);
   };
 
+  const showNetworkError = () => {
+    setIsOpenNetworkErrorModal(true);
+  };
+
   return (
     <ConfigProvider value={config}>
       <ThemeProvider theme={createTheme({ dark: false })}>
         <GlobalStyle />
         <NavigateContext.Provider value={navigate}>
-          <Navigation page={page} koudaisai={koudaisai ?? false} />
-          <NetworkErrorModal isOpen={isOpenNetworkErrorModal} />
+          <ShowNetworkErrorContext.Provider value={showNetworkError}>
+            <Navigation page={page} koudaisai={koudaisai ?? false} />
+            <NetworkErrorModal isOpen={isOpenNetworkErrorModal} />
+          </ShowNetworkErrorContext.Provider>
         </NavigateContext.Provider>
       </ThemeProvider>
     </ConfigProvider>
