@@ -43,7 +43,7 @@ export const fetch = async (): Promise<void> => {
         }
 
         // checksum
-        const md5sum = await md5sumFile(absolutePath);
+        const md5sum = await md5sumFile(absolutePath).catch(undefined);
 
         // checksum が異なるなら更新
         if (md5sum === undefined || md5 !== md5sum) {
