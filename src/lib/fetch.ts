@@ -49,10 +49,6 @@ export const fetch = async (): Promise<void> => {
         if (md5sum === undefined || md5 !== md5sum) {
           await data.pipe(createWriteStream(absolutePath));
 
-          console.log(data);
-
-          console.log(promises.access(absoluteDir));
-
           // decompress
           decompress(absolutePath, absoluteDir);
         }
