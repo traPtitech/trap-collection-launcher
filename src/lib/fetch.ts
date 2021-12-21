@@ -1,13 +1,7 @@
-import {
-  WriteStream,
-  createWriteStream,
-  promises,
-  existsSync,
-  mkdirSync,
-} from 'fs';
+import { createWriteStream, promises, existsSync } from 'fs';
 import path from 'path';
 import decompress from 'decompress';
-import { version } from '@/config';
+import { promiseExists } from './utils/promiseExists';
 import {
   getGameFile,
   getGameImage,
@@ -43,14 +37,7 @@ export const fetch = async (): Promise<void> => {
         );
         const absoluteDir = path.dirname(absolutePath);
 
-        const existDir = await promises
-          .access(absoluteDir)
-          .then(() => {
-            return true;
-          })
-          .catch(() => {
-            return false;
-          });
+        const existDir = await promiseExists;
         if (!existDir) {
           await promises.mkdir(absoluteDir, { recursive: true });
         }
@@ -61,6 +48,9 @@ export const fetch = async (): Promise<void> => {
         // checksum が異なるなら更新
         if (md5sum === undefined || md5 !== md5sum) {
           await data.pipe(createWriteStream(absolutePath));
+
+          console.log(data);
+
           console.log(promises.access(absoluteDir));
 
           // decompress
@@ -75,14 +65,7 @@ export const fetch = async (): Promise<void> => {
       );
       const absoluteDir = path.dirname(absolutePath);
 
-      const existDir = await promises
-        .access(absoluteDir)
-        .then(() => {
-          return true;
-        })
-        .catch(() => {
-          return false;
-        });
+      const existDir = await promiseExists;
       if (!existDir) {
         await promises.mkdir(absoluteDir, { recursive: true });
       }
@@ -98,14 +81,7 @@ export const fetch = async (): Promise<void> => {
         );
         const absoluteDir = path.dirname(absolutePath);
 
-        const existDir = await promises
-          .access(absoluteDir)
-          .then(() => {
-            return true;
-          })
-          .catch(() => {
-            return false;
-          });
+        const existDir = await promiseExists;
         if (!existDir) {
           await promises.mkdir(absoluteDir, { recursive: true });
         }
