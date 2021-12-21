@@ -1,5 +1,6 @@
 import React, { createContext, useState } from 'react';
-import { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
+import NetworkErrorModal from './components/NetworkErrorModal';
 import { createTheme } from './styles/theme';
 import * as config from '@/renderer/config';
 import { ConfigProvider } from '@/renderer/contexts/Config';
@@ -8,6 +9,18 @@ import GameSelect from '@/renderer/views/GameSelect';
 import TitlePage from '@/renderer/views/Title';
 
 export type Page = 'title' | 'gameSelect';
+
+const ModalBackground = styled.div<{ $isOpen: boolean }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: ${(props) => props.theme.colors.background.menu};
+  opacity: ${(props) => (props.$isOpen ? '100%' : '0%')};
+  transition: opacity ${(props) => props.theme.duration.normal} ease-out;
+  pointer-events: none;
+`;
 
 const Navigation = ({
   page,
@@ -33,10 +46,20 @@ export const NavigateContext = createContext<
   ((page: Page) => void) | undefined
 >(undefined);
 
+export const ShowNetworkErrorContext = createContext<(() => void) | undefined>(
+  undefined
+);
+
 const App = ({ config, koudaisai }: Props) => {
   const [page, setPage] = useState<Page>('title');
+  const [isOpenNetworkErrorModal, setIsOpenNetworkErrorModal] = useState(false);
+
   const navigate = (page: Page) => {
     setPage(page);
+  };
+
+  const showNetworkError = () => {
+    setIsOpenNetworkErrorModal(true);
   };
 
   return (
@@ -44,7 +67,11 @@ const App = ({ config, koudaisai }: Props) => {
       <ThemeProvider theme={createTheme({ dark: false })}>
         <GlobalStyle />
         <NavigateContext.Provider value={navigate}>
-          <Navigation page={page} koudaisai={koudaisai ?? false} />
+          <ShowNetworkErrorContext.Provider value={showNetworkError}>
+            <Navigation page={page} koudaisai={koudaisai ?? false} />
+            <ModalBackground $isOpen={isOpenNetworkErrorModal} />
+            <NetworkErrorModal isOpen={isOpenNetworkErrorModal} />
+          </ShowNetworkErrorContext.Provider>
         </NavigateContext.Provider>
       </ThemeProvider>
     </ConfigProvider>

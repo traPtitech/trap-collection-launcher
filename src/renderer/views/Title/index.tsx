@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MdArrowForward } from 'react-icons/md';
 import { BarLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
-import { NavigateContext } from '@/renderer/App';
+import { NavigateContext, ShowNetworkErrorContext } from '@/renderer/App';
 import collectionLogo from '@/renderer/assets/logo.svg';
 
 const Div = ({ ...props }) => <div {...props} />;
@@ -129,23 +129,25 @@ type Progress = 'inputProductkey' | 'login' | 'fetchGame';
 const TitlePage = () => {
   const [productKey, setProductKey] = useState<string>('');
   const navigate = useContext(NavigateContext);
+  const showNetworkError = useContext(ShowNetworkErrorContext);
   const [invalidProductKey, setInvalidProductKey] = useState(false);
   const [progress, setProgress] = useState<Progress>('login');
   const theme = useTheme();
 
-  const tryLogin = async () => {
-    setProgress('login');
-    const success = await window.TraPCollectionAPI.invoke.postLauncherLogin();
-    if (success) {
-      setProgress('fetchGame');
-      await window.TraPCollectionAPI.invoke.fetchGame();
-      navigate && navigate('gameSelect');
-      return true;
-    } else {
-      setProgress('inputProductkey');
-      return false;
-    }
-  };
+  const tryLogin = async () =>
+    (async () => {
+      setProgress('login');
+      const success = await window.TraPCollectionAPI.invoke.postLauncherLogin();
+      if (success) {
+        setProgress('fetchGame');
+        await window.TraPCollectionAPI.invoke.fetchGame();
+        navigate && navigate('gameSelect');
+        return true;
+      } else {
+        setProgress('inputProductkey');
+        return false;
+      }
+    })().catch(showNetworkError);
 
   useEffect(() => {
     (async () => {

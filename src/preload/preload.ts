@@ -51,6 +51,12 @@ const api: TraPCollection.API = {
     fetchGame: async () => {
       return await ipcRenderer.invoke('fetchGame');
     },
+    quitApp: async () => {
+      return await ipcRenderer.invoke('quitApp');
+    },
+    reloadWindow: async () => {
+      return await ipcRenderer.invoke('reloadWindow');
+    },
   },
   on: {
     progress: (listener) => {
