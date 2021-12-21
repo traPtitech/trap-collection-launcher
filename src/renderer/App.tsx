@@ -1,5 +1,6 @@
 import React, { createContext, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
+import NetworkErrorModal from './components/NetworkErrorModal';
 import { createTheme } from './styles/theme';
 import * as config from '@/renderer/config';
 import { ConfigProvider } from '@/renderer/contexts/Config';
@@ -35,6 +36,8 @@ export const NavigateContext = createContext<
 
 const App = ({ config, koudaisai }: Props) => {
   const [page, setPage] = useState<Page>('title');
+  const [isOpenNetworkErrorModal, setIsOpenNetworkErrorModal] = useState(false);
+
   const navigate = (page: Page) => {
     setPage(page);
   };
@@ -45,6 +48,7 @@ const App = ({ config, koudaisai }: Props) => {
         <GlobalStyle />
         <NavigateContext.Provider value={navigate}>
           <Navigation page={page} koudaisai={koudaisai ?? false} />
+          <NetworkErrorModal isOpen={isOpenNetworkErrorModal} />
         </NavigateContext.Provider>
       </ThemeProvider>
     </ConfigProvider>
