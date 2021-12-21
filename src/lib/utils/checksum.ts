@@ -1,13 +1,19 @@
 import crypto from 'crypto';
 import fs from 'fs';
+import { promiseExists } from '@/lib/utils/promiseExists';
 
 export const md5sumFile = async (filePath: string): Promise<string> =>
-  new Promise((resolve) => {
-    const data = fs.createReadStream(filePath);
-    const md5hash = crypto.createHash('md5');
+  new Promise((resolve, reject) => {
+    fs.promises
+      .access(filePath)
+      .then(() => {
+        const data = fs.createReadStream(filePath);
+        const md5hash = crypto.createHash('md5');
 
-    data.pipe(md5hash).on('finish', () => {
-      const md5sum = md5hash.digest('hex');
-      resolve(md5sum);
-    });
+        data.pipe(md5hash).on('finish', () => {
+          const md5sum = md5hash.digest('hex');
+          resolve(md5sum);
+        });
+      })
+      .catch(reject);
   });
