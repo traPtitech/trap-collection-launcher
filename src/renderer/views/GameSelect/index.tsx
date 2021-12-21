@@ -120,6 +120,20 @@ const WheelWatcher = styled(Div)`
   bottom: 0;
   right: 0;
 `;
+
+const ErrorMessage = styled(Div)`
+  position: absolute;
+  top: 4.5rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: ${(props) => props.theme.colors.text.primary};
+`;
+
 // ゲームを切り替える最小の WheelEvent.deltaY の量
 const threshold = 20;
 
@@ -143,12 +157,14 @@ const GameSelect = ({ koudaisai }: Props) => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [openedModal, setOpenedModal] = useState<ModalType>(undefined);
   const [canScroll, setCanScroll] = useState(true); //トラックパッドなどで非常に細かくwheelイベントが発生した際，処理落ちするのを防ぐ
-  const [gameInfos, setGameInfos] = useState<TraPCollection.GameInfo[]>([]);
+  const [gameInfos, setGameInfos] = useState<
+    TraPCollection.GameInfo[] | undefined
+  >(undefined);
 
   useEffect(() => {
     const fetchGameInfo = async () => {
       const res = await window.TraPCollectionAPI.invoke.getGameInfo();
-      setGameInfos(res);
+      setGameInfos(res.length === 0 ? undefined : res);
     };
     fetchGameInfo();
   }, []);
@@ -189,78 +205,86 @@ const GameSelect = ({ koudaisai }: Props) => {
   ];
 
   return (
-    <Wrapper>
-      <WheelWatcher
-        onWheel={(e: { deltaY: number }) => {
-          if (canScroll) {
-            if (e.deltaY > threshold) {
-              setSelectedGame(selectedGame - 1);
-            } else if (e.deltaY < -threshold) {
-              setSelectedGame(selectedGame + 1);
-            }
-            setCanScroll(false);
-            setTimeout(() => setCanScroll(true), 100);
-          }
-        }}
-      >
-        <VideoWrapper>
-          <BackgroundVideo
-            src={gameInfos[mod(selectedGame, gameInfos.length)].video}
-            poster={gameInfos[mod(selectedGame, gameInfos.length)].poster}
-            autoPlay
-            controls={false}
-          />
-        </VideoWrapper>
-        <VideoOverlay />
-        <SelectorBackGround />
-        <Slider
-          selected={selectedGame}
-          gameInfos={gameInfos}
-          onPlayGame={() => {
-            window.TraPCollectionAPI.invoke.launch(
-              gameInfos[mod(selectedGame, gameInfos.length)].id
-            );
-          }}
-          onClickGame={(i) => {
-            setSelectedGame(i);
-          }}
-        />
+    <>
+      <Wrapper>
+        {gameInfos ? (
+          <>
+            <WheelWatcher
+              onWheel={(e: { deltaY: number }) => {
+                if (canScroll) {
+                  if (e.deltaY > threshold) {
+                    setSelectedGame(selectedGame - 1);
+                  } else if (e.deltaY < -threshold) {
+                    setSelectedGame(selectedGame + 1);
+                  }
+                  setCanScroll(false);
+                  setTimeout(() => setCanScroll(true), 100);
+                }
+              }}
+            >
+              <VideoWrapper>
+                <BackgroundVideo
+                  src={gameInfos[mod(selectedGame, gameInfos.length)]?.video}
+                  poster={gameInfos[mod(selectedGame, gameInfos.length)].poster}
+                  autoPlay
+                  controls={false}
+                />
+              </VideoWrapper>
+              <VideoOverlay />
+              <SelectorBackGround />
+              <Slider
+                selected={selectedGame}
+                gameInfos={gameInfos}
+                onPlayGame={() => {
+                  window.TraPCollectionAPI.invoke.launch(
+                    gameInfos[mod(selectedGame, gameInfos.length)].id
+                  );
+                }}
+                onClickGame={(i) => {
+                  setSelectedGame(i);
+                }}
+              />
+              <Description
+                gameInfo={gameInfos[mod(selectedGame, gameInfos.length)]}
+              />
+
+              <Mover
+                onClickLeft={() => setSelectedGame(selectedGame - 1)}
+                onClickRight={() => setSelectedGame(selectedGame + 1)}
+              />
+
+              <DotSelector
+                length={gameInfos.length}
+                selectedGame={selectedGame}
+                onClickGame={(i) => {
+                  setSelectedGame(i);
+                }}
+              />
+            </WheelWatcher>
+          </>
+        ) : (
+          <ErrorMessage>ゲームが取得できませんでした</ErrorMessage>
+        )}
         <Border />
         <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>
           <MenuButton />
         </MenuButtonWrapper>
         <CollectionLogo src={collectionLogo} />
-        <Description
-          gameInfo={gameInfos[mod(selectedGame, gameInfos.length)]}
+
+        <MenuBackground $isOpen={isOpenMenu || openedModal !== undefined} />
+        <SideBar
+          isOpen={isOpenMenu}
+          items={menuItems}
+          koudaisai={koudaisai}
+          onCancel={() => setIsOpenMenu(false)}
         />
 
-        <Mover
-          onClickLeft={() => setSelectedGame(selectedGame - 1)}
-          onClickRight={() => setSelectedGame(selectedGame + 1)}
+        <Modals
+          openedModal={openedModal}
+          closeHandler={() => setOpenedModal(undefined)}
         />
-
-        <DotSelector
-          length={gameInfos.length}
-          selectedGame={selectedGame}
-          onClickGame={(i) => {
-            setSelectedGame(i);
-          }}
-        />
-      </WheelWatcher>
-
-      <MenuBackground $isOpen={isOpenMenu || openedModal !== undefined} />
-      <SideBar
-        isOpen={isOpenMenu}
-        items={menuItems}
-        koudaisai={koudaisai}
-        onCancel={() => setIsOpenMenu(false)}
-      />
-
-      <Modals
-        openedModal={openedModal}
-        closeHandler={() => setOpenedModal(undefined)}
-      />
-    </Wrapper>
+      </Wrapper>
+    </>
   );
 };
 

@@ -2820,6 +2820,51 @@ export const LauncherAuthApiAxiosParamCreator = function (
       };
     },
     /**
+     * ランチャーが自身の情報を取得
+     * @summary ランチャーが自身の情報を取得
+     * @param {string} [sessions]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLauncherMe: async (
+      sessions?: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/launcher/me`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication LauncherAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * バージョンのプロダクトキー一覧
      * @summary バージョンのプロダクトキー一覧
      * @param {string} launcherVersionID ランチャーのバージョンのID
@@ -3025,6 +3070,30 @@ export const LauncherAuthApiFp = function (configuration?: Configuration) {
       );
     },
     /**
+     * ランチャーが自身の情報を取得
+     * @summary ランチャーが自身の情報を取得
+     * @param {string} [sessions]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getLauncherMe(
+      sessions?: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Version>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getLauncherMe(
+        sessions,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
      * バージョンのプロダクトキー一覧
      * @summary バージョンのプロダクトキー一覧
      * @param {string} launcherVersionID ランチャーのバージョンのID
@@ -3130,6 +3199,18 @@ export const LauncherAuthApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * ランチャーが自身の情報を取得
+     * @summary ランチャーが自身の情報を取得
+     * @param {string} [sessions]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLauncherMe(sessions?: string, options?: any): AxiosPromise<Version> {
+      return localVarFp
+        .getLauncherMe(sessions, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * バージョンのプロダクトキー一覧
      * @summary バージョンのプロダクトキー一覧
      * @param {string} launcherVersionID ランチャーのバージョンのID
@@ -3195,6 +3276,20 @@ export class LauncherAuthApi extends BaseAPI {
   public deleteProductKey(productKeyID: string, options?: any) {
     return LauncherAuthApiFp(this.configuration)
       .deleteProductKey(productKeyID, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * ランチャーが自身の情報を取得
+   * @summary ランチャーが自身の情報を取得
+   * @param {string} [sessions]
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof LauncherAuthApi
+   */
+  public getLauncherMe(sessions?: string, options?: any) {
+    return LauncherAuthApiFp(this.configuration)
+      .getLauncherMe(sessions, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

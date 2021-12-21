@@ -14,7 +14,7 @@ const Wrapper = styled(Div)`
   align-items: center;
 `;
 
-const Dot = styled(Div)<{ isSelected: boolean }>`
+const Dot = styled(Div)`
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
@@ -23,9 +23,9 @@ const Dot = styled(Div)<{ isSelected: boolean }>`
   box-shadow: 0px 3px 6px ${(props) => props.theme.colors.shadow.dot};
 `;
 
-const DotWrapper = styled(Div)`
+const DotWrapper = styled(Div)<{ $isSelected: boolean }>`
   color: ${(props) =>
-    props.isSelected
+    props.$isSelected
       ? props.theme.colors.button.dot.hover
       : props.theme.colors.button.dot.fill};
   &:hover {
@@ -60,8 +60,9 @@ const DotSelector = ({ length, selectedGame, onClickGame }: Props) => {
       onClick={() =>
         onClickGame && onClickGame(selectedGame + i - mod(selectedGame, length))
       }
+      $isSelected={mod(selectedGame, length) === i}
     >
-      <Dot isSelected={mod(selectedGame, length) === i}></Dot>
+      <Dot />
     </DotWrapper>
   ));
 

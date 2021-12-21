@@ -5,7 +5,8 @@ import { store } from '@/lib/store';
 
 export const postLauncherLoginHandler = (): void => {
   ipcMain.handle('postLauncherLogin', async () => {
-    const productKey = store.get('productKey');
+    const productKeys = store.get('productKey') ?? [];
+    const productKey = productKeys[0]?.id;
     if (productKey) {
       const res = await postLauncherLogin(productKey)
         .then(({ data }) => {

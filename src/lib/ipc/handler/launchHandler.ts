@@ -3,6 +3,7 @@ import path from 'path';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
 import { store } from '@/lib/store';
+import { generateAbsolutePath } from '@/lib/utils/generatePaths';
 
 export const launchHandler = async (
   window: BrowserWindow | null
@@ -21,7 +22,10 @@ export const launchHandler = async (
     if (!target) {
       return;
     }
-    const child = launch[platform][target.type](target.url);
+    const url =
+      target.type === 'url' ? target.url : generateAbsolutePath(target.url);
+    console.log(url);
+    const child = launch[platform][target.type](url);
     child.on('exit', () => {
       window.reload();
       window.restore();

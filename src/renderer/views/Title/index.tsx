@@ -1,7 +1,7 @@
 import Cleave from 'cleave.js/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { MdArrowForward } from 'react-icons/md';
-import Loader from 'react-loader-spinner';
+import { BarLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
 import { NavigateContext } from '@/renderer/App';
 import collectionLogo from '@/renderer/assets/logo.svg';
@@ -16,6 +16,7 @@ const Wrapper = styled(Div)`
   right: 0;
   bottom: 0;
   background-color: ${(props) => props.theme.colors.panel.primary};
+  user-select: none;
 `;
 
 const TitleContainer = styled(Div)`
@@ -43,7 +44,7 @@ const BottomWrapper = styled(Div)`
   align-items: center;
 `;
 
-const ProductKeyText = styled(Div)<{ $invalidProductKey: boolean }>`
+const BottomText = styled(Div)<{ $invalidProductKey: boolean }>`
   position: relative;
   color: ${(props) =>
     props.$invalidProductKey
@@ -123,22 +124,25 @@ const isValidProductKeyFormat = (str: string) => {
   );
 };
 
+type Progress = 'inputProductkey' | 'login' | 'fetchGame';
+
 const TitlePage = () => {
   const [productKey, setProductKey] = useState<string>('');
   const navigate = useContext(NavigateContext);
   const [invalidProductKey, setInvalidProductKey] = useState(false);
-  const [needUserInput, setNeedUserInput] = useState(false);
+  const [progress, setProgress] = useState<Progress>('login');
   const theme = useTheme();
 
   const tryLogin = async () => {
-    setNeedUserInput(false);
+    setProgress('login');
     const success = await window.TraPCollectionAPI.invoke.postLauncherLogin();
     if (success) {
+      setProgress('fetchGame');
       await window.TraPCollectionAPI.invoke.fetchGame();
       navigate && navigate('gameSelect');
       return true;
     } else {
-      setNeedUserInput(true);
+      setProgress('inputProductkey');
       return false;
     }
   };
@@ -174,13 +178,13 @@ const TitlePage = () => {
         <CollectionLogoWrapper src={collectionLogo} />
       </TitleContainer>
       <BottomWrapper>
-        {needUserInput ? (
+        {progress === 'inputProductkey' ? (
           <>
-            <ProductKeyText $invalidProductKey={invalidProductKey}>
+            <BottomText $invalidProductKey={invalidProductKey}>
               {invalidProductKey
                 ? 'プロダクトキーが誤っています'
                 : 'プロダクトキーを入力して下さい'}
-            </ProductKeyText>
+            </BottomText>
             <ProductKeyInputWrapper>
               <ProductKeyInput
                 onKeyPress={onKeyPressHandler}
@@ -203,16 +207,25 @@ const TitlePage = () => {
               </EnterButton>
             </ProductKeyInputWrapper>
           </>
-        ) : (
+        ) : progress === 'login' ? (
           <>
-            <Loader
-              type='Oval'
-              height='60'
-              width='60'
+            <BottomText> ログインしています </BottomText>
+            <BarLoader
+              height='4'
+              width='200'
               color={theme.colors.button.information.fill}
             />
           </>
-        )}
+        ) : progress === 'fetchGame' ? (
+          <>
+            <BottomText> ゲームをダウンロードしています </BottomText>
+            <BarLoader
+              height='4'
+              width='200'
+              color={theme.colors.button.information.fill}
+            />
+          </>
+        ) : undefined}
       </BottomWrapper>
     </Wrapper>
   );

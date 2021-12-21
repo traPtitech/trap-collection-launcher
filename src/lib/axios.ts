@@ -43,7 +43,7 @@ axiosStreamInstance.interceptors.request.use(
 const config = new Configuration({ basePath: baseUrl });
 
 const API = {
-  LauncherAuthApi: new LauncherAuthApi(config),
+  LauncherAuthApi: new LauncherAuthApi(config, baseUrl, axiosInstance),
   GameApi: new GameApi(config, baseUrl, axiosInstance),
   GameStreamApi: new GameApi(config, baseUrl, axiosStreamInstance),
   VersionApi: new VersionApi(config, baseUrl, axiosInstance),
@@ -120,3 +120,5 @@ export const postSeats = async (seatId: number, seatVersionId: number) =>
  */
 export const deleteSeats = async (seatId: number, seatVersionId: number) =>
   API.SeatApi.deleteSeat({ seatId, seatVersionId });
+
+export const getLauncherMe = async () => API.LauncherAuthApi.getLauncherMe();

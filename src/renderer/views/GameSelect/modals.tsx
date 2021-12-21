@@ -19,7 +19,7 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
   return (
     <>
       <ProductModal
-        isOpen={openedModal === 'resetKey'}
+        isOpen={openedModal === 'productKey'}
         onCancel={closeHandler}
       />
       <Modal
