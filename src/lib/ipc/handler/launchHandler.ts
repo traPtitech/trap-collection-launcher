@@ -31,7 +31,6 @@ export const launchHandler = async (
       window.restore();
       window.focus();
     });
-    window.minimize();
   });
 };
 

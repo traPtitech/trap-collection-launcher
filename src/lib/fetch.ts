@@ -103,14 +103,13 @@ export const fetch = async (): Promise<void> => {
       const { id: gameId, name, description, createdAt, version } = data;
       const url = await getGameUrl(id)
         .then(({ data: url }) => url)
-        .catch(() => {
+        .catch(async () => {
           const parentPath =
             generateAbsolutePath(generateLocalPath('games', id)) + '\\dist';
-          const gamefile = showFiles(parentPath);
+          const gamefile = await searchFiles(parentPath);
           if (gamefile === undefined) return '';
           return gamefile;
         });
-      console.log(url);
       const tempType = versionsCheck.find(({ id: temp }) => temp === id)?.type;
       const type: TraPCollection.GameType =
         tempType !== 'app' && tempType !== 'jar' && tempType !== 'url'
@@ -143,29 +142,29 @@ export const fetch = async (): Promise<void> => {
   store.set('gameInfo', gameInfos);
 };
 
-const showFiles = (dirpath: any): string | undefined => {
-  readdir(dirpath, { withFileTypes: true }, (err, dirents) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
+const searchFiles = (dirpath: any): Promise<string | undefined> =>
+  new Promise((resolve, reject) => {
+    readdir(dirpath, { withFileTypes: true }, async (err, dirents) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      }
 
-    dirents.map((dirent) => {
-      const name = dirent.name;
-      const fp = path.join(dirpath, name);
-      if (
-        (name.includes('.exe') || name.includes('.app')) &&
-        !name.includes('UnityCrashHandler')
-      ) {
-        console.log(name);
-        return fp;
-      }
-      if (dirent.isDirectory()) {
-        const gamefile = showFiles(fp);
-        console.log(fp, gamefile);
-        if (gamefile !== undefined) return gamefile;
-      }
+      dirents.map(async (dirent) => {
+        const name = dirent.name;
+        const fp = path.join(dirpath, name);
+        if (
+          (name.includes('.exe') || name.includes('.app')) &&
+          !name.includes('UnityCrashHandler')
+        ) {
+          resolve(fp);
+        }
+        if (dirent.isDirectory()) {
+          const gamefile = await searchFiles(fp);
+          if (gamefile !== undefined) {
+            resolve(gamefile);
+          }
+        }
+      });
     });
   });
-  return undefined;
-};
