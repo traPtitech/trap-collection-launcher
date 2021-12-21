@@ -26,6 +26,7 @@ const NetworkErrorModal = ({
       {...props}
       onOk={() => window.TraPCollectionAPI.invoke.quitApp()}
       onCancel={() => window.TraPCollectionAPI.invoke.reloadWindow()}
+      okButtonText='終了'
       modalType='warning'
     >
       <Content>ランチャーを終了しますか？</Content>
