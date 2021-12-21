@@ -3,7 +3,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MdArrowForward } from 'react-icons/md';
 import { BarLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
-import { NavigateContext, ShowNetworkErrorContext } from '@/renderer/App';
+import {
+  NavigateContext,
+  SetOfflineModeContext,
+  ShowNetworkErrorContext,
+} from '@/renderer/App';
 import collectionLogo from '@/renderer/assets/logo.svg';
 
 const Div = ({ ...props }) => <div {...props} />;
@@ -133,6 +137,7 @@ const TitlePage = () => {
   const [invalidProductKey, setInvalidProductKey] = useState(false);
   const [progress, setProgress] = useState<Progress>('login');
   const theme = useTheme();
+  const [isOfflineMode] = useContext(SetOfflineModeContext) ?? [];
 
   const tryLogin = async () =>
     (async () => {
@@ -154,6 +159,12 @@ const TitlePage = () => {
       await tryLogin();
     })();
   }, []);
+
+  useEffect(() => {
+    if (isOfflineMode) {
+      navigate && navigate('gameSelect');
+    }
+  }, [isOfflineMode, navigate]);
 
   const onEnterProductKey = () => {
     if (!isValidProductKeyFormat(productKey)) {

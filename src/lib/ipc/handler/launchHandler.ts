@@ -24,14 +24,11 @@ export const launchHandler = async (
     }
     const url =
       target.type === 'url' ? target.url : generateAbsolutePath(target.url);
-    console.log(url);
+
     const child = launch[platform][target.type](url);
     child.on('exit', () => {
-      window.reload();
-      window.restore();
       window.focus();
     });
-    window.minimize();
   });
 };
 
