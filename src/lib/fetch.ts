@@ -51,8 +51,10 @@ export const fetch = async (): Promise<void> => {
           await data.pipe(stream);
 
           // decompress
-          stream.on('close', () => {
-            decompress(absolutePath, absoluteDir + '/dist').catch(console.log);
+          stream.on('finish', () => {
+            decompress(absolutePath, absoluteDir + '/dist').catch(
+              console.error
+            );
           });
         }
       }),
@@ -130,8 +132,6 @@ export const fetch = async (): Promise<void> => {
       };
     })
   );
-
-  console.log(gameInfos);
 
   store.set('gameInfo', gameInfos);
 };
