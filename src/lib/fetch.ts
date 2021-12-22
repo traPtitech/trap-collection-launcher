@@ -74,7 +74,14 @@ export const fetch = async (): Promise<void> => {
         await promises.mkdir(absoluteDir, { recursive: true });
       }
 
-      await data.pipe(createWriteStream(absolutePath));
+      const stream = createWriteStream(absolutePath);
+
+      await data.pipe(stream);
+
+      await new Promise<void>((resolve, reject) => {
+        stream.on('finish', resolve);
+        stream.on('error', reject);
+      });
     }),
     ...data.games.map(async ({ id }) => {
       try {
@@ -90,7 +97,14 @@ export const fetch = async (): Promise<void> => {
           await promises.mkdir(absoluteDir, { recursive: true });
         }
 
-        await data.pipe(createWriteStream(absolutePath));
+        const stream = createWriteStream(absolutePath);
+
+        await data.pipe(stream);
+
+        await new Promise<void>((resolve, reject) => {
+          stream.on('finish', resolve);
+          stream.on('error', reject);
+        });
       } catch {
         () => {
           return;
