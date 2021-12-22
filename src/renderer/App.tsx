@@ -2,6 +2,7 @@ import React, { createContext, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import NetworkErrorModal from './components/NetworkErrorModal';
 import { createTheme } from './styles/theme';
+import { isKoudaisai } from '@/config';
 import * as config from '@/renderer/config';
 import { ConfigProvider } from '@/renderer/contexts/Config';
 import GlobalStyle from '@/renderer/styles/GlobalStyle';
@@ -37,11 +38,6 @@ const Navigation = ({
   }
 };
 
-type Props = {
-  config: config.Config;
-  koudaisai?: boolean;
-};
-
 export const NavigateContext = createContext<
   ((page: Page) => void) | undefined
 >(undefined);
@@ -54,7 +50,11 @@ export const SetOfflineModeContext = createContext<
   [boolean, (isOfflineMode: boolean) => void] | undefined
 >(undefined);
 
-const App = ({ config, koudaisai }: Props) => {
+type Props = {
+  config: config.Config;
+};
+
+const App = ({ config }: Props) => {
   const [page, setPage] = useState<Page>('title');
   const [isOfflineMode, setIsOfflineMode] = useState(false);
   const [isOpenNetworkErrorModal, setIsOpenNetworkErrorModal] = useState(false);
@@ -79,7 +79,7 @@ const App = ({ config, koudaisai }: Props) => {
         <NavigateContext.Provider value={navigate}>
           <ShowNetworkErrorContext.Provider value={showNetworkError}>
             <SetOfflineModeContext.Provider value={useIsOffline}>
-              <Navigation page={page} koudaisai={koudaisai ?? false} />
+              <Navigation page={page} koudaisai={isKoudaisai} />
               <ModalBackground $isOpen={isOpenNetworkErrorModal} />
               <NetworkErrorModal
                 closeHandler={() => setIsOpenNetworkErrorModal(false)}
