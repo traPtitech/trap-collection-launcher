@@ -2,8 +2,6 @@ import childProcess from 'child_process';
 import path from 'path';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
-import { sitDownHandler } from '@/lib/ipc/handler/sitDownHandler';
-import { sitUpHandler } from '@/lib/ipc/handler/sitUpHandler';
 import { store } from '@/lib/store';
 
 export const launchHandler = async (
@@ -22,12 +20,6 @@ export const launchHandler = async (
       .find((gameInfo) => gameInfo.id === gameId);
     if (!target) {
       return;
-    }
-    if (process.env.KOUDAISAI === 'true') {
-      sitDownHandler();
-      window.on('close', function () {
-        sitUpHandler();
-      });
     }
     const child = launch[platform][target.type](target.url);
     child.on('exit', () => {

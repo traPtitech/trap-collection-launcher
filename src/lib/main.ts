@@ -2,6 +2,8 @@ import { app, BrowserWindow, protocol } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 import logger from 'electron-log';
 import updater from 'update-electron-app';
+import { sitDown } from '@/lib/ipc/handler/sitDownHandler';
+import { sitUp } from '@/lib/ipc/handler/sitUpHandler';
 import ipcListener from '@/lib/ipc/ipcListener';
 import { store } from '@/lib/store';
 import { updateToken } from '@/lib/utils/updateToken';
@@ -62,6 +64,11 @@ const createWindow = (): void => {
     // ipc listen
     // ipcListener.setWindow(mainWindow);
   });
+
+  if (process.env.KOUDAISAI === 'true') {
+    sitDown();
+    mainWindow.on('closed', sitUp);
+  }
 };
 
 // This method will be called when Electron has finished
