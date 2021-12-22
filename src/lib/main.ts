@@ -35,13 +35,15 @@ const createWindow = (): void => {
       // webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
       preload: process.env.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
+    show: false,
   });
   ipcListener.setWindow(mainWindow);
 
-  mainWindow.maximize();
-
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.maximize();
+  });
 
   if (process.env.NODE_ENV === 'production') {
     // mainWindow.setMenu(null);
