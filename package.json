@@ -78,10 +78,10 @@
             "repository": {
               "owner": "traPtitech",
               "name": "trap-collection-launcher"
-            }
-          },
-          "draft": false,
-          "prerelease": true
+            },
+            "draft": false,
+            "prerelease": true
+          }
         }
       ]
     }
