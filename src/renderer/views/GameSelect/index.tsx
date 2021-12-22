@@ -224,7 +224,9 @@ const GameSelect = ({ koudaisai }: Props) => {
             >
               <VideoWrapper>
                 <BackgroundVideo
-                  src={gameInfos[mod(selectedGame, gameInfos.length)]?.video}
+                  src={
+                    gameInfos[mod(selectedGame, gameInfos.length)]?.video ?? ''
+                  }
                   poster={gameInfos[mod(selectedGame, gameInfos.length)].poster}
                   autoPlay
                   controls={false}
