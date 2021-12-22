@@ -71,6 +71,9 @@ declare namespace TraPCollection {
      * "artworks/UUIDv4.mp4"
      */
     video?: string;
+    bodyUpdatedAt: string;
+    imgUpdatedAt: string;
+    movieUpdatedAt: string;
   };
 
   type Progress = {

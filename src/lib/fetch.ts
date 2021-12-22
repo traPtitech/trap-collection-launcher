@@ -23,13 +23,14 @@ export const fetch = async (): Promise<void> => {
   const { data: version } = await getLauncherMe();
   const { data } = await getVersion(version.id);
   const { data: versionsCheck } = await getVersionsCheck();
+  const gameInfos = store.get('gameInfo');
 
   await Promise.all([
     ...versionsCheck
       .filter(({ type }) => {
         return type !== 'url';
       })
-      .map(async ({ id, md5 }) => {
+      .map(async ({ id, md5, bodyUpdatedAt }) => {
         const { data } = await getGameFile(id);
 
         const absolutePath = generateAbsolutePath(
@@ -42,11 +43,16 @@ export const fetch = async (): Promise<void> => {
           await promises.mkdir(absoluteDir, { recursive: true });
         }
 
-        // checksum
-        const md5sum = await md5sumFile(absolutePath).catch(() => undefined);
+        const existPath = await promiseExists(absolutePath);
 
-        // checksum が異なるなら更新
-        if (md5sum === undefined || md5 !== md5sum) {
+        // bodyUpdatedAtが異なるなら更新
+        if (
+          (gameInfos.find(({ id: tempId }) => id === tempId)?.bodyUpdatedAt ??
+            '') !== bodyUpdatedAt ||
+          !existPath
+        ) {
+          console.log('update Body');
+
           const stream = createWriteStream(absolutePath);
           data.pipe(stream);
 
@@ -55,13 +61,18 @@ export const fetch = async (): Promise<void> => {
               await decompress(absolutePath, absoluteDir + '/dist').catch(
                 console.error
               );
-              resolve();
+
+              // checksum
+              const md5sum = await md5sumFile(absolutePath).catch(
+                () => undefined
+              );
+              md5sum === md5 ? resolve() : reject();
             });
             stream.on('error', reject);
           });
         }
       }),
-    ...data.games.map(async ({ id }) => {
+    ...versionsCheck.map(async ({ id, imgUpdatedAt }) => {
       const { data } = await getGameImage(id);
 
       const absolutePath = generateAbsolutePath(
@@ -74,16 +85,26 @@ export const fetch = async (): Promise<void> => {
         await promises.mkdir(absoluteDir, { recursive: true });
       }
 
-      const stream = createWriteStream(absolutePath);
+      const existPath = await promiseExists(absolutePath);
 
-      await data.pipe(stream);
+      if (
+        (gameInfos.find(({ id: tempId }) => id === tempId)?.imgUpdatedAt ??
+          '') !== imgUpdatedAt ||
+        !existPath
+      ) {
+        console.log('update Image');
 
-      await new Promise<void>((resolve, reject) => {
-        stream.on('finish', resolve);
-        stream.on('error', reject);
-      });
+        const stream = createWriteStream(absolutePath);
+
+        await data.pipe(stream);
+
+        await new Promise<void>((resolve, reject) => {
+          stream.on('finish', resolve);
+          stream.on('error', reject);
+        });
+      }
     }),
-    ...data.games.map(async ({ id }) => {
+    ...versionsCheck.map(async ({ id, movieUpdatedAt }) => {
       try {
         const { data } = await getGameVideo(id);
 
@@ -97,14 +118,25 @@ export const fetch = async (): Promise<void> => {
           await promises.mkdir(absoluteDir, { recursive: true });
         }
 
-        const stream = createWriteStream(absolutePath);
+        const existPath = await promiseExists(absolutePath);
 
-        await data.pipe(stream);
+        // movieUpdatedAtが異なるなら更新
+        if (
+          (gameInfos.find(({ id: tempId }) => id === tempId)?.movieUpdatedAt ??
+            '') !== movieUpdatedAt ||
+          !existPath
+        ) {
+          console.log('update movie');
 
-        await new Promise<void>((resolve, reject) => {
-          stream.on('finish', resolve);
-          stream.on('error', reject);
-        });
+          const stream = createWriteStream(absolutePath);
+
+          await data.pipe(stream);
+
+          await new Promise<void>((resolve, reject) => {
+            stream.on('finish', resolve);
+            stream.on('error', reject);
+          });
+        }
       } catch {
         () => {
           return;
@@ -115,7 +147,7 @@ export const fetch = async (): Promise<void> => {
     throw reason;
   });
 
-  const gameInfos: TraPCollection.GameInfo[] = await Promise.all(
+  const newGameInfos: TraPCollection.GameInfo[] = await Promise.all(
     data.games.map(async ({ id }) => {
       const { data } = await getGameInfo(id);
       const { id: gameId, name, description, createdAt, version } = data;
@@ -143,6 +175,13 @@ export const fetch = async (): Promise<void> => {
         ? generateLocalPath('artworks', id, 'video.mp4')
         : undefined;
 
+      const bodyUpdatedAt =
+        versionsCheck.find(({ id: temp }) => temp === id)?.bodyUpdatedAt ?? '';
+      const imgUpdatedAt =
+        versionsCheck.find(({ id: temp }) => temp === id)?.imgUpdatedAt ?? '';
+      const movieUpdatedAt =
+        versionsCheck.find(({ id: temp }) => temp === id)?.movieUpdatedAt ?? '';
+
       return {
         id: gameId,
         name,
@@ -153,11 +192,14 @@ export const fetch = async (): Promise<void> => {
         url,
         poster,
         video,
+        bodyUpdatedAt,
+        imgUpdatedAt,
+        movieUpdatedAt,
       };
     })
   );
 
-  store.set('gameInfo', gameInfos);
+  store.set('gameInfo', newGameInfos);
 };
 
 const searchFiles = (dirpath: any): Promise<string | undefined> =>

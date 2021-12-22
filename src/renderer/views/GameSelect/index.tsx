@@ -229,6 +229,7 @@ const GameSelect = ({ koudaisai }: Props) => {
                   }
                   poster={gameInfos[mod(selectedGame, gameInfos.length)].poster}
                   autoPlay
+                  loop
                   controls={false}
                 />
               </VideoWrapper>
