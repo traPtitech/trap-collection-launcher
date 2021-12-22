@@ -60,7 +60,6 @@ export const fetch = async (): Promise<void> => {
             stream.on('error', reject);
           });
         }
-        return 1;
       }),
     ...data.games.map(async ({ id }) => {
       const { data } = await getGameImage(id);
@@ -76,7 +75,6 @@ export const fetch = async (): Promise<void> => {
       }
 
       await data.pipe(createWriteStream(absolutePath));
-      return 2;
     }),
     ...data.games.map(async ({ id }) => {
       try {
@@ -93,7 +91,6 @@ export const fetch = async (): Promise<void> => {
         }
 
         await data.pipe(createWriteStream(absolutePath));
-        return 3;
       } catch {
         () => {
           return;
