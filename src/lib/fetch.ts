@@ -47,8 +47,8 @@ export const fetch = async (): Promise<void> => {
 
         // checksum が異なるなら更新
         if (md5sum === undefined || md5 !== md5sum) {
-          const stream = await createWriteStream(absolutePath);
-          await data.pipe(stream);
+          const stream = createWriteStream(absolutePath);
+          data.pipe(stream);
 
           await new Promise<void>((resolve, reject) => {
             stream.on('finish', async () => {
@@ -57,9 +57,10 @@ export const fetch = async (): Promise<void> => {
               );
               resolve();
             });
-            data.on('error', reject());
+            stream.on('error', reject);
           });
         }
+        return 1;
       }),
     ...data.games.map(async ({ id }) => {
       const { data } = await getGameImage(id);
@@ -75,6 +76,7 @@ export const fetch = async (): Promise<void> => {
       }
 
       await data.pipe(createWriteStream(absolutePath));
+      return 2;
     }),
     ...data.games.map(async ({ id }) => {
       try {
@@ -91,13 +93,15 @@ export const fetch = async (): Promise<void> => {
         }
 
         await data.pipe(createWriteStream(absolutePath));
+        return 3;
       } catch {
-        return;
+        () => {
+          return;
+        };
       }
     }),
   ]).catch((reason) => {
-    console.error(reason);
-    return;
+    throw reason;
   });
 
   const gameInfos: TraPCollection.GameInfo[] = await Promise.all(
