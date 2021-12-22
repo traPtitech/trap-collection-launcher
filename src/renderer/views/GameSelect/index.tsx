@@ -274,6 +274,7 @@ const GameSelect = ({ koudaisai }: Props) => {
         </MenuButtonWrapper>
         <CollectionLogo
           src={collectionLogo}
+          title='公式ホームページへ移動する'
           onClick={() => {
             setIsOpenMenu(false);
             setOpenedModal('goWeb');
