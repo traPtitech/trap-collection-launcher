@@ -23,10 +23,12 @@ export const launchHandler = async (
     if (!target) {
       return;
     }
-    sitDownHandler();
-    window.on('close', function () {
-      sitUpHandler();
-    });
+    if (process.env.KOUDAISAI === 'true') {
+      sitDownHandler();
+      window.on('close', function () {
+        sitUpHandler();
+      });
+    }
     const child = launch[platform][target.type](target.url);
     child.on('exit', () => {
       window.reload();
