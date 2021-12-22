@@ -50,8 +50,13 @@ export const ShowNetworkErrorContext = createContext<(() => void) | undefined>(
   undefined
 );
 
+export const SetOfflineModeContext = createContext<
+  [boolean, (isOfflineMode: boolean) => void] | undefined
+>(undefined);
+
 const App = ({ config, koudaisai }: Props) => {
   const [page, setPage] = useState<Page>('title');
+  const [isOfflineMode, setIsOfflineMode] = useState(false);
   const [isOpenNetworkErrorModal, setIsOpenNetworkErrorModal] = useState(false);
 
   const navigate = (page: Page) => {
@@ -62,15 +67,25 @@ const App = ({ config, koudaisai }: Props) => {
     setIsOpenNetworkErrorModal(true);
   };
 
+  const useIsOffline: [boolean, (isOfflineMode: boolean) => void] = [
+    isOfflineMode,
+    (isOfflineMode: boolean) => setIsOfflineMode(isOfflineMode),
+  ];
+
   return (
     <ConfigProvider value={config}>
       <ThemeProvider theme={createTheme({ dark: false })}>
         <GlobalStyle />
         <NavigateContext.Provider value={navigate}>
           <ShowNetworkErrorContext.Provider value={showNetworkError}>
-            <Navigation page={page} koudaisai={koudaisai ?? false} />
-            <ModalBackground $isOpen={isOpenNetworkErrorModal} />
-            <NetworkErrorModal isOpen={isOpenNetworkErrorModal} />
+            <SetOfflineModeContext.Provider value={useIsOffline}>
+              <Navigation page={page} koudaisai={koudaisai ?? false} />
+              <ModalBackground $isOpen={isOpenNetworkErrorModal} />
+              <NetworkErrorModal
+                closeHandler={() => setIsOpenNetworkErrorModal(false)}
+                isOpen={isOpenNetworkErrorModal}
+              />
+            </SetOfflineModeContext.Provider>
           </ShowNetworkErrorContext.Provider>
         </NavigateContext.Provider>
       </ThemeProvider>

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import Modal, * as ModalPackage from '../Modal';
+import { SetOfflineModeContext } from '@/renderer/App';
 
 const Content = styled.div`
   text-align: center;
@@ -9,6 +10,7 @@ const Content = styled.div`
 `;
 
 const NetworkErrorModal = ({
+  closeHandler,
   ...props
 }: Omit<
   ModalPackage.Props,
@@ -19,17 +21,25 @@ const NetworkErrorModal = ({
   | 'okButtonText'
   | 'title'
   | 'onCancel'
->) => {
+> & { closeHandler: () => void }) => {
+  const [, setOfflineMode] = useContext(SetOfflineModeContext) ?? [];
+
   return (
     <Modal
       title='サーバーの接続に失敗しました'
       {...props}
-      onOk={() => window.TraPCollectionAPI.invoke.quitApp()}
+      onOk={() => {
+        setOfflineMode && setOfflineMode(true);
+        closeHandler();
+      }}
       onCancel={() => window.TraPCollectionAPI.invoke.reloadWindow()}
-      okButtonText='終了'
+      okButtonText='オフラインモードで起動'
       modalType='warning'
     >
-      <Content>ランチャーを終了しますか？</Content>
+      <Content>
+        オフラインモードで起動しますか？ <br />
+        ゲーム，ランチャーの自動更新は利用出来ません．
+      </Content>
     </Modal>
   );
 };
