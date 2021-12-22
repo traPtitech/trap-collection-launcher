@@ -110,6 +110,7 @@ const CollectionLogo = styled(Img)`
   top: 0.85rem;
   width: 10rem;
   height: auto;
+  cursor: pointer;
 `;
 
 // マウスの動きを監視するようのdiv
@@ -271,13 +272,21 @@ const GameSelect = ({ koudaisai }: Props) => {
         <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>
           <MenuButton />
         </MenuButtonWrapper>
-        <CollectionLogo src={collectionLogo} />
+        <CollectionLogo
+          src={collectionLogo}
+          onClick={() => {
+            setIsOpenMenu(false);
+            setOpenedModal('goWeb');
+          }}
+        />
 
         <MenuBackground $isOpen={isOpenMenu || openedModal !== undefined} />
         <SideBar
           isOpen={isOpenMenu}
           items={menuItems}
           koudaisai={koudaisai}
+          setOpenedModal={setOpenedModal}
+          setIsOpenMenu={setIsOpenMenu}
           onCancel={() => setIsOpenMenu(false)}
         />
 
