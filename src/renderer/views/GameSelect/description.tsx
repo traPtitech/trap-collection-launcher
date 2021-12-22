@@ -5,7 +5,7 @@ const Div = ({ ...props }) => <div {...props} />;
 
 const Wrapper = styled(Div)`
   position: absolute;
-  left: 4.5rem;
+  left: 5.5rem;
   top: 4.875rem;
   right: 32.375rem;
   height: auto;
