@@ -51,8 +51,6 @@ export const fetch = async (): Promise<void> => {
             '') !== bodyUpdatedAt ||
           !existPath
         ) {
-          console.log('update Body');
-
           const stream = createWriteStream(absolutePath);
           data.pipe(stream);
 
@@ -92,8 +90,6 @@ export const fetch = async (): Promise<void> => {
           '') !== imgUpdatedAt ||
         !existPath
       ) {
-        console.log('update Image');
-
         const stream = createWriteStream(absolutePath);
 
         await data.pipe(stream);
@@ -126,8 +122,6 @@ export const fetch = async (): Promise<void> => {
             '') !== movieUpdatedAt ||
           !existPath
         ) {
-          console.log('update movie');
-
           const stream = createWriteStream(absolutePath);
 
           await data.pipe(stream);
