@@ -12,8 +12,8 @@ const Image = ({ ...props }) => {
 
 const Wrapper = styled(Div)<{ $isSelect: boolean }>`
   position: relative;
-  width: 100%;
-  height: 100%;
+  height: 25rem;
+  width: 25rem;
   background-color: ${(props) => props.theme.colors.panel.primary};
   border-radius: 0.5rem;
   transition: transform ${(props) => props.theme.duration.normal} ease-out;
