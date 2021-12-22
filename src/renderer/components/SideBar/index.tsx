@@ -202,7 +202,7 @@ const SideBar = ({
           {koudaisai ? (
             <OnlyTrap>このメニューは部員専用です</OnlyTrap>
           ) : undefined}
-          <FootLogo title='公式ホームページ'>
+          <FootLogo title='公式ホームページを開く'>
             <img
               src={trap}
               width='224'

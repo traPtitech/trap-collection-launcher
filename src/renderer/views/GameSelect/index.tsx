@@ -272,14 +272,7 @@ const GameSelect = ({ koudaisai }: Props) => {
         <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>
           <MenuButton />
         </MenuButtonWrapper>
-        <CollectionLogo
-          src={collectionLogo}
-          title='公式ホームページへ移動する'
-          onClick={() => {
-            setIsOpenMenu(false);
-            setOpenedModal('goWeb');
-          }}
-        />
+        <CollectionLogo src={collectionLogo} />
 
         <MenuBackground $isOpen={isOpenMenu || openedModal !== undefined} />
         <SideBar
