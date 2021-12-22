@@ -45,6 +45,8 @@ const createWindow = (): void => {
     mainWindow.maximize();
   });
 
+  mainWindow.setMenu(null);
+
   if (process.env.NODE_ENV === 'production') {
     // mainWindow.setMenu(null);
   }
