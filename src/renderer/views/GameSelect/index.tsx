@@ -110,7 +110,6 @@ const CollectionLogo = styled(Img)`
   top: 0.85rem;
   width: 10rem;
   height: auto;
-  cursor: pointer;
 `;
 
 // マウスの動きを監視するようのdiv
