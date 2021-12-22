@@ -3,6 +3,7 @@ import { MdClose, MdNavigateNext } from 'react-icons/md';
 import styled from 'styled-components';
 import { packageJson } from '@/config';
 import trap from '@/renderer/assets/trap.svg';
+import { ModalType } from '@/renderer/views/GameSelect/modals';
 
 const Div = ({ ...props }) => <div {...props} />;
 
@@ -90,6 +91,10 @@ const Foot = styled(Div)`
   gap: 0.5rem;
 `;
 
+const FootLogo = styled(Div)`
+  cursor: pointer;
+`;
+
 const Collection = styled(Div)`
   position: relative;
   font-size: 1rem;
@@ -153,12 +158,21 @@ const NavigateButton = styled(MdNavigateNext)`
 
 export type Props = {
   items: { text: string; onClick: MouseEventHandler<HTMLDivElement> }[];
+  setOpenedModal: React.Dispatch<React.SetStateAction<ModalType>>;
+  setIsOpenMenu: React.Dispatch<React.SetStateAction<boolean>>;
   onCancel: MouseEventHandler<HTMLDivElement>;
   isOpen: boolean;
   koudaisai: boolean;
 };
 
-const SideBar = ({ isOpen, items, onCancel, koudaisai }: Props) => {
+const SideBar = ({
+  isOpen,
+  setOpenedModal,
+  setIsOpenMenu,
+  items,
+  onCancel,
+  koudaisai,
+}: Props) => {
   useEffect(() => {
     const active = document.activeElement as HTMLElement;
     active && isOpen && active.blur();
@@ -188,7 +202,16 @@ const SideBar = ({ isOpen, items, onCancel, koudaisai }: Props) => {
           {koudaisai ? (
             <OnlyTrap>このメニューは部員専用です</OnlyTrap>
           ) : undefined}
-          <img src={trap} width='224' />
+          <FootLogo title='公式ホームページを開く'>
+            <img
+              src={trap}
+              width='224'
+              onClick={() => {
+                setIsOpenMenu(false);
+                setOpenedModal('goWeb');
+              }}
+            />
+          </FootLogo>
           <MetaData>
             <Collection>traP Collection</Collection>
             <Version>{`ver. ${packageJson.version}`}</Version>
