@@ -1,4 +1,10 @@
+/**
+ * @see {@url https://www.electronforge.io/configuration}
+ */
 module.exports = {
+  /**
+   * @see {@url https://electron.github.io/electron-packager/main/interfaces/electronpackager.options.html}
+   */
   packagerConfig: {
     icon: './assets/icon.ico',
     appCopyright: 'Copyright (c) 2021 東京工業大学デジタル創作同好会traP',
