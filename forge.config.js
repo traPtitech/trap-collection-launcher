@@ -9,10 +9,6 @@ module.exports = {
     icon: './assets/icon.ico',
     appCopyright: 'Copyright (c) 2021 東京工業大学デジタル創作同好会traP',
     /**
-     * @see {@url https://www.npmjs.com/package/electron-notarize#method-notarizeopts-promisevoid}
-     */
-    osxNotarize: {},
-    /**
      * @see {@url https://www.npmjs.com/package/electron-osx-sign#opts---options}
      */
     osxSign: {},
