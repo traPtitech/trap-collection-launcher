@@ -24,7 +24,10 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "icon": "./assets/icon.ico"
+        "icon": "./assets/icon.ico",
+        "appCopyright": "Copyright (c) 2021 東京工業大学デジタル創作同好会traP",
+        "osxNotarize": {},
+        "osxSign": {}
       },
       "makers": [
         {
@@ -38,14 +41,6 @@
           "platforms": [
             "darwin"
           ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
         }
       ],
       "plugins": [
