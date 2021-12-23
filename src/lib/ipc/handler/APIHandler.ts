@@ -14,12 +14,11 @@ export const postLauncherLoginHandler = (): void => {
           return true;
         })
         .catch((e) => {
-          if (!e.response) {
-            throw new Error('network error');
+          if (400 <= e.response?.status && e.response?.status < 500) {
+            return false;
           }
-          if (axios.isAxiosError(e) && e.response) {
-            return false; //ネットワークエラー以外の場合は false を返す
-          }
+          console.log(e.response?.status);
+          throw new Error('network error');
         });
       return res ?? false;
     }
