@@ -62,6 +62,12 @@ const api: TraPCollection.API = {
     progress: (listener) => {
       ipcRenderer.on('progress', listener);
     },
+    onBrowserWindowFocus: (listener) => {
+      ipcRenderer.on('onBrowserWindowFocus', listener);
+    },
+    onBrowserWindowBlur: (listener) => {
+      ipcRenderer.on('onBrowserWindowBlur', listener);
+    },
   },
 };
 

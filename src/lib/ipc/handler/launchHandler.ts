@@ -25,10 +25,7 @@ export const launchHandler = async (
     const url =
       target.type === 'url' ? target.url : generateAbsolutePath(target.url);
 
-    const child = launch[platform][target.type](url);
-    child.on('exit', () => {
-      window.focus();
-    });
+    launch[platform][target.type](url);
   });
 };
 

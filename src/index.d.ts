@@ -23,6 +23,8 @@ declare namespace TraPCollection {
   };
   type FromMain = {
     progress(progress: Progress): void;
+    onBrowserWindowFocus: () => void;
+    onBrowserWindowBlur: () => void;
   };
 
   type FromMainReceiver = {
