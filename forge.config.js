@@ -9,9 +9,20 @@ module.exports = {
     icon: './assets/icon.ico',
     appCopyright: 'Copyright (c) 2021 東京工業大学デジタル創作同好会traP',
     /**
+     * @see {@url https://www.npmjs.com/package/electron-notarize#method-notarizeopts-promisevoid}
+     */
+    osxNotarize: {
+      appleId: 'trapsysad@gmail.com',
+      appleIdPassword: '@keychain:AC_PASSWORD',
+    },
+    /**
      * @see {@url https://www.npmjs.com/package/electron-osx-sign#opts---options}
      */
-    osxSign: {},
+    osxSign: {
+      identity: 'Developer ID Application: traP TokyoTech (3T86F866SY)',
+      'hardened-runtime': true,
+      'gatekeeper-assess': false,
+    },
   },
   makers: [
     {
