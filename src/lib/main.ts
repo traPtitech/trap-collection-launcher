@@ -2,6 +2,7 @@ import { app, BrowserWindow, protocol } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 import logger from 'electron-log';
 import updater from 'update-electron-app';
+import { ipcMain } from '@/common/typedIpc';
 import ipcListener from '@/lib/ipc/ipcListener';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -46,6 +47,13 @@ const createWindow = (): void => {
   });
 
   mainWindow.setMenu(null);
+
+  mainWindow.on('focus', () => {
+    ipcMain.send<'onBrowserWindowFocus'>(mainWindow, 'onBrowserWindowFocus');
+  });
+  mainWindow.on('blur', () => {
+    ipcMain.send<'onBrowserWindowBlur'>(mainWindow, 'onBrowserWindowBlur');
+  });
 
   if (process.env.NODE_ENV === 'production') {
     // mainWindow.setMenu(null);

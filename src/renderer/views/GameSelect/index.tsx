@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { MdMenu } from 'react-icons/md';
 import styled from 'styled-components';
 import Description from './description';
@@ -10,7 +10,9 @@ import SideBar from '@/renderer/components/SideBar';
 import Slider from '@/renderer/components/Slider';
 
 const Div = ({ ...props }) => <div {...props} />;
-const Video = ({ ...props }) => <video {...props} />;
+const Video = forwardRef<HTMLVideoElement, JSX.IntrinsicElements['video']>(
+  ({ ...props }, ref) => <video {...props} ref={ref} />
+);
 const Hr = ({ ...props }) => <hr {...props} />;
 const Img = ({ ...props }) => <img {...props} />;
 
@@ -161,12 +163,29 @@ const GameSelect = ({ koudaisai }: Props) => {
     TraPCollection.GameInfo[] | undefined
   >(undefined);
 
+  const videoElement = React.useRef<HTMLVideoElement>(null);
+
   useEffect(() => {
-    const fetchGameInfo = async () => {
+    (async () => {
       const res = await window.TraPCollectionAPI.invoke.getGameInfo();
       setGameInfos(res.length === 0 ? undefined : res);
+
+      window.TraPCollectionAPI.on.onBrowserWindowFocus(() => {
+        videoElement.current?.play();
+      });
+      window.TraPCollectionAPI.on.onBrowserWindowBlur(() => {
+        videoElement.current?.pause();
+      });
+    })();
+
+    return () => {
+      window.TraPCollectionAPI.on.onBrowserWindowFocus(() => {
+        return;
+      });
+      window.TraPCollectionAPI.on.onBrowserWindowBlur(() => {
+        return;
+      });
     };
-    fetchGameInfo();
   }, []);
 
   const menuItems = [
@@ -224,6 +243,7 @@ const GameSelect = ({ koudaisai }: Props) => {
             >
               <VideoWrapper>
                 <BackgroundVideo
+                  ref={videoElement}
                   src={
                     gameInfos[mod(selectedGame, gameInfos.length)]?.video ?? ''
                   }
