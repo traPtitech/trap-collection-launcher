@@ -139,18 +139,19 @@ export const fetch = async (): Promise<void> => {
 
   const newGameInfos: TraPCollection.GameInfo[] = await Promise.all(
     data.map(
-      async ({ id, type, bodyUpdatedAt, imgUpdatedAt, movieUpdatedAt }) => {
+      async ({
+        id,
+        type,
+        bodyUpdatedAt,
+        imgUpdatedAt,
+        movieUpdatedAt,
+        entryPoint,
+      }) => {
         const { data } = await getGameInfo(id);
         const { id: gameId, name, description, createdAt, version } = data;
         const url = await getGameUrl(id)
           .then(({ data: url }) => url)
-          .catch(async () => {
-            const parentPath =
-              generateAbsolutePath(generateLocalPath('games', id)) + '\\dist';
-            const gamefile = await searchFiles(parentPath);
-            if (gamefile === undefined) return '';
-            return gamefile;
-          });
+          .catch(async () => generateLocalPath('games', id, entryPoint) ?? '');
 
         const absoluteVideoPath = generateAbsolutePath(
           generateLocalPath('artworks', id, 'video.mp4')
