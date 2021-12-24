@@ -62,6 +62,12 @@ export interface CheckItem {
    */
   type: string;
   /**
+   * 実行ファイルの相対パス
+   * @type {string}
+   * @memberof CheckItem
+   */
+  entryPoint?: string;
+  /**
    * ゲーム本体の更新日時
    * @type {string}
    * @memberof CheckItem
@@ -78,7 +84,7 @@ export interface CheckItem {
    * @type {string}
    * @memberof CheckItem
    */
-  movieUpdatedAt: string;
+  movieUpdatedAt?: string;
 }
 /**
  * ゲーム
