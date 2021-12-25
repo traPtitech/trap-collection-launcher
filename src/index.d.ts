@@ -75,7 +75,7 @@ declare namespace TraPCollection {
     video?: string;
     bodyUpdatedAt: string;
     imgUpdatedAt: string;
-    movieUpdatedAt: string;
+    movieUpdatedAt?: string;
   };
 
   type Progress = {
