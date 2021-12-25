@@ -1,6 +1,5 @@
-import { createWriteStream, promises, existsSync, readdir } from 'fs';
+import { createWriteStream, promises, existsSync } from 'fs';
 import path from 'path';
-import decompress from 'decompress';
 import {
   getGameFile,
   getGameImage,
@@ -11,12 +10,12 @@ import {
   getVersionsCheck,
 } from '@/lib/axios';
 import { store } from '@/lib/store';
-import { md5sumFile } from '@/lib/utils/checksum';
 import {
   generateAbsolutePath,
   generateLocalPath,
 } from '@/lib/utils/generatePaths';
 import { promiseExists } from '@/lib/utils/promiseExists';
+import unzip from '@/lib/utils/unzip';
 
 export const fetch = async (): Promise<void> => {
   const { data } = await getVersionsCheck();
@@ -51,23 +50,7 @@ export const fetch = async (): Promise<void> => {
             '') !== bodyUpdatedAt ||
           !existPath
         ) {
-          const stream = createWriteStream(absolutePath);
-          data.pipe(stream);
-
-          await new Promise<void>((resolve, reject) => {
-            stream.on('finish', async () => {
-              await decompress(absolutePath, absoluteDir + '/dist').catch(
-                console.error
-              );
-
-              // checksum
-              const md5sum = await md5sumFile(absolutePath).catch(
-                () => undefined
-              );
-              md5sum === md5 ? resolve() : reject();
-            });
-            stream.on('error', reject);
-          });
+          await unzip(data, absolutePath, md5).catch(console.error);
         }
       }),
     ...data.map(async ({ id, imgUpdatedAt }) => {
@@ -182,8 +165,9 @@ export const fetch = async (): Promise<void> => {
           createdAt,
           version,
           description: description ?? '',
-          type:
-            type !== 'app' && type !== 'jar' && type !== 'url' ? 'url' : type,
+          type: (type === 'windows' || type === 'mac'
+            ? 'app'
+            : type) as TraPCollection.GameType,
           url,
           poster,
           video,
