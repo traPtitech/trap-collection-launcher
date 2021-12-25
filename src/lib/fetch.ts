@@ -198,7 +198,8 @@ export const fetch = async (): Promise<void> => {
   store.set('gameInfo', newGameInfos);
 };
 
-const searchFiles = (dirpath: any): Promise<string | undefined> =>
+/*
+const searchFiles = (dirpath: string): Promise<string | undefined> =>
   new Promise((resolve, reject) => {
     readdir(dirpath, { withFileTypes: true }, async (err, dirents) => {
       if (err) {
@@ -226,3 +227,4 @@ const searchFiles = (dirpath: any): Promise<string | undefined> =>
       );
     });
   });
+*/
