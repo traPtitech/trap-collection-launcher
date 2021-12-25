@@ -41,11 +41,12 @@ const launch: Record<
         stdio: 'ignore',
         cwd: path.dirname(url),
       }),
-    jar: (url) =>
-      childProcess.spawn(`javaw -jar ${path.basename(url)}`, {
+    jar: (url) => {
+      return childProcess.spawn(`javaw`, ['-jar', path.basename(url)], {
         stdio: 'ignore',
         cwd: path.dirname(url),
-      }),
+      });
+    },
     url: (url) => childProcess.spawn(`cmd`, ['/C', `start /wait ${url}`]),
   },
   darwin: {
