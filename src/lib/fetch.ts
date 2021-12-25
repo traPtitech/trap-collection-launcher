@@ -152,9 +152,6 @@ export const fetch = async (): Promise<void> => {
         const url = await getGameUrl(id)
           .then(({ data: url }) => url)
           .catch(async () => {
-            console.log(
-              generateLocalPath('games', id + '/dist', entryPoint) ?? ''
-            );
             return generateLocalPath('games', id + '/dist', entryPoint) ?? '';
           });
 
