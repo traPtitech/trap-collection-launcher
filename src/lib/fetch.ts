@@ -151,7 +151,12 @@ export const fetch = async (): Promise<void> => {
         const { id: gameId, name, description, createdAt, version } = data;
         const url = await getGameUrl(id)
           .then(({ data: url }) => url)
-          .catch(async () => generateLocalPath('games', id, entryPoint) ?? '');
+          .catch(async () => {
+            console.log(
+              generateLocalPath('games', id + '/dist', entryPoint) ?? ''
+            );
+            return generateLocalPath('games', id + '/dist', entryPoint) ?? '';
+          });
 
         const absoluteVideoPath = generateAbsolutePath(
           generateLocalPath('artworks', id, 'video.mp4')
