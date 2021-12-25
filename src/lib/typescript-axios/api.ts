@@ -121,7 +121,7 @@ export interface Game {
    * @type {GameVersion}
    * @memberof Game
    */
-  version: GameVersion;
+  version?: GameVersion;
 }
 /**
  * ゲームのファイルの情報
