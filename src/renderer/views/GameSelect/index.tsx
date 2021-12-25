@@ -224,92 +224,102 @@ const GameSelect = ({ koudaisai }: Props) => {
   ];
 
   return (
-    <>
-      <Wrapper>
-        {gameInfos ? (
-          <>
-            <WheelWatcher
-              onWheel={(e: { deltaY: number }) => {
-                if (canScroll) {
-                  if (e.deltaY > threshold) {
-                    setSelectedGame(selectedGame - 1);
-                  } else if (e.deltaY < -threshold) {
-                    setSelectedGame(selectedGame + 1);
-                  }
-                  setCanScroll(false);
-                  setTimeout(() => setCanScroll(true), 100);
+    <Wrapper>
+      {gameInfos ? (
+        <>
+          <WheelWatcher
+            onWheel={(e: { deltaY: number }) => {
+              if (canScroll) {
+                if (e.deltaY > threshold) {
+                  setSelectedGame(selectedGame - 1);
+                } else if (e.deltaY < -threshold) {
+                  setSelectedGame(selectedGame + 1);
                 }
-              }}
-            >
-              <VideoWrapper>
-                <BackgroundVideo
-                  ref={videoElement}
-                  src={
-                    gameInfos[mod(selectedGame, gameInfos.length)]?.video ?? ''
+                setCanScroll(false);
+                setTimeout(() => setCanScroll(true), 100);
+              }
+            }}
+          >
+            <VideoWrapper>
+              <BackgroundVideo
+                ref={videoElement}
+                src={
+                  gameInfos[mod(selectedGame, gameInfos.length)]?.video ?? ''
+                }
+                poster={gameInfos[mod(selectedGame, gameInfos.length)].poster}
+                autoPlay
+                loop
+                controls={false}
+              />
+            </VideoWrapper>
+            <VideoOverlay />
+            <SelectorBackGround />
+            <Slider
+              selected={selectedGame}
+              gameInfos={gameInfos}
+              onPlayGame={() => {
+                (async () => {
+                  const checkJava =
+                    await window.TraPCollectionAPI.invoke.checkJava();
+                  if (
+                    gameInfos[mod(selectedGame, gameInfos.length)].type ==
+                      'jar' &&
+                    checkJava === false
+                  ) {
+                    setOpenedModal('noJava');
+                  } else {
+                    await window.TraPCollectionAPI.invoke.launch(
+                      gameInfos[mod(selectedGame, gameInfos.length)].id
+                    );
                   }
-                  poster={gameInfos[mod(selectedGame, gameInfos.length)].poster}
-                  autoPlay
-                  loop
-                  controls={false}
-                />
-              </VideoWrapper>
-              <VideoOverlay />
-              <SelectorBackGround />
-              <Slider
-                selected={selectedGame}
-                gameInfos={gameInfos}
-                onPlayGame={() => {
-                  window.TraPCollectionAPI.invoke.launch(
-                    gameInfos[mod(selectedGame, gameInfos.length)].id
-                  );
-                }}
-                onClickGame={(i) => {
-                  setSelectedGame(i);
-                }}
-              />
-              <Description
-                gameInfo={gameInfos[mod(selectedGame, gameInfos.length)]}
-              />
+                })();
+              }}
+              onClickGame={(i) => {
+                setSelectedGame(i);
+              }}
+            />
+            <Description
+              gameInfo={gameInfos[mod(selectedGame, gameInfos.length)]}
+            />
 
-              <Mover
-                onClickLeft={() => setSelectedGame(selectedGame - 1)}
-                onClickRight={() => setSelectedGame(selectedGame + 1)}
-              />
+            <Mover
+              onClickLeft={() => setSelectedGame(selectedGame - 1)}
+              onClickRight={() => setSelectedGame(selectedGame + 1)}
+            />
 
-              <DotSelector
-                length={gameInfos.length}
-                selectedGame={selectedGame}
-                onClickGame={(i) => {
-                  setSelectedGame(i);
-                }}
-              />
-            </WheelWatcher>
-          </>
-        ) : (
-          <ErrorMessage>ゲームが取得できませんでした</ErrorMessage>
-        )}
-        <Border />
-        <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>
-          <MenuButton />
-        </MenuButtonWrapper>
-        <CollectionLogo src={collectionLogo} />
+            <DotSelector
+              length={gameInfos.length}
+              selectedGame={selectedGame}
+              onClickGame={(i) => {
+                setSelectedGame(i);
+              }}
+            />
+          </WheelWatcher>
+        </>
+      ) : (
+        <ErrorMessage>ゲームが取得できませんでした</ErrorMessage>
+      )}
+      <Border />
+      <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>
+        <MenuButton />
+      </MenuButtonWrapper>
+      <CollectionLogo src={collectionLogo} />
 
-        <MenuBackground $isOpen={isOpenMenu || openedModal !== undefined} />
-        <SideBar
-          isOpen={isOpenMenu}
-          items={menuItems}
-          koudaisai={koudaisai}
-          setOpenedModal={setOpenedModal}
-          setIsOpenMenu={setIsOpenMenu}
-          onCancel={() => setIsOpenMenu(false)}
-        />
+      <MenuBackground $isOpen={isOpenMenu || openedModal !== undefined} />
+      <SideBar
+        isOpen={isOpenMenu}
+        items={menuItems}
+        koudaisai={koudaisai}
+        setOpenedModal={setOpenedModal}
+        setIsOpenMenu={setIsOpenMenu}
+        onCancel={() => setIsOpenMenu(false)}
+      />
 
-        <Modals
-          openedModal={openedModal}
-          closeHandler={() => setOpenedModal(undefined)}
-        />
-      </Wrapper>
-    </>
+      <Modals
+        openedModal={openedModal}
+        closeHandler={() => setOpenedModal(undefined)}
+      />
+    </Wrapper>
   );
 };
 

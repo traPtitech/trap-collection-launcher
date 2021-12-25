@@ -8,7 +8,8 @@ export type ModalType =
   | 'resetKey'
   | 'sendSeatNum'
   | 'productKey'
-  | 'goWeb';
+  | 'goWeb'
+  | 'noJava';
 
 export type Props = {
   openedModal: ModalType;
@@ -22,6 +23,15 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
         isOpen={openedModal === 'productKey'}
         onCancel={closeHandler}
       />
+      <Modal
+        modalType='information'
+        title='Javaがインストールされていません'
+        isOpen={openedModal === 'noJava'}
+        noButton
+        onOk={closeHandler}
+      >
+        このゲームをプレイするにはJavaが必要です
+      </Modal>
       <Modal
         modalType='warning'
         title='プロダクトキーをリセットします'
