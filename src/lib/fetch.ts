@@ -7,6 +7,7 @@ import {
   getGameInfo,
   getGameUrl,
   getGameVideo,
+  getLauncherMe,
   getVersionsCheck,
 } from '@/lib/axios';
 import { store } from '@/lib/store';
@@ -20,6 +21,9 @@ import { promiseExists } from '@/lib/utils/promiseExists';
 export const fetch = async (): Promise<void> => {
   const { data } = await getVersionsCheck();
   const gameInfos = store.get('gameInfo');
+  const {
+    data: { id: versionId },
+  } = await getLauncherMe();
 
   await Promise.all([
     ...data
@@ -30,7 +34,7 @@ export const fetch = async (): Promise<void> => {
         const { data } = await getGameFile(id);
 
         const absolutePath = generateAbsolutePath(
-          generateLocalPath('games', id, 'game.zip')
+          generateLocalPath(versionId, 'games', id, 'game.zip')
         );
         const absoluteDir = path.dirname(absolutePath);
 
@@ -70,7 +74,7 @@ export const fetch = async (): Promise<void> => {
       const { data } = await getGameImage(id);
 
       const absolutePath = generateAbsolutePath(
-        generateLocalPath('artworks', id, 'poster.png')
+        generateLocalPath(versionId, 'artworks', id, 'poster.png')
       );
       const absoluteDir = path.dirname(absolutePath);
 
@@ -101,7 +105,7 @@ export const fetch = async (): Promise<void> => {
         const { data } = await getGameVideo(id);
 
         const absolutePath = generateAbsolutePath(
-          generateLocalPath('artworks', id, 'video.mp4')
+          generateLocalPath(versionId, 'artworks', id, 'video.mp4')
         );
         const absoluteDir = path.dirname(absolutePath);
 
@@ -152,16 +156,24 @@ export const fetch = async (): Promise<void> => {
         const url = await getGameUrl(id)
           .then(({ data: url }) => url)
           .catch(async () => {
-            return generateLocalPath('games', id + '/dist', entryPoint) ?? '';
+            return (
+              generateLocalPath(versionId, 'games', id + '/dist', entryPoint) ??
+              ''
+            );
           });
 
         const absoluteVideoPath = generateAbsolutePath(
-          generateLocalPath('artworks', id, 'video.mp4')
+          generateLocalPath(versionId, 'artworks', id, 'video.mp4')
         );
 
-        const poster = generateLocalPath('artworks', id, 'poster.png');
+        const poster = generateLocalPath(
+          versionId,
+          'artworks',
+          id,
+          'poster.png'
+        );
         const video = existsSync(absoluteVideoPath)
-          ? generateLocalPath('artworks', id, 'video.mp4')
+          ? generateLocalPath(versionId, 'artworks', id, 'video.mp4')
           : undefined;
 
         return {
