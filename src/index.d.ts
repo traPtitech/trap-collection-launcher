@@ -48,7 +48,7 @@ declare namespace TraPCollection {
     id: string;
     name: string;
     createdAt: string;
-    version: {
+    version?: {
       id: string;
       name: string;
       description: string;

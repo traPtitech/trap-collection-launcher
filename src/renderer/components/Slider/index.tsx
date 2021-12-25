@@ -85,7 +85,7 @@ const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
         }}
       >
         <Version $isSelected={mod(selected - index, 4 * len) === 2 * len}>
-          {gameInfo.version.name}
+          {gameInfo.version?.name}
         </Version>
         <SliderImage
           src={gameInfo.poster}
