@@ -37,10 +37,10 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
   transform-origin: bottom right;
 `;
 
-const computePos = (index: number, len: number) => {
+const computePos = (index: number, len: number, loopNumber: number) => {
   const $right =
     4.875 + 15 * (index - 2 * len) + (index >= 2 * len + 1 ? 12.5 : 0);
-  const $hidden = index >= 3 * len || index <= len - 1;
+  const $hidden = index >= (loopNumber - 1) * len || index <= len - 1;
   const $scale = index == 2 * len ? 1.0 : 0.5;
   return {
     $bottom: 3.25,
@@ -69,27 +69,38 @@ export type Props = {
 };
 
 const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
-  const gameInfos4 = [...gameInfos, ...gameInfos, ...gameInfos, ...gameInfos];
-  const listImages = gameInfos4.map((gameInfo, index) => {
+  const loopNumber = 5;
+  const gameInfosLoop = new Array<TraPCollection.GameInfo[]>(loopNumber)
+    .fill(gameInfos)
+    .flat();
+  const listImages = gameInfosLoop.map((gameInfo, index) => {
     const len = gameInfos.length;
     return (
       <ImageWrapper
         key={index}
-        {...computePos(mod(selected - index, 4 * len), len)}
+        {...computePos(
+          mod(selected - index, loopNumber * len),
+          len,
+          loopNumber
+        )}
         onClick={() => {
           onClickGame &&
-            onClickGame(selected + 2 * len - mod(selected - index, 4 * len));
-          if (mod(selected - index, 4 * len) === 2 * len) {
+            onClickGame(
+              selected + 2 * len - mod(selected - index, loopNumber * len)
+            );
+          if (mod(selected - index, loopNumber * len) === 2 * len) {
             onPlayGame && onPlayGame();
           }
         }}
       >
-        <Version $isSelected={mod(selected - index, 4 * len) === 2 * len}>
+        <Version
+          $isSelected={mod(selected - index, loopNumber * len) === 2 * len}
+        >
           {gameInfo.version?.name}
         </Version>
         <SliderImage
           src={gameInfo.poster}
-          isSelect={mod(selected - index, 4 * len) === len * 2}
+          isSelect={mod(selected - index, loopNumber * len) === len * 2}
         />
       </ImageWrapper>
     );
