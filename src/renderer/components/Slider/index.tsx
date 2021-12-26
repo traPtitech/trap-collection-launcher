@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import SliderImage from './sliderImage';
 
-const BackGround = styled.div`
+const Div = ({ ...props }) => <div {...props} />;
+
+const BackGround = styled(Div)`
   position: absolute;
   left: 0;
   right: 0;
@@ -18,14 +20,14 @@ type ImageWrapperProps = {
   $hidden?: boolean;
 };
 
-const Version = styled.div<{ $isSelected?: boolean }>`
+const Version = styled(Div)<{ $isSelected?: boolean }>`
   position: relative;
   margin: 1rem;
   opacity: ${(props) => (props.$isSelected ? '100%' : '0%')};
   transition: opacity ${(props) => props.theme.duration.slider};
 `;
 
-const ImageWrapper = styled.div<ImageWrapperProps>`
+const ImageWrapper = styled(Div)<ImageWrapperProps>`
   position: absolute;
   right: ${(props) => props.$right}rem;
   bottom: ${(props) => props.$bottom}rem;
@@ -35,6 +37,12 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
   transition: all ${(props) => props.theme.duration.slider} ease-out;
   visibility: ${(props) => (props.$hidden ? 'hidden' : 'visible')};
   transform-origin: bottom right;
+`;
+
+const InternalImageWrapper = styled(Div)`
+  position: relative;
+  height: auto;
+  width: auto;
 `;
 
 const computePos = (index: number, len: number, loopNumber: number) => {
@@ -89,9 +97,7 @@ const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
         >
           {gameInfo.version?.name}
         </Version>
-        <SliderImage
-          src={gameInfo.poster}
-          isSelect={mod(selected - index, loopNumber * len) === len * 2}
+        <InternalImageWrapper
           onClick={() => {
             onClickGame &&
               onClickGame(
@@ -101,7 +107,12 @@ const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
               onPlayGame && onPlayGame();
             }
           }}
-        />
+        >
+          <SliderImage
+            src={gameInfo.poster}
+            isSelect={mod(selected - index, loopNumber * len) === len * 2}
+          />
+        </InternalImageWrapper>
       </ImageWrapper>
     );
   });
