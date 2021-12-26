@@ -231,9 +231,9 @@ const GameSelect = ({ koudaisai }: Props) => {
             onWheel={(e: { deltaY: number }) => {
               if (canScroll) {
                 if (e.deltaY > threshold) {
-                  setSelectedGame(selectedGame - 1);
-                } else if (e.deltaY < -threshold) {
                   setSelectedGame(selectedGame + 1);
+                } else if (e.deltaY < -threshold) {
+                  setSelectedGame(selectedGame - 1);
                 }
                 setCanScroll(false);
                 setTimeout(() => setCanScroll(true), 100);
