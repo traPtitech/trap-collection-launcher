@@ -32,7 +32,8 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
         onOk={closeHandler}
         onCancel={closeHandler}
       >
-        このゲームをプレイするにはJavaが必要です
+        このゲームをプレイするにはJavaのダウンロードが必要です
+        https://www.java.com/ja/download/
       </Modal>
       <Modal
         modalType='warning'
