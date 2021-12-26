@@ -83,15 +83,6 @@ const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
           len,
           loopNumber
         )}
-        onClick={() => {
-          onClickGame &&
-            onClickGame(
-              selected + 2 * len - mod(selected - index, loopNumber * len)
-            );
-          if (mod(selected - index, loopNumber * len) === 2 * len) {
-            onPlayGame && onPlayGame();
-          }
-        }}
       >
         <Version
           $isSelected={mod(selected - index, loopNumber * len) === 2 * len}
@@ -101,6 +92,15 @@ const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
         <SliderImage
           src={gameInfo.poster}
           isSelect={mod(selected - index, loopNumber * len) === len * 2}
+          onClick={() => {
+            onClickGame &&
+              onClickGame(
+                selected + 2 * len - mod(selected - index, loopNumber * len)
+              );
+            if (mod(selected - index, loopNumber * len) === 2 * len) {
+              onPlayGame && onPlayGame();
+            }
+          }}
         />
       </ImageWrapper>
     );
