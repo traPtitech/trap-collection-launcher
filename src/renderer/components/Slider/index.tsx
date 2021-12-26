@@ -30,7 +30,7 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
   right: ${(props) => props.$right}rem;
   bottom: ${(props) => props.$bottom}rem;
   text-align: center;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSize.small};
   transform: scale(${(props) => props.$scale});
   transition: all ${(props) => props.theme.duration.slider} ease-out;
   visibility: ${(props) => (props.$hidden ? 'hidden' : 'visible')};

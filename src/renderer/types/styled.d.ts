@@ -1,6 +1,12 @@
 import 'styled-components';
 
 export interface Theme {
+  fontSize: {
+    small: string;
+    medium: string;
+    large: string;
+    gameTitle: string;
+  };
   colors: {
     text: {
       primary: string;

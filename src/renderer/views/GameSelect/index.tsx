@@ -132,7 +132,7 @@ const ErrorMessage = styled(Div)`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: ${(props) => props.theme.fontSize.medium};
   color: ${(props) => props.theme.colors.text.primary};
 `;
 

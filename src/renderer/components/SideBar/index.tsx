@@ -38,7 +38,7 @@ const Display = styled(Div)<{ $isOpen: boolean }>`
 `;
 
 const Title = styled(Div)`
-  font-size: 1.75rem;
+  font-size: ${(props) => props.theme.fontSize.large};
   height: 4.5rem;
   width: 100%;
   display: flex;
@@ -72,7 +72,7 @@ const Item = styled(Div)`
 
 const ItemText = styled(Div)`
   padding: 1.25rem;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSize.small};
   height: auto;
   color: ${(props) => props.theme.colors.text.primary};
 `;
@@ -98,12 +98,14 @@ const FootLogo = styled(Div)`
 const Collection = styled(Div)`
   position: relative;
   font-size: 1rem;
+  transform: rotate(0.03deg);
   color: ${(props) => props.theme.colors.text.version};
 `;
 
 const Version = styled(Div)`
   position: relative;
   font-size: 0.75rem;
+  transform: rotate(0.03deg);
   color: ${(props) => props.theme.colors.text.version};
 `;
 
@@ -118,12 +120,13 @@ const MetaData = styled(Div)`
 const Edition = styled(Div)`
   position: relative;
   font-size: 0.75rem;
+  transform: rotate(0.03deg);
   color: ${(props) => props.theme.colors.text.version};
 `;
 
 const OnlyTrap = styled(Div)`
   position: relative;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSize.small};
   color: ${(props) => props.theme.colors.text.warn};
 `;
 

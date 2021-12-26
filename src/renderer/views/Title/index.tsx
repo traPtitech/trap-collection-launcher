@@ -54,7 +54,7 @@ const BottomText = styled(Div)<{ $invalidProductKey: boolean }>`
     props.$invalidProductKey
       ? props.theme.colors.text.warn
       : props.theme.colors.text.primary};
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSize.small};
   font-weight: bold;
 `;
 
