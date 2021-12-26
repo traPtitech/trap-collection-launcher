@@ -22,6 +22,7 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
       <ProductModal
         isOpen={openedModal === 'productKey'}
         onCancel={closeHandler}
+        onOk={closeHandler}
       />
       <Modal
         modalType='information'
@@ -29,6 +30,7 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
         isOpen={openedModal === 'noJava'}
         noButton
         onOk={closeHandler}
+        onCancel={closeHandler}
       >
         このゲームをプレイするにはJavaが必要です
       </Modal>

@@ -12,7 +12,7 @@ const ProductModal = ({
   ...props
 }: Omit<
   ModalPackage.Props,
-  'noButton' | 'children' | 'modalType' | 'onOk' | 'okButtonText' | 'title'
+  'noButton' | 'children' | 'modalType' | 'okButtonText' | 'title'
 >) => {
   const [productKey, setProductKey] = useState('');
 
