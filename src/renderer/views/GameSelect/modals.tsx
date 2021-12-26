@@ -1,7 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
 import SendSeatNum from './sendSeatNum';
 import Modal, { ModalEventHandler } from '@/renderer/components/Modal';
 import ProductModal from '@/renderer/components/ProductModal';
+
+const JavaLink = styled.a`
+  color: ${(props) => props.theme.colors.button.information.fill};
+  text-decoration: none;
+`;
 
 export type ModalType =
   | undefined
@@ -28,12 +34,14 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
         modalType='information'
         title='Javaがインストールされていません'
         isOpen={openedModal === 'noJava'}
-        noButton
-        onOk={closeHandler}
+        okButtonText='ダウンロードページへ'
+        onOk={(e) => {
+          closeHandler(e);
+          window.TraPCollectionAPI.invoke.openJavaDownloadPage();
+        }}
         onCancel={closeHandler}
       >
         このゲームをプレイするにはJavaのダウンロードが必要です
-        https://www.java.com/ja/download/
       </Modal>
       <Modal
         modalType='warning'

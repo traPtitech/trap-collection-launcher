@@ -1,7 +1,7 @@
 import childProcess from 'child_process';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
-import { questionnaireUrl, homePageUrl } from '@/config';
+import { questionnaireUrl, homePageUrl, javaDownloadPageUrl } from '@/config';
 
 export const openQuestionnaireHandler = async (
   window: BrowserWindow | null
@@ -15,15 +15,23 @@ export const openQuestionnaireHandler = async (
   });
 };
 
+const openWebPage = async (url: string): Promise<void> => {
+  const platform = process.platform;
+  if (platform === 'win32') {
+    childProcess.spawn(`cmd`, ['/C', `start /wait ${url}`]);
+  }
+  if (platform === 'darwin') {
+    childProcess.spawn('open', ['-W', url]);
+  }
+  return;
+};
+
 export const openHomePageHandler = async (): Promise<void> => {
-  ipcMain.handle('openHomePage', async () => {
-    const platform = process.platform;
-    if (platform === 'win32') {
-      childProcess.spawn(`cmd`, ['/C', `start /wait ${homePageUrl}`]);
-    }
-    if (platform === 'darwin') {
-      childProcess.spawn('open', ['-W', homePageUrl]);
-    }
-    return;
-  });
+  ipcMain.handle('openHomePage', async () => openWebPage(homePageUrl));
+};
+
+export const openJavaDownloadPageHandler = async (): Promise<void> => {
+  ipcMain.handle('openJavaDownloadPage', async () =>
+    openWebPage(javaDownloadPageUrl)
+  );
 };

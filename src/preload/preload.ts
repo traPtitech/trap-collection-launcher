@@ -45,6 +45,9 @@ const api: TraPCollection.API = {
     openHomePage: async () => {
       return await ipcRenderer.invoke('openHomePage');
     },
+    openJavaDownloadPage: async () => {
+      return await ipcRenderer.invoke('openJavaDownloadPage');
+    },
     postLauncherLogin: async () => {
       return ipcRenderer.invoke('postLauncherLogin');
     },

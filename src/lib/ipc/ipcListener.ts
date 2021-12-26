@@ -18,6 +18,7 @@ import { sitUpHandler } from './handler/sitUpHandler';
 import { ipcMain } from '@/common/typedIpc';
 import {
   openHomePageHandler,
+  openJavaDownloadPageHandler,
   openQuestionnaireHandler,
 } from '@/lib/ipc/handler/openWebPageHandler';
 
@@ -57,12 +58,14 @@ class IpcListener {
     ipcMain.removeHandler('fetchGame');
     ipcMain.removeHandler('quitApp');
     ipcMain.removeHandler('reloadWindow');
+    ipcMain.removeHandler('openJavaDownloadPage');
   }
 
   private addListeners() {
     launchHandler(this.window);
     openQuestionnaireHandler(this.window);
     openHomePageHandler();
+    openJavaDownloadPageHandler();
     getGameInfoHandler();
     checkJavaHandler();
     getProductKeyHandler();
