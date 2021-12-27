@@ -74,7 +74,7 @@ const PlayText = styled(Div)`
   height: 6.25rem;
   background-color: ${(props) => props.theme.colors.button.information.fill};
   color: ${(props) => props.theme.colors.text.opposite};
-  font-size: 2rem;
+  font-size: ${(props) => props.theme.fontSize.large};
   border-radius: 0 0 0.5rem 0.5rem;
   display: flex;
   justify-content: center;

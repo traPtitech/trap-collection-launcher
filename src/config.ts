@@ -13,3 +13,4 @@ export const packageJson: {
 
 export const questionnaireUrl = 'https://anke-to.trap.jp/targeted';
 export const homePageUrl = 'https://trap.jp/';
+export const javaDownloadPageUrl = 'https://www.java.com/ja/download/';

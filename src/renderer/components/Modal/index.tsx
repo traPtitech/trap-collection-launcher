@@ -24,8 +24,8 @@ const Overlay = styled(Div)<{ $isOpen: boolean }>`
 const Display = styled(Div)<{ $isOpen: boolean }>`
   position: relative;
   background-color: ${(props) => props.theme.colors.panel.primary};
-  padding: 1.69rem; //27px
-  width: 37.5rem; //600px
+  padding: 1.7rem;
+  width: 40rem;
   height: auto;
   border-radius: 0.5rem; //8px
   transition: transform ${(props) => props.theme.duration.normal} ease-out;
@@ -41,15 +41,16 @@ const Contents = styled(Div)`
   height: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem; //16px
+  gap: 1rem;
 `;
 
 const ModalButton = styled(Div)<{
   $buttonType: 'cancel' | 'information' | 'warning';
 }>`
-  width: 13.5rem; //216px
-  height: 3.38rem; //54px
-  font-size: 0.938rem; //15px
+  width: 14rem;
+  height: 3.5rem;
+  font-size: ${(props) => props.theme.fontSize.exSmall};
+  transform: rotate(0.03deg);
   text-align: center;
   border-radius: 0.5rem; //8px
   display: flex;
@@ -101,17 +102,20 @@ const ModalButton = styled(Div)<{
 
 const Buttons = styled(Div)`
   display: flex;
+  margin-top: 1rem;
   justify-content: space-between;
 `;
 
 const Title = styled(Div)`
   text-align: center;
   color: ${(props) => props.theme.colors.text.header};
-  font-size: 1.5rem;
+  font-size: ${(props) => props.theme.fontSize.large};
 `;
 
 const Children = styled(Div)`
-  font-size: 1rem;
+  text-align: center;
+  font-size: ${(props) => props.theme.fontSize.exSmall};
+  transform: rotate(0.03deg);
   color: ${(props) => props.theme.colors.text.primary};
 `;
 

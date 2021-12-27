@@ -1,7 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
 import SendSeatNum from './sendSeatNum';
 import Modal, { ModalEventHandler } from '@/renderer/components/Modal';
 import ProductModal from '@/renderer/components/ProductModal';
+
+const JavaLink = styled.a`
+  color: ${(props) => props.theme.colors.button.information.fill};
+  text-decoration: none;
+`;
 
 export type ModalType =
   | undefined
@@ -22,15 +28,20 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
       <ProductModal
         isOpen={openedModal === 'productKey'}
         onCancel={closeHandler}
+        onOk={closeHandler}
       />
       <Modal
         modalType='information'
         title='Javaがインストールされていません'
         isOpen={openedModal === 'noJava'}
-        noButton
-        onOk={closeHandler}
+        okButtonText='ダウンロードページへ'
+        onOk={(e) => {
+          closeHandler(e);
+          window.TraPCollectionAPI.invoke.openJavaDownloadPage();
+        }}
+        onCancel={closeHandler}
       >
-        このゲームをプレイするにはJavaが必要です
+        このゲームをプレイするにはJavaのダウンロードが必要です。
       </Modal>
       <Modal
         modalType='warning'
@@ -48,16 +59,16 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
       </Modal>
       <Modal
         modalType='information'
-        title='traPの公式ホームページに遷移します．'
+        title='traP 公式ホームページ'
         isOpen={openedModal === 'goWeb'}
-        okButtonText='traP 公式ホームページ'
+        okButtonText='開く'
         onCancel={closeHandler}
         onOk={(e) => {
           closeHandler(e);
           window.TraPCollectionAPI.invoke.openHomePage();
         }}
       >
-        traPの公式ホームページに遷移します．
+        traPの公式ホームページを開きますか？
       </Modal>
       <SendSeatNum
         isOpen={openedModal === 'sendSeatNum'}

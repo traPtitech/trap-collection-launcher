@@ -132,7 +132,7 @@ const ErrorMessage = styled(Div)`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: ${(props) => props.theme.fontSize.medium};
   color: ${(props) => props.theme.colors.text.primary};
 `;
 
@@ -231,9 +231,9 @@ const GameSelect = ({ koudaisai }: Props) => {
             onWheel={(e: { deltaY: number }) => {
               if (canScroll) {
                 if (e.deltaY > threshold) {
-                  setSelectedGame(selectedGame - 1);
-                } else if (e.deltaY < -threshold) {
                   setSelectedGame(selectedGame + 1);
+                } else if (e.deltaY < -threshold) {
+                  setSelectedGame(selectedGame - 1);
                 }
                 setCanScroll(false);
                 setTimeout(() => setCanScroll(true), 100);

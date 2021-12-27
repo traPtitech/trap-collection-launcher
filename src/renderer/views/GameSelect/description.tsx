@@ -13,14 +13,15 @@ const Wrapper = styled(Div)`
 
 const Title = styled(Div)`
   width: 100%;
-  font-size: 5rem;
+  font-size: ${(props) => props.theme.fontSize.gameTitle};
   font-weight: bold;
   color: ${(props) => props.theme.colors.text.header};
 `;
 
 const Primary = styled(Div)`
   width: 100%;
-  font-size: 1.25rem;
+  overflow-wrap: break-word;
+  font-size: ${(props) => props.theme.fontSize.small};
   color: ${(props) => props.theme.colors.text.primary};
 `;
 

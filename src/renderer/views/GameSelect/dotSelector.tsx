@@ -31,6 +31,7 @@ const DotWrapper = styled(Div)<{ $isSelected: boolean }>`
   &:hover {
     color: ${(props) => props.theme.colors.button.dot.hover};
   }
+  transition: color ${(props) => props.theme.duration.normal} ease-out;
   cursor: pointer;
   width: auto;
   height: auto;
