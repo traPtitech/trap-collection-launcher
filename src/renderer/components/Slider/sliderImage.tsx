@@ -21,6 +21,7 @@ const Wrapper = styled(Div)<{ $isSelect: boolean }>`
     transform: scale(${(props) => (props.$isSelect ? '1.0' : '1.1')});
   }
   cursor: pointer;
+  box-shadow: 0px 3px 10px ${(props) => props.theme.colors.shadow.dot};
 `;
 
 const StyledImage = styled(Image)<{ $isLoad: boolean; $isSelect: boolean }>`
@@ -30,7 +31,6 @@ const StyledImage = styled(Image)<{ $isLoad: boolean; $isSelect: boolean }>`
   opacity: ${(props) => (props.$isLoad ? '100%' : '0%')};
   transition: opacity ${(props) => props.theme.duration.normal} ease-out;
   border-radius: 0.5rem;
-  box-shadow: 0px 3px 10px ${(props) => props.theme.colors.background.menu};
 `;
 
 const ImageBorder = styled(Div)<{ $isSelect: boolean }>`
