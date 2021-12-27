@@ -1,6 +1,7 @@
 import React, { forwardRef, useEffect, useState } from 'react';
 import { MdMenu } from 'react-icons/md';
-import styled from 'styled-components';
+import { BarLoader } from 'react-spinners';
+import styled, { useTheme } from 'styled-components';
 import Description from './description';
 import DotSelector from './dotSelector';
 import Modals, { ModalType } from './modals';
@@ -163,12 +164,14 @@ const GameSelect = ({ koudaisai }: Props) => {
     TraPCollection.GameInfo[] | undefined
   >(undefined);
 
+  const theme = useTheme();
+
   const videoElement = React.useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     (async () => {
       const res = await window.TraPCollectionAPI.invoke.getGameInfo();
-      setGameInfos(res.length === 0 ? undefined : res);
+      setGameInfos(res);
 
       window.TraPCollectionAPI.on.onBrowserWindowFocus(() => {
         videoElement.current?.play();
@@ -225,7 +228,7 @@ const GameSelect = ({ koudaisai }: Props) => {
 
   return (
     <Wrapper>
-      {gameInfos ? (
+      {gameInfos !== undefined && gameInfos !== [] ? (
         <>
           <WheelWatcher
             onWheel={(e: { deltaY: number }) => {
@@ -296,8 +299,16 @@ const GameSelect = ({ koudaisai }: Props) => {
             />
           </WheelWatcher>
         </>
-      ) : (
+      ) : gameInfos === [] ? (
         <ErrorMessage>ゲームが取得できませんでした</ErrorMessage>
+      ) : (
+        <ErrorMessage>
+          <BarLoader
+            height='4px'
+            width='200px'
+            color={theme.colors.button.information.fill}
+          />
+        </ErrorMessage>
       )}
       <Border />
       <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>

@@ -225,8 +225,8 @@ const TitlePage = () => {
           <>
             <BottomText> ログインしています </BottomText>
             <BarLoader
-              height='4'
-              width='200'
+              height='4px'
+              width='200px'
               color={theme.colors.button.information.fill}
             />
           </>
@@ -234,8 +234,8 @@ const TitlePage = () => {
           <>
             <BottomText> ゲームをダウンロードしています </BottomText>
             <BarLoader
-              height='4'
-              width='200'
+              height='4px'
+              width='200px'
               color={theme.colors.button.information.fill}
             />
           </>
