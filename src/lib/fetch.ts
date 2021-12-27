@@ -171,14 +171,10 @@ export const fetch = async (): Promise<void> => {
           stream.on('finish', resolve);
           stream.on('error', reject);
         });
-
-        progressLog.add('videoDownload');
-      } catch {
-        (error: any) => {
-          progressLog.add('videoDownload');
-          return;
-        };
+      } catch (e) {
+        // ignore
       }
+      progressLog.add('videoDownload');
     }),
   ]).catch((reason) => {
     throw reason;
