@@ -1,6 +1,6 @@
 import React from 'react';
 import { MdDone } from 'react-icons/md';
-import { BeatLoader, BounceLoader, FadeLoader } from 'react-spinners';
+import { BounceLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
 
 const Div = ({ ...props }) => <div {...props} />;
