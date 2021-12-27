@@ -244,11 +244,6 @@ const TitlePage = () => {
         ) : progress === 'fetchGame' ? (
           <>
             <BottomText> ゲームをダウンロードしています </BottomText>
-            <BarLoader
-              height='4px'
-              width='200px'
-              color={theme.colors.button.information.fill}
-            />
             {downloadFetchLog && <FetchLog log={downloadFetchLog} />}
           </>
         ) : undefined}

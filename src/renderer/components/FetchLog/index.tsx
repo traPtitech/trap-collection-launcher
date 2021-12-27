@@ -1,5 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
+import { MdDone } from 'react-icons/md';
+import { BeatLoader, BounceLoader, FadeLoader } from 'react-spinners';
+import styled, { useTheme } from 'styled-components';
 
 const Div = ({ ...props }) => <div {...props} />;
 
@@ -29,6 +31,41 @@ const LogBlock = styled(Div)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+`;
+
+const DoneIcon = styled(MdDone)`
+  color: ${(props) => props.theme.colors.button.information.fill};
+  height: 1.2rem;
+  width: 1.2rem;
+`;
+
+const UntilIconUntilIcon = styled(Div)`
+  width: 1.2rem;
+  height: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const UntilIcon = () => {
+  const theme = useTheme();
+
+  return (
+    <UntilIconUntilIcon>
+      <BounceLoader
+        size='0.9rem'
+        color={theme.colors.button.information.fill}
+      />
+    </UntilIconUntilIcon>
+  );
+};
+
+const RightBlock = styled(Div)`
+  display: flex;
+  justify-content: end;
+  gap: 0.5rem;
+  align-items: center;
 `;
 
 const FetchLog = ({ log }: Props) => {
@@ -36,37 +73,50 @@ const FetchLog = ({ log }: Props) => {
     <ProgressLog>
       <LogBlock>
         <div>【Game】Unzip </div>
-        <div>
+        <RightBlock>
+          {log.fileDecompress.complete === log.fileDecompress.total ? (
+            <DoneIcon />
+          ) : (
+            <UntilIcon />
+          )}
           {log.fileDecompress.complete}/{log.fileDecompress.total}
-        </div>
+        </RightBlock>
       </LogBlock>
       <LogBlock>
         <div>【Game】Download </div>
-        <div>
+        <RightBlock>
+          {log.fileDownload.complete === log.fileDownload.total ? (
+            <DoneIcon />
+          ) : (
+            <UntilIcon />
+          )}
           {log.fileDownload.complete}/{log.fileDownload.total}
-        </div>
+        </RightBlock>
       </LogBlock>
       <LogBlock>
         <div>【Video】Download </div>
-        <div>
+        <RightBlock>
+          {log.videoDownload.complete === log.videoDownload.total ? (
+            <DoneIcon />
+          ) : (
+            <UntilIcon />
+          )}
           {log.videoDownload.complete}/{log.videoDownload.total}
-        </div>
+        </RightBlock>
       </LogBlock>
       <LogBlock>
         <div>【Image】Download </div>
-        <div>
+        <RightBlock>
+          {log.posterDownload.complete === log.posterDownload.total ? (
+            <DoneIcon />
+          ) : (
+            <UntilIcon />
+          )}
           {log.posterDownload.complete}/{log.posterDownload.total}
-        </div>
+        </RightBlock>
       </LogBlock>
     </ProgressLog>
   );
 };
-
-`
-【Game 】Unzip    (=>       |1/8)
-【Game 】Download (===>     |3/8)
-【Video】Download (=====>   |5/8)
-【Image】Download (========>|8/8)
-`;
 
 export default FetchLog;
