@@ -2,6 +2,7 @@
 import PackageJson from '/package.json';
 
 export const baseUrl = 'https://collection-dev.tokyotech.org/api';
+// export const baseUrl = 'https://collection.trap.jp/api';
 export const isKoudaisai = process.env.KOUDAISAI === 'true';
 
 export const packageJson: {
