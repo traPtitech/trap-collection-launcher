@@ -53,6 +53,7 @@ export interface Theme {
     background: {
       selector: string;
       menu: string;
+      scrollbar: string;
     };
     shadow: {
       dot: string;

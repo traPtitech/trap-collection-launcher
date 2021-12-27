@@ -60,16 +60,24 @@ const api: TraPCollection.API = {
     reloadWindow: async () => {
       return await ipcRenderer.invoke('reloadWindow');
     },
+    progress: async () => {
+      return await ipcRenderer.invoke('progress');
+    },
   },
   on: {
-    progress: (listener) => {
-      ipcRenderer.on('progress', listener);
-    },
     onBrowserWindowFocus: (listener) => {
       ipcRenderer.on('onBrowserWindowFocus', listener);
     },
     onBrowserWindowBlur: (listener) => {
       ipcRenderer.on('onBrowserWindowBlur', listener);
+    },
+  },
+  removeListener: {
+    onBrowserWindowFocus: (listener) => {
+      ipcRenderer.removeListener('onBrowserWindowFocus', listener);
+    },
+    onBrowserWindowBlur: (listener) => {
+      ipcRenderer.removeListener('onBrowserWindowBlur', listener);
     },
   },
 };

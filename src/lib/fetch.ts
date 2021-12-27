@@ -1,5 +1,6 @@
 import { createWriteStream, promises, existsSync } from 'fs';
 import path from 'path';
+import { CheckItem } from './typescript-axios';
 import {
   getGameFile,
   getGameImage,
@@ -9,6 +10,7 @@ import {
   getLauncherMe,
   getVersionsCheck,
 } from '@/lib/axios';
+import progressLog from '@/lib/progressLog';
 import { store } from '@/lib/store';
 import {
   generateAbsolutePath,
@@ -24,38 +26,106 @@ export const fetch = async (): Promise<void> => {
     data: { id: versionId },
   } = await getLauncherMe();
 
-  await Promise.all([
-    ...data
+  const needFetchFileGamesUndef = await Promise.all(
+    data
       .filter(({ type }) => {
         return type !== 'url';
       })
-      .map(async ({ id, md5, bodyUpdatedAt }) => {
-        const { data } = await getGameFile(id);
-
+      .map(async (data) => {
+        const { id, bodyUpdatedAt } = data;
         const absolutePath = generateAbsolutePath(
           generateLocalPath(versionId, 'games', id, 'game.zip')
         );
-        const absoluteDir = path.dirname(absolutePath);
-
-        const existDir = await promiseExists(absoluteDir);
-        if (!existDir) {
-          await promises.mkdir(absoluteDir, { recursive: true });
-        }
 
         const existPath = await promiseExists(absolutePath);
 
-        // bodyUpdatedAtが異なるなら更新
         if (
-          (gameInfos.find(({ id: tempId }) => id === tempId)?.bodyUpdatedAt ??
-            '') !== bodyUpdatedAt ||
+          gameInfos.find(({ id: tempId }) => id === tempId)?.bodyUpdatedAt !==
+            bodyUpdatedAt ||
           !existPath
         ) {
-          await unzip(data, absolutePath, md5).catch(console.error);
+          return data;
         }
-      }),
-    ...data.map(async ({ id, imgUpdatedAt }) => {
-      const { data } = await getGameImage(id);
+        return undefined;
+      })
+  );
+  const needFetchFileGames = needFetchFileGamesUndef.filter(
+    (data) => data !== undefined
+  ) as CheckItem[];
+  const needFetchPosterGamesUndef = await Promise.all(
+    data.map(async (data) => {
+      const { id, imgUpdatedAt } = data;
 
+      const absolutePath = generateAbsolutePath(
+        generateLocalPath(versionId, 'artworks', id, 'poster.png')
+      );
+
+      const existPath = await promiseExists(absolutePath);
+
+      if (
+        gameInfos.find(({ id: tempId }) => id === tempId)?.imgUpdatedAt !==
+          imgUpdatedAt ||
+        !existPath
+      ) {
+        return data;
+      }
+      return undefined;
+    })
+  );
+  const needFetchPosterGames = needFetchPosterGamesUndef.filter(
+    (data) => data !== undefined
+  ) as CheckItem[];
+  const needFetchVideoGamesUndef = await Promise.all(
+    data.map(async (data) => {
+      const { id, movieUpdatedAt } = data;
+
+      const absolutePath = generateAbsolutePath(
+        generateLocalPath(versionId, 'artworks', id, 'video.mp4')
+      );
+
+      const existPath = await promiseExists(absolutePath);
+
+      if (
+        (gameInfos.find(({ id: tempId }) => id === tempId)?.movieUpdatedAt !==
+          movieUpdatedAt ||
+          !existPath) &&
+        movieUpdatedAt
+      ) {
+        return data;
+      }
+      return undefined;
+    })
+  );
+  const needFetchVideoGames = needFetchVideoGamesUndef.filter(
+    (data) => data !== undefined
+  ) as CheckItem[];
+
+  progressLog.reset(
+    needFetchFileGames.length,
+    needFetchPosterGames.length,
+    needFetchVideoGames.length
+  );
+
+  await Promise.all([
+    ...needFetchFileGames.map(async ({ id, md5 }) => {
+      const absolutePath = generateAbsolutePath(
+        generateLocalPath(versionId, 'games', id, 'game.zip')
+      );
+      const absoluteDir = path.dirname(absolutePath);
+
+      const existDir = await promiseExists(absoluteDir);
+      if (!existDir) {
+        await promises.mkdir(absoluteDir, { recursive: true });
+      }
+
+      const { data } = await getGameFile(id);
+      await unzip(data, absolutePath, md5, () =>
+        progressLog.add('fileDownload')
+      ).catch(console.error);
+
+      progressLog.add('fileDecompress');
+    }),
+    ...needFetchPosterGames.map(async ({ id }) => {
       const absolutePath = generateAbsolutePath(
         generateLocalPath(versionId, 'artworks', id, 'poster.png')
       );
@@ -66,27 +136,21 @@ export const fetch = async (): Promise<void> => {
         await promises.mkdir(absoluteDir, { recursive: true });
       }
 
-      const existPath = await promiseExists(absolutePath);
+      const { data } = await getGameImage(id);
 
-      if (
-        (gameInfos.find(({ id: tempId }) => id === tempId)?.imgUpdatedAt ??
-          '') !== imgUpdatedAt ||
-        !existPath
-      ) {
-        const stream = createWriteStream(absolutePath);
+      const stream = createWriteStream(absolutePath);
 
-        await data.pipe(stream);
+      await data.pipe(stream);
 
-        await new Promise<void>((resolve, reject) => {
-          stream.on('finish', resolve);
-          stream.on('error', reject);
-        });
-      }
+      await new Promise<void>((resolve, reject) => {
+        stream.on('finish', resolve);
+        stream.on('error', reject);
+      });
+
+      progressLog.add('posterDownload');
     }),
-    ...data.map(async ({ id, movieUpdatedAt }) => {
+    ...needFetchVideoGames.map(async ({ id }) => {
       try {
-        const { data } = await getGameVideo(id);
-
         const absolutePath = generateAbsolutePath(
           generateLocalPath(versionId, 'artworks', id, 'video.mp4')
         );
@@ -97,25 +161,21 @@ export const fetch = async (): Promise<void> => {
           await promises.mkdir(absoluteDir, { recursive: true });
         }
 
-        const existPath = await promiseExists(absolutePath);
+        const { data } = await getGameVideo(id);
 
-        // movieUpdatedAtが異なるなら更新
-        if (
-          (gameInfos.find(({ id: tempId }) => id === tempId)?.movieUpdatedAt ??
-            '') !== movieUpdatedAt ||
-          !existPath
-        ) {
-          const stream = createWriteStream(absolutePath);
+        const stream = createWriteStream(absolutePath);
 
-          await data.pipe(stream);
+        await data.pipe(stream);
 
-          await new Promise<void>((resolve, reject) => {
-            stream.on('finish', resolve);
-            stream.on('error', reject);
-          });
-        }
+        await new Promise<void>((resolve, reject) => {
+          stream.on('finish', resolve);
+          stream.on('error', reject);
+        });
+
+        progressLog.add('videoDownload');
       } catch {
-        () => {
+        (error: any) => {
+          progressLog.add('videoDownload');
           return;
         };
       }

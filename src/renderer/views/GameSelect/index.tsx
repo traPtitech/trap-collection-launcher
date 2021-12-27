@@ -168,26 +168,28 @@ const GameSelect = ({ koudaisai }: Props) => {
 
   const videoElement = React.useRef<HTMLVideoElement>(null);
 
+  const onBrowserWindowFocus = () => {
+    videoElement.current?.play();
+  };
+  const onBrowserWindowBlur = () => {
+    videoElement.current?.pause();
+  };
   useEffect(() => {
     (async () => {
       const res = await window.TraPCollectionAPI.invoke.getGameInfo();
       setGameInfos(res);
 
-      window.TraPCollectionAPI.on.onBrowserWindowFocus(() => {
-        videoElement.current?.play();
-      });
-      window.TraPCollectionAPI.on.onBrowserWindowBlur(() => {
-        videoElement.current?.pause();
-      });
+      window.TraPCollectionAPI.on.onBrowserWindowFocus(onBrowserWindowFocus);
+      window.TraPCollectionAPI.on.onBrowserWindowBlur(onBrowserWindowBlur);
     })();
 
     return () => {
-      window.TraPCollectionAPI.on.onBrowserWindowFocus(() => {
-        return;
-      });
-      window.TraPCollectionAPI.on.onBrowserWindowBlur(() => {
-        return;
-      });
+      window.TraPCollectionAPI.removeListener.onBrowserWindowFocus(
+        onBrowserWindowFocus
+      );
+      window.TraPCollectionAPI.removeListener.onBrowserWindowBlur(
+        onBrowserWindowBlur
+      );
     };
   }, []);
 

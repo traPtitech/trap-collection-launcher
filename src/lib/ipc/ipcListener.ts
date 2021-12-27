@@ -7,6 +7,7 @@ import { getProductKeyHandler } from './handler/getProductKeyHandler';
 import { getSeatIdHandler } from './handler/getSeatIdHandler';
 import { getSeatVersionHandler } from './handler/getSeatVersionHandler';
 import { launchHandler } from './handler/launchHandler';
+import { progressHandler } from './handler/progressHandler';
 import { quitAppHandler } from './handler/quitAppHandler';
 import { reloadWindowHandler } from './handler/reloadWindowHandler';
 import { resetProductKeyHandler } from './handler/resetProductKetHandler';
@@ -59,6 +60,7 @@ class IpcListener {
     ipcMain.removeHandler('quitApp');
     ipcMain.removeHandler('reloadWindow');
     ipcMain.removeHandler('openJavaDownloadPage');
+    ipcMain.removeHandler('progress');
   }
 
   private addListeners() {
@@ -81,6 +83,7 @@ class IpcListener {
     fetchGameHandler();
     quitAppHandler();
     reloadWindowHandler(this.window);
+    progressHandler();
   }
 }
 

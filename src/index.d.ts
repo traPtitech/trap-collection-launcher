@@ -1,6 +1,10 @@
 declare namespace TraPCollection {
   // IPC通信用API
-  type API = { invoke: FromRenderer; on: FromMainReceiver };
+  type API = {
+    invoke: FromRenderer;
+    on: FromMainReceiver;
+    removeListener: FromMainReceiver;
+  };
   type FromRenderer = {
     launch(gameId: string): Promise<void>;
     openQuestionnaire(): Promise<void>;
@@ -21,9 +25,9 @@ declare namespace TraPCollection {
     fetchGame(): Promise<void>;
     quitApp(): Promise<void>;
     reloadWindow(): Promise<void>;
+    progress(): Promise<TraPCollection.Progress>;
   };
   type FromMain = {
-    progress(progress: Progress): void;
     onBrowserWindowFocus: () => void;
     onBrowserWindowBlur: () => void;
   };
@@ -80,11 +84,11 @@ declare namespace TraPCollection {
   };
 
   type Progress = {
-    title: string;
-    phase: 'fetch' | 'decompress' | 'verify' | 'genChecksum' | 'done';
-    progressRate: number; // 0-100
-  }[];
-
+    fileDownload: { complete: number; total: number };
+    fileDecompress: { complete: number; total: number };
+    posterDownload: { complete: number; total: number };
+    videoDownload: { complete: number; total: number };
+  };
   type Platform = 'win32' | 'darwin';
 }
 

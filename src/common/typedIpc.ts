@@ -21,18 +21,19 @@ export const ipcRenderer = {
       ...args: Parameters<TraPCollection.FromMain[K]>
     ) => void
   ): void {
-    originalIpcRenderer.on(
-      channel,
-      (event: IpcRendererEvent, ...args: unknown[]) => {
-        listener(event, ...(args as Parameters<TraPCollection.FromMain[K]>));
-      }
-    );
+    originalIpcRenderer.on(channel, listener as (...args: unknown[]) => void);
   },
   removeListener<K extends keyof TraPCollection.FromMain>(
     channel: K,
-    listener: (...args: unknown[]) => void
+    listener: (
+      event: IpcRendererEvent,
+      ...args: Parameters<TraPCollection.FromMain[K]>
+    ) => void
   ): void {
-    originalIpcRenderer.removeListener(channel, listener);
+    originalIpcRenderer.removeListener(
+      channel,
+      listener as (...args: unknown[]) => void
+    );
   },
 };
 

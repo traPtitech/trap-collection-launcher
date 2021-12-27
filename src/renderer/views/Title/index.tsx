@@ -9,6 +9,7 @@ import {
   ShowNetworkErrorContext,
 } from '@/renderer/App';
 import collectionLogo from '@/renderer/assets/logo.svg';
+import FetchLog from '@/renderer/components/FetchLog';
 
 const Div = ({ ...props }) => <div {...props} />;
 const Img = ({ ...props }) => <img {...props} />;
@@ -37,7 +38,7 @@ const TitleContainer = styled(Div)`
 
 const BottomWrapper = styled(Div)`
   position: absolute;
-  height: 50%;
+  height: 40%;
   left: 0;
   right: 0;
   bottom: 0;
@@ -139,6 +140,9 @@ const TitlePage = () => {
   const [progress, setProgress] = useState<Progress>('login');
   const theme = useTheme();
   const [isOfflineMode] = useContext(SetOfflineModeContext) ?? [];
+  const [downloadFetchLog, setDownloadFetchLog] = useState<
+    TraPCollection.Progress | undefined
+  >(undefined);
 
   const tryLogin = async () =>
     (async () => {
@@ -155,10 +159,17 @@ const TitlePage = () => {
       }
     })().catch(showNetworkError);
 
+  const fetchGameProgress = async () => {
+    const progress = await window.TraPCollectionAPI.invoke.progress();
+    setDownloadFetchLog(progress);
+  };
+
   useEffect(() => {
     (async () => {
       await tryLogin();
     })();
+    const timerId = setInterval(fetchGameProgress, 500);
+    return () => clearInterval(timerId);
   }, []);
 
   useEffect(() => {
@@ -238,6 +249,7 @@ const TitlePage = () => {
               width='200px'
               color={theme.colors.button.information.fill}
             />
+            {downloadFetchLog && <FetchLog log={downloadFetchLog} />}
           </>
         ) : undefined}
       </BottomWrapper>

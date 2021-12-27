@@ -4,12 +4,19 @@ import AdmZip from 'adm-zip';
 import iconv from 'iconv-lite';
 import { md5sumFile } from './checksum';
 
-const unzip = async (data: any, absolutePath: string, md5: string) => {
+const unzip = async (
+  data: any,
+  absolutePath: string,
+  md5: string,
+  onDownload: () => void
+) => {
   const stream = createWriteStream(absolutePath);
   data.pipe(stream);
 
   await new Promise<void>((resolve, reject) => {
     stream.on('finish', async () => {
+      onDownload();
+
       // checksum
       const md5sum = await md5sumFile(absolutePath).catch(() => undefined);
       if (md5sum !== md5) {
