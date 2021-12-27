@@ -41,7 +41,7 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
         }}
         onCancel={closeHandler}
       >
-        このゲームをプレイするにはJavaのダウンロードが必要です
+        このゲームをプレイするにはJavaのダウンロードが必要です。
       </Modal>
       <Modal
         modalType='warning'
@@ -59,16 +59,16 @@ const Modals = ({ openedModal, closeHandler }: Props) => {
       </Modal>
       <Modal
         modalType='information'
-        title='traPの公式ホームページに遷移します．'
+        title='traP 公式ホームページ'
         isOpen={openedModal === 'goWeb'}
-        okButtonText='traP 公式ホームページ'
+        okButtonText='開く'
         onCancel={closeHandler}
         onOk={(e) => {
           closeHandler(e);
           window.TraPCollectionAPI.invoke.openHomePage();
         }}
       >
-        traPの公式ホームページに遷移します．
+        traPの公式ホームページを開きますか？
       </Modal>
       <SendSeatNum
         isOpen={openedModal === 'sendSeatNum'}

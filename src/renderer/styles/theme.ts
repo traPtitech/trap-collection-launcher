@@ -4,7 +4,8 @@ import { Theme } from '../types/styled';
 export const createTheme = ({ dark }: { dark: boolean }): Theme => {
   return {
     fontSize: {
-      small: '1.35rem',
+      exSmall: '1.1rem',
+      small: '1.26rem',
       medium: '1.5rem',
       large: '1.7rem',
       gameTitle: '5rem',

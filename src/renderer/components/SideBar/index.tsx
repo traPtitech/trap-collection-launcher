@@ -72,7 +72,7 @@ const Item = styled(Div)`
 
 const ItemText = styled(Div)`
   padding: 1.25rem;
-  font-size: 1.2rem;
+  font-size: ${(props) => props.theme.fontSize.exSmall};
   transform: rotate(0.03deg);
   height: auto;
   color: ${(props) => props.theme.colors.text.primary};

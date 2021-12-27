@@ -41,15 +41,16 @@ const Contents = styled(Div)`
   height: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem; //16px
+  gap: 1rem;
 `;
 
 const ModalButton = styled(Div)<{
   $buttonType: 'cancel' | 'information' | 'warning';
 }>`
-  width: 15rem;
-  height: 3.8rem;
-  font-size: ${(props) => props.theme.fontSize.small};
+  width: 14rem;
+  height: 3.5rem;
+  font-size: ${(props) => props.theme.fontSize.exSmall};
+  transform: rotate(0.03deg);
   text-align: center;
   border-radius: 0.5rem; //8px
   display: flex;
@@ -101,6 +102,7 @@ const ModalButton = styled(Div)<{
 
 const Buttons = styled(Div)`
   display: flex;
+  margin-top: 1rem;
   justify-content: space-between;
 `;
 
@@ -112,7 +114,8 @@ const Title = styled(Div)`
 
 const Children = styled(Div)`
   text-align: center;
-  font-size: ${(props) => props.theme.fontSize.small};
+  font-size: ${(props) => props.theme.fontSize.exSmall};
+  transform: rotate(0.03deg);
   color: ${(props) => props.theme.colors.text.primary};
 `;
 

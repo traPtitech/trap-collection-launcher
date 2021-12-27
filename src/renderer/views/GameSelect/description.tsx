@@ -21,7 +21,7 @@ const Title = styled(Div)`
 const Primary = styled(Div)`
   width: 100%;
   overflow-wrap: break-word;
-  font-size: ${(props) => props.theme.fontSize.medium};
+  font-size: ${(props) => props.theme.fontSize.small};
   color: ${(props) => props.theme.colors.text.primary};
 `;
 

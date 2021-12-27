@@ -2,6 +2,7 @@ import 'styled-components';
 
 export interface Theme {
   fontSize: {
+    exSmall: string;
     small: string;
     medium: string;
     large: string;
