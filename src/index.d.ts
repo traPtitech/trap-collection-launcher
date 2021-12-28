@@ -10,14 +10,14 @@ declare namespace TraPCollection {
     openQuestionnaire(): Promise<void>;
     openHomePage(): Promise<void>;
     openJavaDownloadPage(): Promise<void>;
-    getGameInfo(): Promise<GameInfo[]>;
+    getGameInfo(): Promise<RendererGameInfo[]>;
     checkJava(): Promise<boolean>;
-    getProductKey(): Promise<string | undefined>;
+    getProductKey(): Promise<string | null>;
     setProductKey(productKey: string): Promise<void>;
     resetProductKey(): Promise<void>;
-    getSeatId(): Promise<number | undefined>;
+    getSeatId(): Promise<number | null>;
     setSeatId(seatId: number): Promise<void>;
-    getSeatVersionId(): Promise<number | undefined>;
+    getSeatVersionId(): Promise<number | null>;
     setSeatVersionId(seatVersionId: number): Promise<void>;
     sitDown(): Promise<void>;
     sitUp(): Promise<void>;
@@ -41,46 +41,80 @@ declare namespace TraPCollection {
     ) => void;
   };
 
-  type GameType = 'app' | 'jar' | 'url';
-  /**
-   * @example
-   * `.exe`: { type: 'app', url: filepath }
-   * `.jar`: { type: 'jar', url: filepath }
-   * `.com`: { type: 'url', url: urlString }
-   */
-
   type GameInfo = {
     id: string;
     name: string;
     createdAt: string;
-    version?: {
-      id: string;
+    version: {
+      id: string; // unique
       name: string;
       description: string;
       createdAt: string;
     };
     description: string;
-    type: GameType;
     /**
+     * relative path
+     * base url: '%AppData%/trap-collection/contents'
      * @example
-     * "games/UUIDv4/*.exe"
-     * "games/UUIDv4/*.jar"
-     * "*.trap.games"
+     * 'games/146dfc4a-e656-4083-b973-4a7196ae4289/v1.0.0/video.mp4'
      */
-    url: string;
+    video?: {
+      path: string;
+      updateAt: string;
+    };
     /**
+     * relative path
+     * base url: '%AppData%/trap-collection/contents'
      * @example
-     * "artworks/UUIDv4.png"
+     * 'games/146dfc4a-e656-4083-b973-4a7196ae4289/v1.0.0/poster.png'
+     */
+    poster: {
+      path: string;
+      updateAt: string;
+    };
+    info:
+      | {
+          type: 'app' | 'jar';
+          /**
+           * relative path
+           * base url: '%AppData%/trap-collection/contents/games/146dfc4a-e656-4083-b973-4a7196ae4289/v1.0.0/dist'
+           * @example
+           * path/to/binary
+           */
+          entryPoint: string;
+          updateAt: string;
+        }
+      | {
+          type: 'url';
+          url: string;
+          updateAt: string;
+        };
+  };
+
+  type GameType = GameInfo['info']['type'];
+
+  type GameInfos = GameInfo[];
+
+  type LauncherVersion = {
+    productKey: string;
+  };
+
+  type LauncherVersions = LauncherVersion[];
+
+  type RendererGameInfo = {
+    id: string;
+    name: string;
+    description: string;
+    versionName: string;
+    /**
+     * absolute path
      */
     poster: string;
     /**
-     * @example
-     * "artworks/UUIDv4.mp4"
+     * absolute path
      */
     video?: string;
-    bodyUpdatedAt: string;
-    imgUpdatedAt: string;
-    movieUpdatedAt?: string;
+    type: GameType;
   };
 
   type Progress = {

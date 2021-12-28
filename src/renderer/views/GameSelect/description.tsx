@@ -26,7 +26,7 @@ const Primary = styled(Div)`
 `;
 
 export type Props = {
-  gameInfo: TraPCollection.GameInfo;
+  gameInfo: TraPCollection.RendererGameInfo;
 };
 
 const Description = ({ gameInfo }: Props) => {

@@ -1,28 +1,19 @@
 import { ipcMain } from '@/common/typedIpc';
-import { store } from '@/lib/store';
+import store from '@/lib/store';
 import { generateAbsolutePath } from '@/lib/utils/generatePaths';
 
 export const getGameInfoHandler = (): void => {
   ipcMain.handle('getGameInfo', async () => {
     const gameInfo = store.get('gameInfo');
-    return gameInfo
-      .filter((v) => v.version)
-      .map((v) => {
-        const { poster, video, url } = v;
-        if (v.type === 'url') {
-          return {
-            ...v,
-            poster: generateAbsolutePath(poster),
-            video: video ? generateAbsolutePath(video) : undefined,
-          };
-        }
-        return {
-          ...v,
-          poster: generateAbsolutePath(poster),
-          video: video ? generateAbsolutePath(video) : undefined,
-          url: generateAbsolutePath(url),
-        };
-      });
+    return gameInfo.map((v) => ({
+      id: v.id,
+      name: v.name,
+      poster: generateAbsolutePath(v.poster.path),
+      video: v.video && generateAbsolutePath(v.video.path),
+      description: v.description,
+      versionName: v.version.name,
+      type: v.info.type,
+    }));
   });
 };
 

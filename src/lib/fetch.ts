@@ -1,238 +1,226 @@
-import { createWriteStream, promises, existsSync } from 'fs';
+import { createWriteStream, promises } from 'fs';
 import path from 'path';
-import { CheckItem } from './typescript-axios';
+import promiseFilter from './utils/promiseFilter';
 import {
   getGameFile,
   getGameImage,
   getGameInfo,
   getGameUrl,
   getGameVideo,
-  getLauncherMe,
   getVersionsCheck,
 } from '@/lib/axios';
 import progressLog from '@/lib/progressLog';
-import { store } from '@/lib/store';
+import store from '@/lib/store';
 import {
   generateAbsolutePath,
   generateLocalPath,
 } from '@/lib/utils/generatePaths';
 import { promiseExists } from '@/lib/utils/promiseExists';
+import promiseSome from '@/lib/utils/promiseSome';
 import unzip from '@/lib/utils/unzip';
 
+/*
+やる処理v1
+- アップデートしなければならないリソースを特定する
+- logを初期化
+- リソースをダウンロード&展開する
+  - logに残す
+- gameInfoを更新
+*/
+
+//gameVersionIdからそのゲームのディレクトリへのパスを生成
+const getLocalGameDirectory = (gameVersionId: string) => {
+  const base = generateLocalPath('games', gameVersionId);
+  return {
+    base,
+    executive: path.join(base, 'game.zip'),
+    poster: path.join(base, 'poster.png'),
+    video: path.join(base, 'video.mp4'),
+  };
+};
+
+const getAbsoluteGameDirectory = (gameVersionId: string) => {
+  const base = generateAbsolutePath(generateLocalPath('games', gameVersionId));
+  return {
+    base,
+    executive: path.join(base, 'game.zip'),
+    poster: path.join(base, 'poster.png'),
+    video: path.join(base, 'video.mp4'),
+  };
+};
+
 export const fetch = async (): Promise<void> => {
-  const { data } = await getVersionsCheck();
-  const gameInfos = store.get('gameInfo');
-  const {
-    data: { id: versionId },
-  } = await getLauncherMe();
+  //v1では，gameInfosは常に1つのランチャーバージョンを指している
+  const oldGameInfos = store.get('gameInfo');
+  const searchOldGameInfo = (gameId: string) =>
+    oldGameInfos.find(({ id }) => id === gameId);
 
-  const needFetchFileGamesUndef = await Promise.all(
-    data
-      .filter(({ type }) => {
-        return type !== 'url';
-      })
-      .map(async (data) => {
-        const { id, bodyUpdatedAt } = data;
-        const absolutePath = generateAbsolutePath(
-          generateLocalPath(versionId, 'games', id, 'game.zip')
-        );
+  //versionsCheck
+  const { data: versionsCheck } = await getVersionsCheck();
 
-        const existPath = await promiseExists(absolutePath);
-
-        if (
-          gameInfos.find(({ id: tempId }) => id === tempId)?.bodyUpdatedAt !==
-            bodyUpdatedAt ||
-          !existPath
-        ) {
-          return data;
-        }
-        return undefined;
-      })
-  );
-  const needFetchFileGames = needFetchFileGamesUndef.filter(
-    (data) => data !== undefined
-  ) as CheckItem[];
-  const needFetchPosterGamesUndef = await Promise.all(
-    data.map(async (data) => {
-      const { id, imgUpdatedAt } = data;
-
-      const absolutePath = generateAbsolutePath(
-        generateLocalPath(versionId, 'artworks', id, 'poster.png')
-      );
-
-      const existPath = await promiseExists(absolutePath);
-
-      if (
-        gameInfos.find(({ id: tempId }) => id === tempId)?.imgUpdatedAt !==
-          imgUpdatedAt ||
-        !existPath
-      ) {
-        return data;
-      }
-      return undefined;
+  const apiGameInfos = await Promise.all(
+    versionsCheck.map(async ({ id }) => {
+      const { data: gameInfo } = await getGameInfo(id);
+      return gameInfo;
     })
   );
-  const needFetchPosterGames = needFetchPosterGamesUndef.filter(
-    (data) => data !== undefined
-  ) as CheckItem[];
-  const needFetchVideoGamesUndef = await Promise.all(
-    data.map(async (data) => {
-      const { id, movieUpdatedAt } = data;
 
-      const absolutePath = generateAbsolutePath(
-        generateLocalPath(versionId, 'artworks', id, 'video.mp4')
+  //gameIdからそのゲームの最新のゲームバージョンを取得
+  const searchGameVersionId = (gameId: string) =>
+    apiGameInfos.find(({ id }) => id === gameId)?.version?.id;
+
+  //アップデートが必要なgameIdの配列
+  const needUpdateGameIds = await promiseFilter(
+    versionsCheck,
+    async (check) => {
+      const { id: gameId } = check;
+
+      const oldGameInfo = searchOldGameInfo(gameId);
+      if (!oldGameInfo) return true; //新規ゲーム
+
+      const gameVersionId = searchGameVersionId(gameId);
+      if (!gameVersionId) return false;
+
+      const gameDirectory = getAbsoluteGameDirectory(gameVersionId);
+
+      const existExecutive = await promiseExists(gameDirectory.executive);
+      const existPoster = await promiseExists(gameDirectory.poster);
+      const existVideo = await promiseExists(gameDirectory.video);
+
+      //Videoは必要ない場合がある
+      const existFiles =
+        existExecutive && existPoster && (existVideo || !check.movieUpdatedAt);
+
+      return (
+        !existFiles ||
+        oldGameInfo.poster.updateAt !== check.imgUpdatedAt ||
+        oldGameInfo.video?.updateAt !== check.movieUpdatedAt ||
+        oldGameInfo.info.updateAt !== check.bodyUpdatedAt
       );
-
-      const existPath = await promiseExists(absolutePath);
-
-      if (
-        (gameInfos.find(({ id: tempId }) => id === tempId)?.movieUpdatedAt !==
-          movieUpdatedAt ||
-          !existPath) &&
-        movieUpdatedAt
-      ) {
-        return data;
-      }
-      return undefined;
-    })
-  );
-  const needFetchVideoGames = needFetchVideoGamesUndef.filter(
-    (data) => data !== undefined
-  ) as CheckItem[];
-
-  progressLog.reset(
-    needFetchFileGames.length,
-    needFetchPosterGames.length,
-    needFetchVideoGames.length
+    }
   );
 
-  await Promise.all([
-    ...needFetchFileGames.map(async ({ id, md5 }) => {
-      const absolutePath = generateAbsolutePath(
-        generateLocalPath(versionId, 'games', id, 'game.zip')
-      );
-      const absoluteDir = path.dirname(absolutePath);
+  const needUpdateNum = needUpdateGameIds.length;
+  progressLog.reset(needUpdateNum, needUpdateNum, needUpdateNum);
 
-      const existDir = await promiseExists(absoluteDir);
-      if (!existDir) {
-        await promises.mkdir(absoluteDir, { recursive: true });
-      }
+  //ゲームのアップデート
+  await promiseSome(needUpdateGameIds, async (check) => {
+    const { id: gameId } = check;
+    const gameVersionId = searchGameVersionId(gameId);
+    if (!gameVersionId) return undefined;
 
-      const { data } = await getGameFile(id);
-      await unzip(data, absolutePath, md5, () =>
+    const gameDirectory = getAbsoluteGameDirectory(gameVersionId);
+    await promises.mkdir(gameDirectory.base, { recursive: true });
+
+    const updateExecutive = async (): Promise<void> => {
+      const { data } = await getGameFile(gameId);
+      await unzip(data, gameDirectory.executive, check.md5, () =>
         progressLog.add('fileDownload')
       ).catch(console.error);
 
       progressLog.add('fileDecompress');
-    }),
-    ...needFetchPosterGames.map(async ({ id }) => {
-      const absolutePath = generateAbsolutePath(
-        generateLocalPath(versionId, 'artworks', id, 'poster.png')
-      );
-      const absoluteDir = path.dirname(absolutePath);
+    };
 
-      const existDir = await promiseExists(absoluteDir);
-      if (!existDir) {
-        await promises.mkdir(absoluteDir, { recursive: true });
-      }
+    const updatePoster = async (): Promise<void> => {
+      const { data } = await getGameImage(gameId);
 
-      const { data } = await getGameImage(id);
-
-      const stream = createWriteStream(absolutePath);
-
-      await data.pipe(stream);
-
+      const writeStream = createWriteStream(gameDirectory.poster);
+      await data.pipe(writeStream);
       await new Promise<void>((resolve, reject) => {
-        stream.on('finish', resolve);
-        stream.on('error', reject);
+        writeStream.on('finish', resolve);
+        writeStream.on('error', reject);
       });
 
       progressLog.add('posterDownload');
-    }),
-    ...needFetchVideoGames.map(async ({ id }) => {
-      try {
-        const absolutePath = generateAbsolutePath(
-          generateLocalPath(versionId, 'artworks', id, 'video.mp4')
-        );
-        const absoluteDir = path.dirname(absolutePath);
+    };
 
-        const existDir = await promiseExists(absoluteDir);
-        if (!existDir) {
-          await promises.mkdir(absoluteDir, { recursive: true });
-        }
-
-        const { data } = await getGameVideo(id);
-
-        const stream = createWriteStream(absolutePath);
-
-        await data.pipe(stream);
-
-        await new Promise<void>((resolve, reject) => {
-          stream.on('finish', resolve);
-          stream.on('error', reject);
-        });
-      } catch (e) {
-        // ignore
+    const updateVideo = async (): Promise<void> => {
+      if (!check.movieUpdatedAt) {
+        progressLog.add('videoDownload');
+        return; //videoがない場合
       }
+      //303リダイレクトなので型が通らない
+      const { data } = (await getGameVideo(gameId)) as { data: any };
+
+      const writeStream = createWriteStream(gameDirectory.video);
+      await data.pipe(writeStream);
+      await new Promise<void>((resolve, reject) => {
+        writeStream.on('finish', resolve);
+        writeStream.on('error', reject);
+      });
+
       progressLog.add('videoDownload');
-    }),
-  ]).catch((reason) => {
-    throw reason;
+    };
+
+    await Promise.all([updateExecutive(), updatePoster(), updateVideo()]);
   });
 
-  const newGameInfos: TraPCollection.GameInfo[] = await Promise.all(
-    data.map(
-      async ({
-        id,
-        type,
-        bodyUpdatedAt,
-        imgUpdatedAt,
-        movieUpdatedAt,
-        entryPoint,
-      }) => {
-        const { data } = await getGameInfo(id);
-        const { id: gameId, name, description, createdAt, version } = data;
-        const url = await getGameUrl(id)
-          .then(({ data: url }) => url)
-          .catch(async () => {
-            return (
-              generateLocalPath(versionId, 'games', id + '/dist', entryPoint) ??
-              ''
-            );
-          });
+  //gameInfoを更新
+  const newGameInfos: TraPCollection.GameInfo[] = await promiseSome(
+    versionsCheck,
+    async (check) => {
+      const apiGameInfo = apiGameInfos.find(({ id }) => id === check.id);
+      if (!apiGameInfo) {
+        return undefined;
+      }
 
-        const absoluteVideoPath = generateAbsolutePath(
-          generateLocalPath(versionId, 'artworks', id, 'video.mp4')
+      if (!apiGameInfo.version) return undefined;
+
+      const gameDirectory = getLocalGameDirectory(apiGameInfo.version.id);
+
+      const info: TraPCollection.GameInfo['info'] = await (async () => {
+        if (check.type === 'url') {
+          const { data: url } = await getGameUrl(check.id);
+          return { type: 'url', url, updateAt: check.bodyUpdatedAt };
+        }
+
+        // typeがurl以外で，かつentryPointが存在しない
+        if (!check.entryPoint) {
+          throw 'entryPoint is not found';
+        }
+
+        const entryPoint = path.join(
+          gameDirectory.base,
+          'dist',
+          check.entryPoint
         );
 
-        const poster = generateLocalPath(
-          versionId,
-          'artworks',
-          id,
-          'poster.png'
-        );
-        const video = existsSync(absoluteVideoPath)
-          ? generateLocalPath(versionId, 'artworks', id, 'video.mp4')
-          : undefined;
+        if (check.type === 'jar') {
+          return {
+            type: 'jar',
+            entryPoint,
+            updateAt: check.bodyUpdatedAt,
+          };
+        }
 
         return {
-          id: gameId,
-          name,
-          createdAt,
-          version,
-          description: description ?? '',
-          type: (type === 'windows' || type === 'mac'
-            ? 'app'
-            : type) as TraPCollection.GameType,
-          url,
-          poster,
-          video,
-          bodyUpdatedAt,
-          imgUpdatedAt,
-          movieUpdatedAt,
+          type: 'app',
+          entryPoint,
+          updateAt: check.bodyUpdatedAt,
         };
-      }
-    )
+      })();
+
+      const video = check.movieUpdatedAt
+        ? {
+            updateAt: check.movieUpdatedAt,
+            path: gameDirectory.video,
+          }
+        : undefined;
+
+      return {
+        id: check.id,
+        createdAt: apiGameInfo.createdAt,
+        description: apiGameInfo.description ?? '',
+        info,
+        name: apiGameInfo.name,
+        poster: {
+          updateAt: check.imgUpdatedAt,
+          path: gameDirectory.poster,
+        },
+        video,
+        version: apiGameInfo.version,
+      };
+    }
   );
 
   store.set('gameInfo', newGameInfos);

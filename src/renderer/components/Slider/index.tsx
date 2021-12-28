@@ -71,14 +71,14 @@ const mod = (a: number, b: number) => {
 
 export type Props = {
   selected: number;
-  gameInfos: TraPCollection.GameInfo[];
+  gameInfos: TraPCollection.RendererGameInfo[];
   onClickGame?: (index: number) => void;
   onPlayGame?: () => void;
 };
 
 const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
   const loopNumber = 5;
-  const gameInfosLoop = new Array<TraPCollection.GameInfo[]>(loopNumber)
+  const gameInfosLoop = new Array<TraPCollection.RendererGameInfo[]>(loopNumber)
     .fill(gameInfos)
     .flat();
   const listImages = gameInfosLoop.map((gameInfo, index) => {
@@ -95,7 +95,7 @@ const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
         <Version
           $isSelected={mod(selected - index, loopNumber * len) === 2 * len}
         >
-          {gameInfo.version?.name}
+          {gameInfo.versionName}
         </Version>
         <InternalImageWrapper
           onClick={() => {

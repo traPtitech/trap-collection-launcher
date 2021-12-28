@@ -1,5 +1,5 @@
 import { ipcMain } from '@/common/typedIpc';
-import { store } from '@/lib/store';
+import store from '@/lib/store';
 
 export const setSeatIdHandler = (): void => {
   ipcMain.handle('setSeatId', async (_, seatId) => {

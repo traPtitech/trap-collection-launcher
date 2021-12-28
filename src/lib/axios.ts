@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import axios from 'axios';
-import { store } from './store';
+import store from './store';
 import { baseUrl } from '@/config';
 import {
   LauncherAuthApi,
