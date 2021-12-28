@@ -24,7 +24,7 @@ const ProgressLog = styled(Div)`
 const LogBlock = styled(Div)`
   position: relative;
   height: auto;
-  width: 18rem;
+  width: 16rem;
   color: ${(props) => props.theme.colors.text.primary};
   font-size: ${(props) => props.theme.fontSize.exSmall};
   transform: rotate(0.03deg);
@@ -61,60 +61,38 @@ const UntilIcon = () => {
   );
 };
 
-const RightBlock = styled(Div)`
+const WithSpinner = styled(Div)`
   display: flex;
   justify-content: end;
   gap: 0.5rem;
   align-items: center;
 `;
 
+const makeLogBlock = (
+  log: TraPCollection.Progress,
+  description: string,
+  key: keyof TraPCollection.Progress
+) => {
+  return (
+    <LogBlock>
+      <WithSpinner>
+        {log[key].complete === log[key].total ? <DoneIcon /> : <UntilIcon />}
+        <div>{description}</div>
+      </WithSpinner>
+      <div>
+        ...{log[key].complete}/{log[key].total}
+      </div>
+    </LogBlock>
+  );
+};
+
 const FetchLog = ({ log }: Props) => {
   return (
     <ProgressLog>
-      <LogBlock>
-        <div>【Game】Unzip </div>
-        <RightBlock>
-          {log.fileDecompress.complete === log.fileDecompress.total ? (
-            <DoneIcon />
-          ) : (
-            <UntilIcon />
-          )}
-          {log.fileDecompress.complete}/{log.fileDecompress.total}
-        </RightBlock>
-      </LogBlock>
-      <LogBlock>
-        <div>【Game】Download </div>
-        <RightBlock>
-          {log.fileDownload.complete === log.fileDownload.total ? (
-            <DoneIcon />
-          ) : (
-            <UntilIcon />
-          )}
-          {log.fileDownload.complete}/{log.fileDownload.total}
-        </RightBlock>
-      </LogBlock>
-      <LogBlock>
-        <div>【Video】Download </div>
-        <RightBlock>
-          {log.videoDownload.complete === log.videoDownload.total ? (
-            <DoneIcon />
-          ) : (
-            <UntilIcon />
-          )}
-          {log.videoDownload.complete}/{log.videoDownload.total}
-        </RightBlock>
-      </LogBlock>
-      <LogBlock>
-        <div>【Image】Download </div>
-        <RightBlock>
-          {log.posterDownload.complete === log.posterDownload.total ? (
-            <DoneIcon />
-          ) : (
-            <UntilIcon />
-          )}
-          {log.posterDownload.complete}/{log.posterDownload.total}
-        </RightBlock>
-      </LogBlock>
+      {makeLogBlock(log, '【Game】Unzip', 'fileDecompress')}
+      {makeLogBlock(log, '【Game】Download', 'fileDownload')}
+      {makeLogBlock(log, '【Video】Download', 'videoDownload')}
+      {makeLogBlock(log, '【Image】Download', 'posterDownload')}
     </ProgressLog>
   );
 };
