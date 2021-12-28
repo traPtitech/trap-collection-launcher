@@ -1970,7 +1970,7 @@ export const GameApiFp = function (configuration?: Configuration) {
       gameID: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getVideo(
         gameID,
@@ -2343,7 +2343,7 @@ export const GameApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getVideo(gameID: string, options?: any): AxiosPromise<any> {
+    getVideo(gameID: string, options?: any): AxiosPromise<void> {
       return localVarFp
         .getVideo(gameID, options)
         .then((request) => request(axios, basePath));

@@ -40,11 +40,15 @@ const launch: Record<
           '/C',
           `start /wait ${gameInfo.info.url}`,
         ]);
-      case 'app':
+      case 'app': {
+        console.log(
+          path.dirname(generateAbsolutePath(gameInfo.info.entryPoint))
+        );
         return childProcess.spawn(path.basename(gameInfo.info.entryPoint), {
           stdio: 'ignore',
           cwd: path.dirname(generateAbsolutePath(gameInfo.info.entryPoint)),
         });
+      }
       case 'jar':
         return childProcess.spawn(
           `javaw`,

@@ -9,14 +9,15 @@ import { app } from 'electron';
  * @example createLocalPath('artworks', id, 'poster.png') // 'artworks/31acb96b-df71-4823-bf16-6efa80edd6b8/poster.png'
  */
 export const generateLocalPath = (
-  versionId: string,
-  type: 'artworks' | 'games',
-  id: string,
+  type: 'games',
+  gameVersionId: string,
   file?: string
 ): string => {
-  return file
-    ? path.join('versions', versionId, type, id, file)
-    : path.join(type, id);
+  if (file) {
+    return path.join(type, gameVersionId, file);
+  } else {
+    return path.join(type, gameVersionId);
+  }
 };
 
 /**
