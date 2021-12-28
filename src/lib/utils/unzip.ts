@@ -30,7 +30,7 @@ const unzip = async (
 
       const zipEntries = zip.getEntries();
 
-      zipEntries.map(async (v) => {
+      zipEntries.forEach((v) => {
         const filePath = path.join(
           absoluteDir,
           iconv.decode(v.rawEntryName, 'shift_jis')
@@ -40,6 +40,7 @@ const unzip = async (
         } else {
           const file = zip.readFile(v);
           if (file) {
+            mkdirSync(path.dirname(filePath), { recursive: true });
             writeFileSync(filePath, file);
           }
         }
