@@ -3,6 +3,6 @@ import { store } from '@/lib/store';
 
 export const resetProductKeyHandler = (): void => {
   ipcMain.handle('resetProductKey', async () => {
-    return store.delete('productKey');
+    return store.delete('launcherVersions');
   });
 };

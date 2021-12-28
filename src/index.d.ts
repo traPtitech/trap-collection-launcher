@@ -91,6 +91,8 @@ declare namespace TraPCollection {
         };
   };
 
+  type GameType = GameInfo['info']['type'];
+
   type GameInfos = GameInfo[];
 
   type LauncherVersion = {
@@ -113,7 +115,7 @@ declare namespace TraPCollection {
      * absolute path
      */
     video?: string;
-    type: 'app' | 'jar' | 'url';
+    type: GameType;
   };
 
   type Progress = {

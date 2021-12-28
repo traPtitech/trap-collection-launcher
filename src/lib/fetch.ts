@@ -40,7 +40,7 @@ export const fetch = async (): Promise<void> => {
         const existPath = await promiseExists(absolutePath);
 
         if (
-          gameInfos.find(({ id: tempId }) => id === tempId)?.info.updateAt !==
+          gameInfos.find(({ id: tempId }) => id === tempId)?.info?.updateAt !==
             bodyUpdatedAt ||
           !existPath
         ) {
@@ -63,7 +63,7 @@ export const fetch = async (): Promise<void> => {
       const existPath = await promiseExists(absolutePath);
 
       if (
-        gameInfos.find(({ id: tempId }) => id === tempId)?.poster.updateAt !==
+        gameInfos.find(({ id: tempId }) => id === tempId)?.poster?.updateAt !==
           imgUpdatedAt ||
         !existPath
       ) {

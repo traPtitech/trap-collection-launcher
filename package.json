@@ -14,7 +14,8 @@
     "open-content-directory-for-windows": "start %APPDATA%/trap-collection/contents",
     "api:build": "openapi-generator-cli generate -g typescript-axios -i ./docs/openapi.yml -o ./src/lib/typescript-axios",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "typecheck": "tsc -p . --noEmit"
   },
   "keywords": [],
   "author": {

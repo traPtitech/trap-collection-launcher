@@ -1,12 +1,11 @@
-import axios from 'axios';
 import { ipcMain } from '@/common/typedIpc';
 import { postLauncherLogin } from '@/lib/axios';
 import { store } from '@/lib/store';
 
 export const postLauncherLoginHandler = (): void => {
   ipcMain.handle('postLauncherLogin', async () => {
-    const productKeys = store.get('productKey') ?? [];
-    const productKey = productKeys[0]?.id;
+    const launcherVersions = store.get('launcherVersions') ?? [];
+    const productKey = launcherVersions[0]?.productKey;
     if (productKey) {
       const res = await postLauncherLogin(productKey)
         .then(({ data }) => {
