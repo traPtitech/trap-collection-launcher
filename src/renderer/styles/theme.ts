@@ -8,7 +8,7 @@ export const createTheme = ({ dark }: { dark: boolean }): Theme => {
       small: '1.26rem',
       medium: '1.5rem',
       large: '1.7rem',
-      gameTitle: '5rem',
+      gameTitle: '4rem',
     },
     colors: {
       text: {
