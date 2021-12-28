@@ -1,22 +1,14 @@
 import Store from 'electron-store';
 
 export const store = new Store<{
-  gameInfo: TraPCollection.GameInfo[];
-  lastUpdate?: Date;
-  productKey?: [
-    {
-      id: 'string';
-    }
-  ];
-  token?: string;
+  gameInfo: TraPCollection.GameInfos;
+  launcherVersions: TraPCollection.LauncherVersions;
   seatId?: number;
   seatVersionId?: number;
 }>({
   defaults: {
     gameInfo: [],
-    lastUpdate: undefined,
-    productKey: undefined,
-    token: undefined,
+    launcherVersions: [],
     seatId: undefined,
     seatVersionId: undefined,
   },

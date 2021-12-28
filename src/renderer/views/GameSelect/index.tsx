@@ -161,7 +161,7 @@ const GameSelect = ({ koudaisai }: Props) => {
   const [openedModal, setOpenedModal] = useState<ModalType>(undefined);
   const [canScroll, setCanScroll] = useState(true); //トラックパッドなどで非常に細かくwheelイベントが発生した際，処理落ちするのを防ぐ
   const [gameInfos, setGameInfos] = useState<
-    TraPCollection.GameInfo[] | undefined
+    TraPCollection.RendererGameInfo[] | undefined
   >(undefined);
 
   const theme = useTheme();

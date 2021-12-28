@@ -40,7 +40,7 @@ export const fetch = async (): Promise<void> => {
         const existPath = await promiseExists(absolutePath);
 
         if (
-          gameInfos.find(({ id: tempId }) => id === tempId)?.bodyUpdatedAt !==
+          gameInfos.find(({ id: tempId }) => id === tempId)?.info.updateAt !==
             bodyUpdatedAt ||
           !existPath
         ) {
@@ -63,7 +63,7 @@ export const fetch = async (): Promise<void> => {
       const existPath = await promiseExists(absolutePath);
 
       if (
-        gameInfos.find(({ id: tempId }) => id === tempId)?.imgUpdatedAt !==
+        gameInfos.find(({ id: tempId }) => id === tempId)?.poster.updateAt !==
           imgUpdatedAt ||
         !existPath
       ) {
@@ -86,7 +86,7 @@ export const fetch = async (): Promise<void> => {
       const existPath = await promiseExists(absolutePath);
 
       if (
-        (gameInfos.find(({ id: tempId }) => id === tempId)?.movieUpdatedAt !==
+        (gameInfos.find(({ id: tempId }) => id === tempId)?.video?.updateAt !==
           movieUpdatedAt ||
           !existPath) &&
         movieUpdatedAt
@@ -180,60 +180,90 @@ export const fetch = async (): Promise<void> => {
     throw reason;
   });
 
-  const newGameInfos: TraPCollection.GameInfo[] = await Promise.all(
-    data.map(
-      async ({
-        id,
-        type,
-        bodyUpdatedAt,
-        imgUpdatedAt,
-        movieUpdatedAt,
-        entryPoint,
-      }) => {
-        const { data } = await getGameInfo(id);
-        const { id: gameId, name, description, createdAt, version } = data;
-        const url = await getGameUrl(id)
-          .then(({ data: url }) => url)
-          .catch(async () => {
-            return (
-              generateLocalPath(versionId, 'games', id + '/dist', entryPoint) ??
-              ''
-            );
-          });
-
-        const absoluteVideoPath = generateAbsolutePath(
-          generateLocalPath(versionId, 'artworks', id, 'video.mp4')
-        );
-
-        const poster = generateLocalPath(
-          versionId,
-          'artworks',
+  const newGameInfosUndef: (TraPCollection.GameInfo | undefined)[] =
+    await Promise.all(
+      data.map(
+        async ({
           id,
-          'poster.png'
-        );
-        const video = existsSync(absoluteVideoPath)
-          ? generateLocalPath(versionId, 'artworks', id, 'video.mp4')
-          : undefined;
-
-        return {
-          id: gameId,
-          name,
-          createdAt,
-          version,
-          description: description ?? '',
-          type: (type === 'windows' || type === 'mac'
-            ? 'app'
-            : type) as TraPCollection.GameType,
-          url,
-          poster,
-          video,
+          type,
           bodyUpdatedAt,
           imgUpdatedAt,
           movieUpdatedAt,
-        };
-      }
-    )
-  );
+          entryPoint,
+        }) => {
+          const { data } = await getGameInfo(id);
+          const { id: gameId, name, description, createdAt, version } = data;
+          const url = await getGameUrl(id)
+            .then(({ data: url }) => url)
+            .catch(async () => {
+              return (
+                generateLocalPath(
+                  versionId,
+                  'games',
+                  id + '/dist',
+                  entryPoint
+                ) ?? ''
+              );
+            });
+
+          const absoluteVideoPath = generateAbsolutePath(
+            generateLocalPath(versionId, 'artworks', id, 'video.mp4')
+          );
+
+          const posterPath = generateLocalPath(
+            versionId,
+            'artworks',
+            id,
+            'poster.png'
+          );
+          const videoPath = existsSync(absoluteVideoPath)
+            ? generateLocalPath(versionId, 'artworks', id, 'video.mp4')
+            : undefined;
+
+          if (!version) {
+            return undefined;
+          }
+
+          if (
+            type !== 'url' &&
+            type !== 'windows' &&
+            type !== 'mac' &&
+            type !== 'jar'
+          ) {
+            return undefined;
+          }
+
+          const infoType = type === 'windows' || type === 'mac' ? 'app' : type;
+
+          return {
+            id: gameId,
+            name,
+            createdAt,
+            version,
+            description: description ?? '',
+            info:
+              infoType === 'url'
+                ? {
+                    type: 'url',
+                    updateAt: bodyUpdatedAt,
+                    url,
+                  }
+                : {
+                    type: infoType,
+                    updateAt: bodyUpdatedAt,
+                    entryPoint: url,
+                  },
+            poster: { path: posterPath, updateAt: imgUpdatedAt },
+            video:
+              videoPath && movieUpdatedAt
+                ? { path: videoPath, updateAt: movieUpdatedAt }
+                : undefined,
+          };
+        }
+      )
+    );
+
+  const newGameInfos = newGameInfosUndef.filter((v) => v);
 
   store.set('gameInfo', newGameInfos);
 };
