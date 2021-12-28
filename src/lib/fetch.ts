@@ -10,7 +10,7 @@ import {
   getVersionsCheck,
 } from '@/lib/axios';
 import progressLog from '@/lib/progressLog';
-import { store } from '@/lib/store';
+import store from '@/lib/store';
 import {
   generateAbsolutePath,
   generateLocalPath,
@@ -19,7 +19,7 @@ import { promiseExists } from '@/lib/utils/promiseExists';
 import promiseSome from '@/lib/utils/promiseSome';
 import unzip from '@/lib/utils/unzip';
 
-/* 
+/*
 やる処理v1
 - アップデートしなければならないリソースを特定する
 - logを初期化

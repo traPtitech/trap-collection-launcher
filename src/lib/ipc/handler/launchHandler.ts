@@ -2,7 +2,7 @@ import childProcess from 'child_process';
 import path from 'path';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
-import { store } from '@/lib/store';
+import store from '@/lib/store';
 import { generateAbsolutePath } from '@/lib/utils/generatePaths';
 
 export const launchHandler = async (

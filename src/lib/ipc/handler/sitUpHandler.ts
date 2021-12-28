@@ -1,6 +1,6 @@
 import { ipcMain } from '@/common/typedIpc';
 import { deleteSeats } from '@/lib/axios';
-import { store } from '@/lib/store';
+import store from '@/lib/store';
 
 export const sitUpHandler = (): void => {
   ipcMain.handle('sitUp', async () => {
