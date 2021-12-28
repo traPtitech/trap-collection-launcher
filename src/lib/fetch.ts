@@ -113,6 +113,14 @@ export const fetch = async (): Promise<void> => {
     await promises.mkdir(gameDirectory.base, { recursive: true });
 
     const updateExecutive = async (): Promise<void> => {
+      if (check.type === 'url') {
+        progressLog.add('fileDownload');
+        progressLog.add('fileDecompress');
+        console.log('URL');
+        return; //videoがない場合
+      }
+      console.log(check.type);
+
       const { data } = await getGameFile(gameId);
       await unzip(data, gameDirectory.executive, check.md5, () =>
         progressLog.add('fileDownload')
