@@ -177,6 +177,7 @@ const GameSelect = ({ koudaisai }: Props) => {
   useEffect(() => {
     (async () => {
       const res = await window.TraPCollectionAPI.invoke.getGameInfo();
+      console.log(res);
       setGameInfos(res);
 
       window.TraPCollectionAPI.on.onBrowserWindowFocus(onBrowserWindowFocus);
@@ -230,7 +231,17 @@ const GameSelect = ({ koudaisai }: Props) => {
 
   return (
     <Wrapper>
-      {gameInfos !== undefined && gameInfos !== [] ? (
+      {gameInfos === undefined ? (
+        <ErrorMessage>
+          <BarLoader
+            height='4px'
+            width='200px'
+            color={theme.colors.button.information.fill}
+          />
+        </ErrorMessage>
+      ) : gameInfos.length === 0 ? (
+        <ErrorMessage>ゲームが取得できませんでした</ErrorMessage>
+      ) : (
         <>
           <WheelWatcher
             onWheel={(e: { deltaY: number }) => {
@@ -301,16 +312,6 @@ const GameSelect = ({ koudaisai }: Props) => {
             />
           </WheelWatcher>
         </>
-      ) : gameInfos === [] ? (
-        <ErrorMessage>ゲームが取得できませんでした</ErrorMessage>
-      ) : (
-        <ErrorMessage>
-          <BarLoader
-            height='4px'
-            width='200px'
-            color={theme.colors.button.information.fill}
-          />
-        </ErrorMessage>
       )}
       <Border />
       <MenuButtonWrapper onClick={() => setIsOpenMenu(true)}>
