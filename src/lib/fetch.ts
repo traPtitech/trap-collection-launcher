@@ -49,6 +49,16 @@ const getAbsoluteGameDirectory = (gameVersionId: string) => {
   };
 };
 
+const getAbsoluteDownloadDirectory = (gameVersionId: string) => {
+  const base = generateAbsolutePath(generateLocalPath('games', gameVersionId));
+  return {
+    base,
+    executive: path.join(base, 'game.zip.traPCollection'),
+    poster: path.join(base, 'poster.png.traPCollection'),
+    video: path.join(base, 'video.mp4.traPCollection'),
+  };
+};
+
 export const fetch = async (): Promise<void> => {
   //v1では，gameInfosは常に1つのランチャーバージョンを指している
   const oldGameInfos = store.get('gameInfo');
@@ -115,6 +125,8 @@ export const fetch = async (): Promise<void> => {
     const gameDirectory = getAbsoluteGameDirectory(gameVersionId);
     await promises.mkdir(gameDirectory.base, { recursive: true });
 
+    const downloadDirectory = getAbsoluteDownloadDirectory(gameVersionId);
+
     const updateExecutive = async (): Promise<void> => {
       if (check.type === 'url') {
         progressLog.add('fileDownload');
@@ -123,8 +135,12 @@ export const fetch = async (): Promise<void> => {
       }
 
       const { data } = await getGameFile(gameId);
-      await unzip(data, gameDirectory.executive, check.md5, () =>
-        progressLog.add('fileDownload')
+      await unzip(
+        data,
+        downloadDirectory.executive,
+        gameDirectory.executive,
+        check.md5,
+        () => progressLog.add('fileDownload')
       ).catch(console.error);
 
       progressLog.add('fileDecompress');
@@ -133,10 +149,13 @@ export const fetch = async (): Promise<void> => {
     const updatePoster = async (): Promise<void> => {
       const { data } = await getGameImage(gameId);
 
-      const writeStream = createWriteStream(gameDirectory.poster);
+      const writeStream = createWriteStream(downloadDirectory.poster);
       await data.pipe(writeStream);
       await new Promise<void>((resolve, reject) => {
-        writeStream.on('finish', resolve);
+        writeStream.on('finish', () => {
+          promises.rename(downloadDirectory.poster, gameDirectory.poster);
+          resolve();
+        });
         writeStream.on('error', reject);
       });
 
@@ -151,10 +170,13 @@ export const fetch = async (): Promise<void> => {
       //303リダイレクトなので型が通らない
       const { data } = (await getGameVideo(gameId)) as { data: any };
 
-      const writeStream = createWriteStream(gameDirectory.video);
+      const writeStream = createWriteStream(downloadDirectory.video);
       await data.pipe(writeStream);
       await new Promise<void>((resolve, reject) => {
-        writeStream.on('finish', resolve);
+        writeStream.on('finish', () => {
+          promises.rename(downloadDirectory.video, gameDirectory.video);
+          resolve();
+        });
         writeStream.on('error', reject);
       });
 
