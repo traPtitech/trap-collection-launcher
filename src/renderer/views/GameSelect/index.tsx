@@ -177,7 +177,6 @@ const GameSelect = ({ koudaisai }: Props) => {
   useEffect(() => {
     (async () => {
       const res = await window.TraPCollectionAPI.invoke.getGameInfo();
-      console.log(res);
       setGameInfos(res);
 
       window.TraPCollectionAPI.on.onBrowserWindowFocus(onBrowserWindowFocus);

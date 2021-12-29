@@ -41,9 +41,6 @@ const launch: Record<
           `start /wait ${gameInfo.info.url}`,
         ]);
       case 'app': {
-        console.log(
-          path.dirname(generateAbsolutePath(gameInfo.info.entryPoint))
-        );
         return childProcess.spawn(path.basename(gameInfo.info.entryPoint), {
           stdio: 'ignore',
           cwd: path.dirname(generateAbsolutePath(gameInfo.info.entryPoint)),

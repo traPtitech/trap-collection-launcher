@@ -87,9 +87,12 @@ export const fetch = async (): Promise<void> => {
       const existPoster = await promiseExists(gameDirectory.poster);
       const existVideo = await promiseExists(gameDirectory.video);
 
-      //Videoは必要ない場合がある
+      //必要なファイルが存在するか
+      //Video,Executiveは必要ない場合がある
       const existFiles =
-        existExecutive && existPoster && (existVideo || !check.movieUpdatedAt);
+        (existExecutive || check.type === 'url') &&
+        existPoster &&
+        (existVideo || !check.movieUpdatedAt);
 
       return (
         !existFiles ||
@@ -116,10 +119,8 @@ export const fetch = async (): Promise<void> => {
       if (check.type === 'url') {
         progressLog.add('fileDownload');
         progressLog.add('fileDecompress');
-        console.log('URL');
         return; //videoがない場合
       }
-      console.log(check.type);
 
       const { data } = await getGameFile(gameId);
       await unzip(data, gameDirectory.executive, check.md5, () =>
