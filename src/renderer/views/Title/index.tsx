@@ -87,6 +87,7 @@ const ProductKeyInput = styled(Cleave)<{ $invalidProductKey: boolean }>`
   color: ${(props) => props.theme.colors.text.primary};
   background-color: transparent;
   text-align: center;
+  transform: rotate(0.03deg);
 `;
 
 const EnterButton = styled(Div)<{ $isValidProductKey: boolean }>`
