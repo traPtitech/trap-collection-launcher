@@ -11,6 +11,10 @@ const unzip = async (
   md5: string,
   onDownload: () => void
 ) => {
+  await promises.unlink(downloadPath).catch(() => {
+    return;
+  });
+
   const stream = createWriteStream(downloadPath);
   data.pipe(stream);
 

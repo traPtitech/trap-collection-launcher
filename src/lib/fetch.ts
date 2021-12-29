@@ -1,6 +1,5 @@
 import { createWriteStream, promises } from 'fs';
 import path from 'path';
-import promiseFilter from './utils/promiseFilter';
 import {
   getGameFile,
   getGameImage,
@@ -167,6 +166,10 @@ export const fetch = async (): Promise<void> => {
 
         const { data } = await getGameImage(gameId);
 
+        promises.unlink(gameDirectory.poster).catch(() => {
+          return;
+        });
+
         const writeStream = createWriteStream(downloadDirectory.poster);
         await data.pipe(writeStream);
         await new Promise<void>((resolve, reject) => {
@@ -186,6 +189,10 @@ export const fetch = async (): Promise<void> => {
         }
         //303リダイレクトなので型が通らない
         const { data } = (await getGameVideo(gameId)) as { data: any };
+
+        promises.unlink(gameDirectory.video).catch(() => {
+          return;
+        });
 
         const writeStream = createWriteStream(downloadDirectory.video);
         await data.pipe(writeStream);
