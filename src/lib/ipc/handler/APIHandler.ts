@@ -16,7 +16,6 @@ export const postLauncherLoginHandler = (): void => {
           if (400 <= e.response?.status && e.response?.status < 500) {
             return false;
           }
-          console.log(e.response?.status);
           throw new Error('network error');
         });
       return res ?? false;

@@ -116,10 +116,8 @@ export const fetch = async (): Promise<void> => {
       if (check.type === 'url') {
         progressLog.add('fileDownload');
         progressLog.add('fileDecompress');
-        console.log('URL');
         return; //videoがない場合
       }
-      console.log(check.type);
 
       const { data } = await getGameFile(gameId);
       await unzip(data, gameDirectory.executive, check.md5, () =>
