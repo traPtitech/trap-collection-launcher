@@ -173,7 +173,7 @@ export const fetch = async (): Promise<void> => {
         const writeStream = createWriteStream(downloadDirectory.poster);
         await data.pipe(writeStream);
         await new Promise<void>((resolve, reject) => {
-          writeStream.on('finish', () => {
+          writeStream.on('close', () => {
             promises.rename(downloadDirectory.poster, gameDirectory.poster);
             resolve();
           });
@@ -197,7 +197,7 @@ export const fetch = async (): Promise<void> => {
         const writeStream = createWriteStream(downloadDirectory.video);
         await data.pipe(writeStream);
         await new Promise<void>((resolve, reject) => {
-          writeStream.on('finish', () => {
+          writeStream.on('close', () => {
             promises.rename(downloadDirectory.video, gameDirectory.video);
             resolve();
           });

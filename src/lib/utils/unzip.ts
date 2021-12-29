@@ -19,7 +19,7 @@ const unzip = async (
   data.pipe(stream);
 
   await new Promise<void>((resolve, reject) => {
-    stream.on('finish', async () => {
+    stream.on('close', async () => {
       onDownload();
 
       await promises.rename(downloadPath, absolutePath);
