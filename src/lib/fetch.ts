@@ -1,6 +1,5 @@
 import { createWriteStream, promises } from 'fs';
 import path from 'path';
-import promiseFilter from './utils/promiseFilter';
 import {
   getGameFile,
   getGameImage,
@@ -49,6 +48,16 @@ const getAbsoluteGameDirectory = (gameVersionId: string) => {
   };
 };
 
+const getAbsoluteDownloadDirectory = (gameVersionId: string) => {
+  const base = generateAbsolutePath(generateLocalPath('games', gameVersionId));
+  return {
+    base,
+    executive: path.join(base, 'game.zip.traPCollection'),
+    poster: path.join(base, 'poster.png.traPCollection'),
+    video: path.join(base, 'video.mp4.traPCollection'),
+  };
+};
+
 export const fetch = async (): Promise<void> => {
   //v1では，gameInfosは常に1つのランチャーバージョンを指している
   const oldGameInfos = store.get('gameInfo');
@@ -70,16 +79,27 @@ export const fetch = async (): Promise<void> => {
     apiGameInfos.find(({ id }) => id === gameId)?.version?.id;
 
   //アップデートが必要なgameIdの配列
-  const needUpdateGameIds = await promiseFilter(
-    versionsCheck,
-    async (check) => {
+  const needUpdateGameIds = await Promise.all(
+    versionsCheck.map(async (check) => {
       const { id: gameId } = check;
 
       const oldGameInfo = searchOldGameInfo(gameId);
-      if (!oldGameInfo) return true; //新規ゲーム
+      if (!oldGameInfo)
+        return {
+          check,
+          executive: check.type !== 'url',
+          poster: true,
+          video: check.movieUpdatedAt !== undefined,
+        }; //新規ゲーム
 
       const gameVersionId = searchGameVersionId(gameId);
-      if (!gameVersionId) return false;
+      if (!gameVersionId)
+        return {
+          check,
+          executive: false,
+          poster: false,
+          video: false,
+        };
 
       const gameDirectory = getAbsoluteGameDirectory(gameVersionId);
 
@@ -87,82 +107,109 @@ export const fetch = async (): Promise<void> => {
       const existPoster = await promiseExists(gameDirectory.poster);
       const existVideo = await promiseExists(gameDirectory.video);
 
-      //必要なファイルが存在するか
-      //Video,Executiveは必要ない場合がある
-      const existFiles =
-        (existExecutive || check.type === 'url') &&
-        existPoster &&
-        (existVideo || !check.movieUpdatedAt);
-
-      return (
-        !existFiles ||
-        oldGameInfo.poster.updateAt !== check.imgUpdatedAt ||
-        oldGameInfo.video?.updateAt !== check.movieUpdatedAt ||
-        oldGameInfo.info.updateAt !== check.bodyUpdatedAt
-      );
-    }
+      return {
+        check,
+        executive:
+          (!existExecutive ||
+            oldGameInfo.info.updateAt !== check.bodyUpdatedAt) &&
+          check.type !== 'url',
+        video:
+          (!existVideo ||
+            oldGameInfo.video?.updateAt !== check.movieUpdatedAt) &&
+          check.movieUpdatedAt,
+        poster:
+          !existPoster || oldGameInfo.poster?.updateAt !== check.imgUpdatedAt,
+      };
+    })
   );
 
-  const needUpdateNum = needUpdateGameIds.length;
-  progressLog.reset(needUpdateNum, needUpdateNum, needUpdateNum);
+  progressLog.reset(
+    needUpdateGameIds.filter(({ executive }) => executive).length,
+    needUpdateGameIds.filter(({ poster }) => poster).length,
+    needUpdateGameIds.filter(({ video }) => video).length
+  );
 
   //ゲームのアップデート
-  await promiseSome(needUpdateGameIds, async (check) => {
-    const { id: gameId } = check;
-    const gameVersionId = searchGameVersionId(gameId);
-    if (!gameVersionId) return undefined;
+  await promiseSome(
+    needUpdateGameIds,
+    async ({ check, executive, video, poster }) => {
+      const { id: gameId } = check;
+      const gameVersionId = searchGameVersionId(gameId);
+      if (!gameVersionId) return undefined;
 
-    const gameDirectory = getAbsoluteGameDirectory(gameVersionId);
-    await promises.mkdir(gameDirectory.base, { recursive: true });
+      const gameDirectory = getAbsoluteGameDirectory(gameVersionId);
+      await promises.mkdir(gameDirectory.base, { recursive: true });
 
-    const updateExecutive = async (): Promise<void> => {
-      if (check.type === 'url') {
-        progressLog.add('fileDownload');
+      const downloadDirectory = getAbsoluteDownloadDirectory(gameVersionId);
+
+      const updateExecutive = async (): Promise<void> => {
+        if (!executive) {
+          return;
+        }
+
+        const { data } = await getGameFile(gameId);
+        await unzip(
+          data,
+          downloadDirectory.executive,
+          gameDirectory.executive,
+          check.md5,
+          () => progressLog.add('fileDownload')
+        ).catch(console.error);
+
         progressLog.add('fileDecompress');
-        return; //videoがない場合
-      }
+      };
 
-      const { data } = await getGameFile(gameId);
-      await unzip(data, gameDirectory.executive, check.md5, () =>
-        progressLog.add('fileDownload')
-      ).catch(console.error);
+      const updatePoster = async (): Promise<void> => {
+        if (!poster) {
+          return;
+        }
 
-      progressLog.add('fileDecompress');
-    };
+        const { data } = await getGameImage(gameId);
 
-    const updatePoster = async (): Promise<void> => {
-      const { data } = await getGameImage(gameId);
+        promises.unlink(gameDirectory.poster).catch(() => {
+          return;
+        });
 
-      const writeStream = createWriteStream(gameDirectory.poster);
-      await data.pipe(writeStream);
-      await new Promise<void>((resolve, reject) => {
-        writeStream.on('finish', resolve);
-        writeStream.on('error', reject);
-      });
+        const writeStream = createWriteStream(downloadDirectory.poster);
+        await data.pipe(writeStream);
+        await new Promise<void>((resolve, reject) => {
+          writeStream.on('close', () => {
+            promises.rename(downloadDirectory.poster, gameDirectory.poster);
+            resolve();
+          });
+          writeStream.on('error', reject);
+        });
 
-      progressLog.add('posterDownload');
-    };
+        progressLog.add('posterDownload');
+      };
 
-    const updateVideo = async (): Promise<void> => {
-      if (!check.movieUpdatedAt) {
+      const updateVideo = async (): Promise<void> => {
+        if (!video) {
+          return;
+        }
+        //303リダイレクトなので型が通らない
+        const { data } = (await getGameVideo(gameId)) as { data: any };
+
+        promises.unlink(gameDirectory.video).catch(() => {
+          return;
+        });
+
+        const writeStream = createWriteStream(downloadDirectory.video);
+        await data.pipe(writeStream);
+        await new Promise<void>((resolve, reject) => {
+          writeStream.on('close', () => {
+            promises.rename(downloadDirectory.video, gameDirectory.video);
+            resolve();
+          });
+          writeStream.on('error', reject);
+        });
+
         progressLog.add('videoDownload');
-        return; //videoがない場合
-      }
-      //303リダイレクトなので型が通らない
-      const { data } = (await getGameVideo(gameId)) as { data: any };
+      };
 
-      const writeStream = createWriteStream(gameDirectory.video);
-      await data.pipe(writeStream);
-      await new Promise<void>((resolve, reject) => {
-        writeStream.on('finish', resolve);
-        writeStream.on('error', reject);
-      });
-
-      progressLog.add('videoDownload');
-    };
-
-    await Promise.all([updateExecutive(), updatePoster(), updateVideo()]);
-  });
+      await Promise.all([updateExecutive(), updatePoster(), updateVideo()]);
+    }
+  );
 
   //gameInfoを更新
   const newGameInfos: TraPCollection.GameInfo[] = await promiseSome(

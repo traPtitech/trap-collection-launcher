@@ -1,4 +1,4 @@
-import { createWriteStream, mkdirSync, writeFileSync } from 'fs';
+import { createWriteStream, mkdirSync, writeFileSync, promises } from 'fs';
 import path from 'path';
 import AdmZip from 'adm-zip';
 import iconv from 'iconv-lite';
@@ -6,16 +6,23 @@ import { md5sumFile } from './checksum';
 
 const unzip = async (
   data: any,
+  downloadPath: string,
   absolutePath: string,
   md5: string,
   onDownload: () => void
 ) => {
-  const stream = createWriteStream(absolutePath);
+  await promises.unlink(downloadPath).catch(() => {
+    return;
+  });
+
+  const stream = createWriteStream(downloadPath);
   data.pipe(stream);
 
   await new Promise<void>((resolve, reject) => {
-    stream.on('finish', async () => {
+    stream.on('close', async () => {
       onDownload();
+
+      await promises.rename(downloadPath, absolutePath);
 
       // checksum
       const md5sum = await md5sumFile(absolutePath).catch(() => undefined);
