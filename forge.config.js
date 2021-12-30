@@ -29,6 +29,7 @@ module.exports = {
       name: '@electron-forge/maker-squirrel',
       config: {
         name: 'trap_collection',
+        copyright: 'Copyright (c) 2021 東京工業大学デジタル創作同好会traP',
       },
     },
     {

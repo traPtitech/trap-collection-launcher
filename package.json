@@ -2,7 +2,7 @@
   "name": "trap-collection",
   "productName": "trap-collection",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "traP 成果物ランチャー",
   "main": ".webpack/main",
   "scripts": {
     "start": "dotenv electron-forge start",
