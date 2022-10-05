@@ -2,7 +2,8 @@ import childProcess from 'child_process';
 import path from 'path';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
-import { store } from '@/lib/store';
+import store from '@/lib/store';
+import { generateAbsolutePath } from '@/lib/utils/generatePaths';
 
 export const launchHandler = async (
   window: BrowserWindow | null
@@ -21,13 +22,8 @@ export const launchHandler = async (
     if (!target) {
       return;
     }
-    const child = launch[platform][target.type](target.url);
-    child.on('exit', () => {
-      window.reload();
-      window.restore();
-      window.focus();
-    });
-    window.minimize();
+
+    launch[platform](target);
   });
 };
 
@@ -35,37 +31,61 @@ export default launchHandler;
 
 const launch: Record<
   TraPCollection.Platform,
-  Record<TraPCollection.GameType, (url: string) => childProcess.ChildProcess>
+  (gameInfo: TraPCollection.GameInfo) => childProcess.ChildProcess
 > = {
-  win32: {
-    app: (url) =>
-      childProcess.spawn(path.basename(url), {
-        stdio: 'ignore',
-        cwd: path.dirname(url),
-      }),
-    jar: (url) =>
-      childProcess.spawn(`javaw -jar ${path.basename(url)}`, {
-        stdio: 'ignore',
-        cwd: path.dirname(url),
-      }),
-    url: (url) => childProcess.spawn(`cmd`, ['/C', `start /wait ${url}`]),
+  win32: (gameInfo) => {
+    switch (gameInfo.info.type) {
+      case 'url':
+        return childProcess.spawn(`cmd`, [
+          '/C',
+          `start /wait ${gameInfo.info.url}`,
+        ]);
+      case 'app': {
+        return childProcess.spawn(path.basename(gameInfo.info.entryPoint), {
+          stdio: 'ignore',
+          cwd: path.dirname(generateAbsolutePath(gameInfo.info.entryPoint)),
+        });
+      }
+      case 'jar':
+        return childProcess.spawn(
+          `javaw`,
+          ['-jar', path.basename(gameInfo.info.entryPoint)],
+          {
+            stdio: 'ignore',
+            cwd: path.dirname(generateAbsolutePath(gameInfo.info.entryPoint)),
+          }
+        );
+    }
   },
-  darwin: {
-    app: (url) => childProcess.spawn('open', ['-W', url]),
-    jar: (url) => childProcess.spawn('open', ['-W', url]),
-    url: (url) => childProcess.spawn('open', ['-W', url]),
+  darwin: (gameInfo) => {
+    switch (gameInfo.info.type) {
+      case 'url':
+        return childProcess.spawn('open', ['-W', gameInfo.info.url]);
+      case 'app':
+        return childProcess.spawn('open', [
+          '-W',
+          generateAbsolutePath(gameInfo.info.entryPoint),
+        ]);
+      case 'jar':
+        return childProcess.spawn('open', [
+          '-W',
+          generateAbsolutePath(gameInfo.info.entryPoint),
+        ]);
+    }
   },
-  // linux: {
-  //   app: (url) =>
-  //     childProcess.spawn('./' + path.basename(url), {
-  //       stdio: 'ignore',
-  //       cwd: path.dirname(url),
-  //     }),
-  //   jar: (url) =>
-  //     childProcess.spawn('./' + path.basename(url), {
-  //       stdio: 'ignore',
-  //       cwd: path.dirname(url),
-  //     }),
-  //   url: (url) => childProcess.spawn('sensible-browser', [url]),
-  // },
 };
+
+// linux: {
+//   app: (url) =>
+//     childProcess.spawn('./' + path.basename(url), {
+//       stdio: 'ignore',
+//       cwd: path.dirname(url),
+//     }),
+//   jar: (url) =>
+//     childProcess.spawn('./' + path.basename(url), {
+//       stdio: 'ignore',
+//       cwd: path.dirname(url),
+//     }),
+//   url: (url) => childProcess.spawn('sensible-browser', [url]),
+// },
+// };

@@ -1,8 +1,8 @@
 // eslint-disable-next-line import/no-unresolved
 import PackageJson from '/package.json';
 
-export const baseUrl = 'https://collection-dev.tokyotech.org/';
-export const version = '';
+export const baseUrl = 'https://collection.trap.jp/api';
+export const isKoudaisai = process.env.KOUDAISAI === 'true';
 
 export const packageJson: {
   name: string;
@@ -13,4 +13,4 @@ export const packageJson: {
 
 export const questionnaireUrl = 'https://anke-to.trap.jp/targeted';
 export const homePageUrl = 'https://trap.jp/';
-export const githubToken = '';
+export const javaDownloadPageUrl = 'https://www.java.com/ja/download/';

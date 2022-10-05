@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import axios from 'axios';
-import { store } from './store';
+import store from './store';
 import { baseUrl } from '@/config';
 import {
   LauncherAuthApi,
@@ -43,7 +43,7 @@ axiosStreamInstance.interceptors.request.use(
 const config = new Configuration({ basePath: baseUrl });
 
 const API = {
-  LauncherAuthApi: new LauncherAuthApi(config),
+  LauncherAuthApi: new LauncherAuthApi(config, baseUrl, axiosInstance),
   GameApi: new GameApi(config, baseUrl, axiosInstance),
   GameStreamApi: new GameApi(config, baseUrl, axiosStreamInstance),
   VersionApi: new VersionApi(config, baseUrl, axiosInstance),
@@ -96,7 +96,7 @@ export const getGameUrl = async (gameId: string) =>
  * バージョンの詳細情報の取得
  * @param launcherVersionId number
  */
-export const getVersion = async (launcherVersionId: number) =>
+export const getVersion = async (launcherVersionId: string) =>
   API.VersionApi.getVersion(launcherVersionId);
 
 /**
@@ -120,3 +120,5 @@ export const postSeats = async (seatId: number, seatVersionId: number) =>
  */
 export const deleteSeats = async (seatId: number, seatVersionId: number) =>
   API.SeatApi.deleteSeat({ seatId, seatVersionId });
+
+export const getLauncherMe = async () => API.LauncherAuthApi.getLauncherMe();

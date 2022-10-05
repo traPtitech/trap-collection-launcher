@@ -18,6 +18,9 @@ const api: TraPCollection.API = {
     setProductKey: async (productKey) => {
       return await ipcRenderer.invoke('setProductKey', productKey);
     },
+    resetProductKey: async () => {
+      return await ipcRenderer.invoke('resetProductKey');
+    },
     getSeatId: async () => {
       return await ipcRenderer.invoke('getSeatId');
     },
@@ -42,16 +45,39 @@ const api: TraPCollection.API = {
     openHomePage: async () => {
       return await ipcRenderer.invoke('openHomePage');
     },
-    postLauncherLogin: async (productKey) => {
-      return ipcRenderer.invoke('postLauncherLogin', productKey);
+    openJavaDownloadPage: async () => {
+      return await ipcRenderer.invoke('openJavaDownloadPage');
+    },
+    postLauncherLogin: async () => {
+      return ipcRenderer.invoke('postLauncherLogin');
     },
     fetchGame: async () => {
       return await ipcRenderer.invoke('fetchGame');
     },
+    quitApp: async () => {
+      return await ipcRenderer.invoke('quitApp');
+    },
+    reloadWindow: async () => {
+      return await ipcRenderer.invoke('reloadWindow');
+    },
+    progress: async () => {
+      return await ipcRenderer.invoke('progress');
+    },
   },
   on: {
-    progress: (listener) => {
-      ipcRenderer.on('progress', listener);
+    onBrowserWindowFocus: (listener) => {
+      ipcRenderer.on('onBrowserWindowFocus', listener);
+    },
+    onBrowserWindowBlur: (listener) => {
+      ipcRenderer.on('onBrowserWindowBlur', listener);
+    },
+  },
+  removeListener: {
+    onBrowserWindowFocus: (listener) => {
+      ipcRenderer.removeListener('onBrowserWindowFocus', listener);
+    },
+    onBrowserWindowBlur: (listener) => {
+      ipcRenderer.removeListener('onBrowserWindowBlur', listener);
     },
   },
 };

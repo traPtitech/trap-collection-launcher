@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import SliderImage from './sliderImage';
 
-const BackGround = styled.div`
+const Div = ({ ...props }) => <div {...props} />;
+
+const BackGround = styled(Div)`
   position: absolute;
   left: 0;
   right: 0;
@@ -18,31 +20,35 @@ type ImageWrapperProps = {
   $hidden?: boolean;
 };
 
-const Version = styled.div<{ $isSelected?: boolean }>`
+const Version = styled(Div)<{ $isSelected?: boolean }>`
   position: relative;
   margin: 1rem;
   opacity: ${(props) => (props.$isSelected ? '100%' : '0%')};
   transition: opacity ${(props) => props.theme.duration.slider};
 `;
 
-const ImageWrapper = styled.div<ImageWrapperProps>`
+const ImageWrapper = styled(Div)<ImageWrapperProps>`
   position: absolute;
   right: ${(props) => props.$right}rem;
   bottom: ${(props) => props.$bottom}rem;
-  height: auto;
   text-align: center;
-  font-size: 1rem;
-  width: 25rem;
+  font-size: ${(props) => props.theme.fontSize.small};
   transform: scale(${(props) => props.$scale});
   transition: all ${(props) => props.theme.duration.slider} ease-out;
   visibility: ${(props) => (props.$hidden ? 'hidden' : 'visible')};
   transform-origin: bottom right;
 `;
 
-const computePos = (index: number, len: number) => {
+const InternalImageWrapper = styled(Div)`
+  position: relative;
+  height: auto;
+  width: auto;
+`;
+
+const computePos = (index: number, len: number, loopNumber: number) => {
   const $right =
     4.875 + 15 * (index - 2 * len) + (index >= 2 * len + 1 ? 12.5 : 0);
-  const $hidden = index >= 3 * len || index <= len - 1;
+  const $hidden = index >= (loopNumber - 1) * len || index <= len - 1;
   const $scale = index == 2 * len ? 1.0 : 0.5;
   return {
     $bottom: 3.25,
@@ -65,34 +71,48 @@ const mod = (a: number, b: number) => {
 
 export type Props = {
   selected: number;
-  gameInfos: TraPCollection.GameInfo[];
+  gameInfos: TraPCollection.RendererGameInfo[];
   onClickGame?: (index: number) => void;
   onPlayGame?: () => void;
 };
 
 const Slider = ({ selected, gameInfos, onClickGame, onPlayGame }: Props) => {
-  const gameInfos4 = [...gameInfos, ...gameInfos, ...gameInfos, ...gameInfos];
-  const listImages = gameInfos4.map((gameInfo, index) => {
+  const loopNumber = 5;
+  const gameInfosLoop = new Array<TraPCollection.RendererGameInfo[]>(loopNumber)
+    .fill(gameInfos)
+    .flat();
+  const listImages = gameInfosLoop.map((gameInfo, index) => {
     const len = gameInfos.length;
     return (
       <ImageWrapper
         key={index}
-        {...computePos(mod(selected - index, 4 * len), len)}
-        onClick={() => {
-          onClickGame &&
-            onClickGame(selected + 2 * len - mod(selected - index, 4 * len));
-          if (mod(selected - index, 4 * len) === 2 * len) {
-            onPlayGame && onPlayGame();
-          }
-        }}
+        {...computePos(
+          mod(selected - index, loopNumber * len),
+          len,
+          loopNumber
+        )}
       >
-        <Version $isSelected={mod(selected - index, 4 * len) === 2 * len}>
-          {gameInfo.version.name}
+        <Version
+          $isSelected={mod(selected - index, loopNumber * len) === 2 * len}
+        >
+          {gameInfo.versionName}
         </Version>
-        <SliderImage
-          src={gameInfo.poster}
-          isSelect={mod(selected - index, 4 * len) === len * 2}
-        />
+        <InternalImageWrapper
+          onClick={() => {
+            onClickGame &&
+              onClickGame(
+                selected + 2 * len - mod(selected - index, loopNumber * len)
+              );
+            if (mod(selected - index, loopNumber * len) === 2 * len) {
+              onPlayGame && onPlayGame();
+            }
+          }}
+        >
+          <SliderImage
+            src={gameInfo.poster}
+            isSelect={mod(selected - index, loopNumber * len) === len * 2}
+          />
+        </InternalImageWrapper>
       </ImageWrapper>
     );
   });

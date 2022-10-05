@@ -3,6 +3,13 @@ import { Theme } from '../types/styled';
 
 export const createTheme = ({ dark }: { dark: boolean }): Theme => {
   return {
+    fontSize: {
+      exSmall: '1.1rem',
+      small: '1.26rem',
+      medium: '1.5rem',
+      large: '1.7rem',
+      gameTitle: '4rem',
+    },
     colors: {
       text: {
         primary: '#444444',
@@ -48,6 +55,7 @@ export const createTheme = ({ dark }: { dark: boolean }): Theme => {
       background: {
         selector: 'linear-gradient(0.25turn, rgba(255,255,255,0.8), #78D1FF)',
         menu: 'rgba(0, 0, 0, 0.5)',
+        scrollbar: 'rgba(0, 0, 0, 0.1)',
       },
       shadow: {
         dot: 'rgba(0, 0, 0, 0.2)',

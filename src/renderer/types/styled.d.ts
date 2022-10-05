@@ -1,6 +1,13 @@
 import 'styled-components';
 
 export interface Theme {
+  fontSize: {
+    exSmall: string;
+    small: string;
+    medium: string;
+    large: string;
+    gameTitle: string;
+  };
   colors: {
     text: {
       primary: string;
@@ -46,6 +53,7 @@ export interface Theme {
     background: {
       selector: string;
       menu: string;
+      scrollbar: string;
     };
     shadow: {
       dot: string;

@@ -1,25 +1,35 @@
 declare namespace TraPCollection {
   // IPC通信用API
-  type API = { invoke: FromRenderer; on: FromMainReceiver };
+  type API = {
+    invoke: FromRenderer;
+    on: FromMainReceiver;
+    removeListener: FromMainReceiver;
+  };
   type FromRenderer = {
     launch(gameId: string): Promise<void>;
     openQuestionnaire(): Promise<void>;
     openHomePage(): Promise<void>;
-    getGameInfo(): Promise<GameInfo[]>;
+    openJavaDownloadPage(): Promise<void>;
+    getGameInfo(): Promise<RendererGameInfo[]>;
     checkJava(): Promise<boolean>;
-    getProductKey(): Promise<string | undefined>;
+    getProductKey(): Promise<string | null>;
     setProductKey(productKey: string): Promise<void>;
-    getSeatId(): Promise<number | undefined>;
+    resetProductKey(): Promise<void>;
+    getSeatId(): Promise<number | null>;
     setSeatId(seatId: number): Promise<void>;
-    getSeatVersionId(): Promise<number | undefined>;
+    getSeatVersionId(): Promise<number | null>;
     setSeatVersionId(seatVersionId: number): Promise<void>;
     sitDown(): Promise<void>;
     sitUp(): Promise<void>;
-    postLauncherLogin(productKey: string): Promise<boolean>;
+    postLauncherLogin(): Promise<boolean>;
     fetchGame(): Promise<void>;
+    quitApp(): Promise<void>;
+    reloadWindow(): Promise<void>;
+    progress(): Promise<TraPCollection.Progress>;
   };
   type FromMain = {
-    progress(progress: Progress): void;
+    onBrowserWindowFocus: () => void;
+    onBrowserWindowBlur: () => void;
   };
 
   type FromMainReceiver = {
@@ -31,51 +41,88 @@ declare namespace TraPCollection {
     ) => void;
   };
 
-  type GameType = 'app' | 'jar' | 'url';
-  /**
-   * @example
-   * `.exe`: { type: 'app', url: filepath }
-   * `.jar`: { type: 'jar', url: filepath }
-   * `.com`: { type: 'url', url: urlString }
-   */
-
   type GameInfo = {
     id: string;
     name: string;
     createdAt: string;
     version: {
-      id: string;
+      id: string; // unique
       name: string;
       description: string;
       createdAt: string;
     };
     description: string;
-    type: GameType;
     /**
+     * relative path
+     * base url: '%AppData%/trap-collection/contents'
      * @example
-     * "games/UUIDv4/*.exe"
-     * "games/UUIDv4/*.jar"
-     * "*.trap.games"
+     * 'games/146dfc4a-e656-4083-b973-4a7196ae4289/v1.0.0/video.mp4'
      */
-    url: string;
+    video?: {
+      path: string;
+      updateAt: string;
+    };
     /**
+     * relative path
+     * base url: '%AppData%/trap-collection/contents'
      * @example
-     * "artworks/UUIDv4.png"
+     * 'games/146dfc4a-e656-4083-b973-4a7196ae4289/v1.0.0/poster.png'
+     */
+    poster: {
+      path: string;
+      updateAt: string;
+    };
+    info:
+      | {
+          type: 'app' | 'jar';
+          /**
+           * relative path
+           * base url: '%AppData%/trap-collection/contents/games/146dfc4a-e656-4083-b973-4a7196ae4289/v1.0.0/dist'
+           * @example
+           * path/to/binary
+           */
+          entryPoint: string;
+          updateAt: string;
+        }
+      | {
+          type: 'url';
+          url: string;
+          updateAt: string;
+        };
+  };
+
+  type GameType = GameInfo['info']['type'];
+
+  type GameInfos = GameInfo[];
+
+  type LauncherVersion = {
+    productKey: string;
+  };
+
+  type LauncherVersions = LauncherVersion[];
+
+  type RendererGameInfo = {
+    id: string;
+    name: string;
+    description: string;
+    versionName: string;
+    /**
+     * absolute path
      */
     poster: string;
     /**
-     * @example
-     * "artworks/UUIDv4.mp4"
+     * absolute path
      */
     video?: string;
+    type: GameType;
   };
 
   type Progress = {
-    title: string;
-    phase: 'fetch' | 'decompress' | 'verify' | 'genChecksum' | 'done';
-    progressRate: number; // 0-100
-  }[];
-
+    fileDownload: { complete: number; total: number };
+    fileDecompress: { complete: number; total: number };
+    posterDownload: { complete: number; total: number };
+    videoDownload: { complete: number; total: number };
+  };
   type Platform = 'win32' | 'darwin';
 }
 

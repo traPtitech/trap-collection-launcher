@@ -62,6 +62,12 @@ export interface CheckItem {
    */
   type: string;
   /**
+   * 実行ファイルの相対パス
+   * @type {string}
+   * @memberof CheckItem
+   */
+  entryPoint?: string;
+  /**
    * ゲーム本体の更新日時
    * @type {string}
    * @memberof CheckItem
@@ -78,7 +84,7 @@ export interface CheckItem {
    * @type {string}
    * @memberof CheckItem
    */
-  movieUpdatedAt: string;
+  movieUpdatedAt?: string;
 }
 /**
  * ゲーム
@@ -99,6 +105,12 @@ export interface Game {
    */
   name: string;
   /**
+   * ゲームの説明
+   * @type {string}
+   * @memberof Game
+   */
+  description?: string;
+  /**
    * ゲームの登録時刻
    * @type {string}
    * @memberof Game
@@ -109,7 +121,7 @@ export interface Game {
    * @type {GameVersion}
    * @memberof Game
    */
-  version: GameVersion;
+  version?: GameVersion;
 }
 /**
  * ゲームのファイルの情報
@@ -119,16 +131,35 @@ export interface Game {
 export interface GameFile {
   /**
    * アセットのID
-   * @type {number}
+   * @type {string}
    * @memberof GameFile
    */
-  id: number;
+  id: string;
   /**
    * ゲームの種類（jar,windows,mac）
    * @type {string}
    * @memberof GameFile
    */
   type: string;
+  /**
+   * ゲームの起動時に実行するファイル
+   * @type {string}
+   * @memberof GameFile
+   */
+  entryPoint: string;
+}
+/**
+ * ゲームのUUIDの一覧
+ * @export
+ * @interface GameIDs
+ */
+export interface GameIDs {
+  /**
+   * ゲームのUUIDの配列
+   * @type {Array<string>}
+   * @memberof GameIDs
+   */
+  gameIDs?: Array<string>;
 }
 /**
  * ゲーム名とID
@@ -188,10 +219,10 @@ export interface GameMeta {
 export interface GameURL {
   /**
    * アセットのID
-   * @type {number}
+   * @type {string}
    * @memberof GameURL
    */
-  id: number;
+  id: string;
   /**
    * ゲームのURL（タイプがURL以外のときはなし）
    * @type {string}
@@ -207,10 +238,10 @@ export interface GameURL {
 export interface GameVersion {
   /**
    * ID
-   * @type {number}
+   * @type {string}
    * @memberof GameVersion
    */
-  id: number;
+  id: string;
   /**
    * 名前
    * @type {string}
@@ -229,37 +260,6 @@ export interface GameVersion {
    * @memberof GameVersion
    */
   createdAt: string;
-}
-/**
- *
- * @export
- * @interface InlineResponse200
- */
-export interface InlineResponse200 {
-  /**
-   *
-   * @type {string}
-   * @memberof InlineResponse200
-   */
-  code_challenge?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof InlineResponse200
-   */
-  code_challenge_method?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof InlineResponse200
-   */
-  client_id?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof InlineResponse200
-   */
-  response_type?: string;
 }
 /**
  * ランチャーのトークン
@@ -376,6 +376,25 @@ export interface NewGameVersion {
   description: string;
 }
 /**
+ * 新しい席のバージョン
+ * @export
+ * @interface NewSeatVersion
+ */
+export interface NewSeatVersion {
+  /**
+   *
+   * @type {number}
+   * @memberof NewSeatVersion
+   */
+  width: number;
+  /**
+   *
+   * @type {number}
+   * @memberof NewSeatVersion
+   */
+  hight?: number;
+}
+/**
  * 新しいランチャーのバージョンの名前
  * @export
  * @interface NewVersion
@@ -440,10 +459,10 @@ export interface ProductKeyGen {
   num: number;
   /**
    * バージョンID
-   * @type {number}
+   * @type {string}
    * @memberof ProductKeyGen
    */
-  version: number;
+  version: string;
 }
 /**
  * 席
@@ -487,7 +506,7 @@ export interface SeatDetail {
    * @type {string}
    * @memberof SeatDetail
    */
-  SeatingTime?: string;
+  seatingTime?: string;
 }
 /**
  * 席のバージョン
@@ -497,10 +516,22 @@ export interface SeatDetail {
 export interface SeatVersion {
   /**
    *
+   * @type {string}
+   * @memberof SeatVersion
+   */
+  id: string;
+  /**
+   *
    * @type {number}
    * @memberof SeatVersion
    */
-  id: number;
+  width: number;
+  /**
+   *
+   * @type {number}
+   * @memberof SeatVersion
+   */
+  hight?: number;
   /**
    * 作成時刻
    * @type {string}
@@ -535,10 +566,10 @@ export interface User {
 export interface Version {
   /**
    * ID
-   * @type {number}
+   * @type {string}
    * @memberof Version
    */
-  id: number;
+  id: string;
   /**
    * 名前
    * @type {string}
@@ -566,10 +597,10 @@ export interface Version {
 export interface VersionDetails {
   /**
    * ID
-   * @type {number}
+   * @type {string}
    * @memberof VersionDetails
    */
-  id: number;
+  id: string;
   /**
    * 名前
    * @type {string}
@@ -603,10 +634,10 @@ export interface VersionDetails {
 export interface VersionMeta {
   /**
    * ID
-   * @type {number}
+   * @type {string}
    * @memberof VersionMeta
    */
-  id: number;
+  id: string;
   /**
    * 名前
    * @type {string}
@@ -755,7 +786,7 @@ export const GameApiAxiosParamCreator = function (
      * ゲームの最新バージョンのファイルの取得
      * @summary ゲームの最新バージョンのファイルの取得
      * @param {string} gameID ゲームのUUID
-     * @param {string} operatingSystem osのパラメーター(mac,windows)
+     * @param {string} operatingSystem osのパラメーター(win32,darwin)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1167,21 +1198,23 @@ export const GameApiAxiosParamCreator = function (
      * ゲームの最新バージョンへのファイルの追加
      * @summary ゲームの最新バージョンへのファイルの追加
      * @param {string} gameID ゲームのUUID
-     * @param {string} type ゲームの種類（jar,windows,mac）
+     * @param {string} entryPoint ゲームの起動時に実行するファイル
      * @param {any} file ゲームのファイル
+     * @param {string} [fileType] ゲームの種類（jar,windows,mac）
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     postFile: async (
       gameID: string,
-      type: string,
+      entryPoint: string,
       file: any,
+      fileType?: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'gameID' is not null or undefined
       assertParamExists('postFile', 'gameID', gameID);
-      // verify required parameter 'type' is not null or undefined
-      assertParamExists('postFile', 'type', type);
+      // verify required parameter 'entryPoint' is not null or undefined
+      assertParamExists('postFile', 'entryPoint', entryPoint);
       // verify required parameter 'file' is not null or undefined
       assertParamExists('postFile', 'file', file);
       const localVarPath = `/games/asset/{gameID}/file`.replace(
@@ -1217,8 +1250,12 @@ export const GameApiAxiosParamCreator = function (
         configuration
       );
 
-      if (type !== undefined) {
-        localVarFormParams.append('type', type as any);
+      if (fileType !== undefined) {
+        localVarFormParams.append('fileType', fileType as any);
+      }
+
+      if (entryPoint !== undefined) {
+        localVarFormParams.append('entryPoint', entryPoint as any);
       }
 
       if (file !== undefined) {
@@ -1472,7 +1509,7 @@ export const GameApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
 
-      // authentication GameMaintainerAuth required
+      // authentication GameOwnerAuth required
 
       // authentication TrapMemberAuth required
       // oauth required
@@ -1767,7 +1804,7 @@ export const GameApiFp = function (configuration?: Configuration) {
      * ゲームの最新バージョンのファイルの取得
      * @summary ゲームの最新バージョンのファイルの取得
      * @param {string} gameID ゲームのUUID
-     * @param {string} operatingSystem osのパラメーター(mac,windows)
+     * @param {string} operatingSystem osのパラメーター(win32,darwin)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1933,7 +1970,7 @@ export const GameApiFp = function (configuration?: Configuration) {
       gameID: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getVideo(
         gameID,
@@ -1950,23 +1987,26 @@ export const GameApiFp = function (configuration?: Configuration) {
      * ゲームの最新バージョンへのファイルの追加
      * @summary ゲームの最新バージョンへのファイルの追加
      * @param {string} gameID ゲームのUUID
-     * @param {string} type ゲームの種類（jar,windows,mac）
+     * @param {string} entryPoint ゲームの起動時に実行するファイル
      * @param {any} file ゲームのファイル
+     * @param {string} [fileType] ゲームの種類（jar,windows,mac）
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async postFile(
       gameID: string,
-      type: string,
+      entryPoint: string,
       file: any,
+      fileType?: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<GameFile>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.postFile(
         gameID,
-        type,
+        entryPoint,
         file,
+        fileType,
         options
       );
       return createRequestFunction(
@@ -2210,7 +2250,7 @@ export const GameApiFactory = function (
      * ゲームの最新バージョンのファイルの取得
      * @summary ゲームの最新バージョンのファイルの取得
      * @param {string} gameID ゲームのUUID
-     * @param {string} operatingSystem osのパラメーター(mac,windows)
+     * @param {string} operatingSystem osのパラメーター(win32,darwin)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -2303,7 +2343,7 @@ export const GameApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getVideo(gameID: string, options?: any): AxiosPromise<any> {
+    getVideo(gameID: string, options?: any): AxiosPromise<void> {
       return localVarFp
         .getVideo(gameID, options)
         .then((request) => request(axios, basePath));
@@ -2312,19 +2352,21 @@ export const GameApiFactory = function (
      * ゲームの最新バージョンへのファイルの追加
      * @summary ゲームの最新バージョンへのファイルの追加
      * @param {string} gameID ゲームのUUID
-     * @param {string} type ゲームの種類（jar,windows,mac）
+     * @param {string} entryPoint ゲームの起動時に実行するファイル
      * @param {any} file ゲームのファイル
+     * @param {string} [fileType] ゲームの種類（jar,windows,mac）
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     postFile(
       gameID: string,
-      type: string,
+      entryPoint: string,
       file: any,
+      fileType?: string,
       options?: any
     ): AxiosPromise<GameFile> {
       return localVarFp
-        .postFile(gameID, type, file, options)
+        .postFile(gameID, entryPoint, file, fileType, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -2482,7 +2524,7 @@ export class GameApi extends BaseAPI {
    * ゲームの最新バージョンのファイルの取得
    * @summary ゲームの最新バージョンのファイルの取得
    * @param {string} gameID ゲームのUUID
-   * @param {string} operatingSystem osのパラメーター(mac,windows)
+   * @param {string} operatingSystem osのパラメーター(win32,darwin)
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof GameApi
@@ -2583,15 +2625,22 @@ export class GameApi extends BaseAPI {
    * ゲームの最新バージョンへのファイルの追加
    * @summary ゲームの最新バージョンへのファイルの追加
    * @param {string} gameID ゲームのUUID
-   * @param {string} type ゲームの種類（jar,windows,mac）
+   * @param {string} entryPoint ゲームの起動時に実行するファイル
    * @param {any} file ゲームのファイル
+   * @param {string} [fileType] ゲームの種類（jar,windows,mac）
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof GameApi
    */
-  public postFile(gameID: string, type: string, file: any, options?: any) {
+  public postFile(
+    gameID: string,
+    entryPoint: string,
+    file: any,
+    fileType?: string,
+    options?: any
+  ) {
     return GameApiFp(this.configuration)
-      .postFile(gameID, type, file, options)
+      .postFile(gameID, entryPoint, file, fileType, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -2777,14 +2826,59 @@ export const LauncherAuthApiAxiosParamCreator = function (
       };
     },
     /**
+     * ランチャーが自身の情報を取得
+     * @summary ランチャーが自身の情報を取得
+     * @param {string} [sessions]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLauncherMe: async (
+      sessions?: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/launcher/me`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication LauncherAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
      * バージョンのプロダクトキー一覧
      * @summary バージョンのプロダクトキー一覧
-     * @param {number} launcherVersionID ランチャーのバージョンのID
+     * @param {string} launcherVersionID ランチャーのバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getProductKeys: async (
-      launcherVersionID: number,
+      launcherVersionID: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'launcherVersionID' is not null or undefined
@@ -2927,19 +3021,6 @@ export const LauncherAuthApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
 
-      // authentication LauncherAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-      // authentication TrapMemberAuth required
-      // oauth required
-      await setOAuthToObject(
-        localVarHeaderParameter,
-        'TrapMemberAuth',
-        ['read'],
-        configuration
-      );
-
       localVarHeaderParameter['Content-Type'] = 'application/json';
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -2995,20 +3076,44 @@ export const LauncherAuthApiFp = function (configuration?: Configuration) {
       );
     },
     /**
+     * ランチャーが自身の情報を取得
+     * @summary ランチャーが自身の情報を取得
+     * @param {string} [sessions]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getLauncherMe(
+      sessions?: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Version>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getLauncherMe(
+        sessions,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
      * バージョンのプロダクトキー一覧
      * @summary バージョンのプロダクトキー一覧
-     * @param {number} launcherVersionID ランチャーのバージョンのID
+     * @param {string} launcherVersionID ランチャーのバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getProductKeys(
-      launcherVersionID: number,
+      launcherVersionID: string,
       options?: any
     ): Promise<
       (
         axios?: AxiosInstance,
         basePath?: string
-      ) => AxiosPromise<ProductKeyDetail>
+      ) => AxiosPromise<Array<ProductKeyDetail>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getProductKeys(
         launcherVersionID,
@@ -3100,16 +3205,28 @@ export const LauncherAuthApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
+     * ランチャーが自身の情報を取得
+     * @summary ランチャーが自身の情報を取得
+     * @param {string} [sessions]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLauncherMe(sessions?: string, options?: any): AxiosPromise<Version> {
+      return localVarFp
+        .getLauncherMe(sessions, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
      * バージョンのプロダクトキー一覧
      * @summary バージョンのプロダクトキー一覧
-     * @param {number} launcherVersionID ランチャーのバージョンのID
+     * @param {string} launcherVersionID ランチャーのバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getProductKeys(
-      launcherVersionID: number,
+      launcherVersionID: string,
       options?: any
-    ): AxiosPromise<ProductKeyDetail> {
+    ): AxiosPromise<Array<ProductKeyDetail>> {
       return localVarFp
         .getProductKeys(launcherVersionID, options)
         .then((request) => request(axios, basePath));
@@ -3169,14 +3286,28 @@ export class LauncherAuthApi extends BaseAPI {
   }
 
   /**
-   * バージョンのプロダクトキー一覧
-   * @summary バージョンのプロダクトキー一覧
-   * @param {number} launcherVersionID ランチャーのバージョンのID
+   * ランチャーが自身の情報を取得
+   * @summary ランチャーが自身の情報を取得
+   * @param {string} [sessions]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof LauncherAuthApi
    */
-  public getProductKeys(launcherVersionID: number, options?: any) {
+  public getLauncherMe(sessions?: string, options?: any) {
+    return LauncherAuthApiFp(this.configuration)
+      .getLauncherMe(sessions, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   * バージョンのプロダクトキー一覧
+   * @summary バージョンのプロダクトキー一覧
+   * @param {string} launcherVersionID ランチャーのバージョンのID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof LauncherAuthApi
+   */
+  public getProductKeys(launcherVersionID: string, options?: any) {
     return LauncherAuthApiFp(this.configuration)
       .getProductKeys(launcherVersionID, options)
       .then((request) => request(this.axios, this.basePath));
@@ -3250,19 +3381,6 @@ export const Oauth2ApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
 
-      // authentication LauncherAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-      // authentication TrapMemberAuth required
-      // oauth required
-      await setOAuthToObject(
-        localVarHeaderParameter,
-        'TrapMemberAuth',
-        ['read'],
-        configuration
-      );
-
       if (code !== undefined) {
         localVarQueryParameter['code'] = code;
       }
@@ -3307,19 +3425,6 @@ export const Oauth2ApiAxiosParamCreator = function (
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
-
-      // authentication LauncherAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-      // authentication TrapMemberAuth required
-      // oauth required
-      await setOAuthToObject(
-        localVarHeaderParameter,
-        'TrapMemberAuth',
-        ['read'],
-        configuration
-      );
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -3433,10 +3538,7 @@ export const Oauth2ApiFp = function (configuration?: Configuration) {
       sessions?: string,
       options?: any
     ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<InlineResponse200>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getGeneratedCode(sessions, options);
@@ -3509,10 +3611,7 @@ export const Oauth2ApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getGeneratedCode(
-      sessions?: string,
-      options?: any
-    ): AxiosPromise<InlineResponse200> {
+    getGeneratedCode(sessions?: string, options?: any): AxiosPromise<void> {
       return localVarFp
         .getGeneratedCode(sessions, options)
         .then((request) => request(axios, basePath));
@@ -3645,12 +3744,12 @@ export const SeatApiAxiosParamCreator = function (
     /**
      * 席の状態の取得
      * @summary 席の状態の取得
-     * @param {number} seatVersionID 席のバージョンのID
+     * @param {string} seatVersionID 席のバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getSeats: async (
-      seatVersionID: number,
+      seatVersionID: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'seatVersionID' is not null or undefined
@@ -3785,12 +3884,12 @@ export const SeatApiFp = function (configuration?: Configuration) {
     /**
      * 席の状態の取得
      * @summary 席の状態の取得
-     * @param {number} seatVersionID 席のバージョンのID
+     * @param {string} seatVersionID 席のバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getSeats(
-      seatVersionID: number,
+      seatVersionID: string,
       options?: any
     ): Promise<
       (
@@ -3862,12 +3961,12 @@ export const SeatApiFactory = function (
     /**
      * 席の状態の取得
      * @summary 席の状態の取得
-     * @param {number} seatVersionID 席のバージョンのID
+     * @param {string} seatVersionID 席のバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getSeats(
-      seatVersionID: number,
+      seatVersionID: string,
       options?: any
     ): AxiosPromise<Array<SeatDetail>> {
       return localVarFp
@@ -3913,12 +4012,12 @@ export class SeatApi extends BaseAPI {
   /**
    * 席の状態の取得
    * @summary 席の状態の取得
-   * @param {number} seatVersionID 席のバージョンのID
+   * @param {string} seatVersionID 席のバージョンのID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof SeatApi
    */
-  public getSeats(seatVersionID: number, options?: any) {
+  public getSeats(seatVersionID: string, options?: any) {
     return SeatApiFp(this.configuration)
       .getSeats(seatVersionID, options)
       .then((request) => request(this.axios, this.basePath));
@@ -3950,12 +4049,12 @@ export const SeatVersionApiAxiosParamCreator = function (
     /**
      * 席のバージョン消去
      * @summary 席のバージョン消去
-     * @param {number} seatVersionID 席のバージョンのID
+     * @param {string} seatVersionID 席のバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     deleteSeatVersion: async (
-      seatVersionID: number,
+      seatVersionID: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'seatVersionID' is not null or undefined
@@ -4005,26 +4104,19 @@ export const SeatVersionApiAxiosParamCreator = function (
       };
     },
     /**
-     * バージョンに席のバージョン追加
-     * @summary バージョンに席のバージョン追加
-     * @param {number} launcherVersionID ランチャーのバージョンのID
+     * 席のバージョン追加
+     * @summary 席のバージョン追加
+     * @param {NewSeatVersion} newSeatVersion
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     postSeatVersion: async (
-      launcherVersionID: number,
+      newSeatVersion: NewSeatVersion,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'launcherVersionID' is not null or undefined
-      assertParamExists(
-        'postSeatVersion',
-        'launcherVersionID',
-        launcherVersionID
-      );
-      const localVarPath = `/versions/{launcherVersionID}/seats`.replace(
-        `{${'launcherVersionID'}}`,
-        encodeURIComponent(String(launcherVersionID))
-      );
+      // verify required parameter 'newSeatVersion' is not null or undefined
+      assertParamExists('postSeatVersion', 'newSeatVersion', newSeatVersion);
+      const localVarPath = `/seats/versions`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -4051,6 +4143,8 @@ export const SeatVersionApiAxiosParamCreator = function (
         configuration
       );
 
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -4059,6 +4153,11 @@ export const SeatVersionApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        newSeatVersion,
+        localVarRequestOptions,
+        configuration
+      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -4079,12 +4178,12 @@ export const SeatVersionApiFp = function (configuration?: Configuration) {
     /**
      * 席のバージョン消去
      * @summary 席のバージョン消去
-     * @param {number} seatVersionID 席のバージョンのID
+     * @param {string} seatVersionID 席のバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async deleteSeatVersion(
-      seatVersionID: number,
+      seatVersionID: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -4102,20 +4201,20 @@ export const SeatVersionApiFp = function (configuration?: Configuration) {
       );
     },
     /**
-     * バージョンに席のバージョン追加
-     * @summary バージョンに席のバージョン追加
-     * @param {number} launcherVersionID ランチャーのバージョンのID
+     * 席のバージョン追加
+     * @summary 席のバージョン追加
+     * @param {NewSeatVersion} newSeatVersion
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async postSeatVersion(
-      launcherVersionID: number,
+      newSeatVersion: NewSeatVersion,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<SeatVersion>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.postSeatVersion(
-        launcherVersionID,
+        newSeatVersion,
         options
       );
       return createRequestFunction(
@@ -4142,12 +4241,12 @@ export const SeatVersionApiFactory = function (
     /**
      * 席のバージョン消去
      * @summary 席のバージョン消去
-     * @param {number} seatVersionID 席のバージョンのID
+     * @param {string} seatVersionID 席のバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     deleteSeatVersion(
-      seatVersionID: number,
+      seatVersionID: string,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
@@ -4155,18 +4254,18 @@ export const SeatVersionApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
-     * バージョンに席のバージョン追加
-     * @summary バージョンに席のバージョン追加
-     * @param {number} launcherVersionID ランチャーのバージョンのID
+     * 席のバージョン追加
+     * @summary 席のバージョン追加
+     * @param {NewSeatVersion} newSeatVersion
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     postSeatVersion(
-      launcherVersionID: number,
+      newSeatVersion: NewSeatVersion,
       options?: any
     ): AxiosPromise<SeatVersion> {
       return localVarFp
-        .postSeatVersion(launcherVersionID, options)
+        .postSeatVersion(newSeatVersion, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -4182,28 +4281,28 @@ export class SeatVersionApi extends BaseAPI {
   /**
    * 席のバージョン消去
    * @summary 席のバージョン消去
-   * @param {number} seatVersionID 席のバージョンのID
+   * @param {string} seatVersionID 席のバージョンのID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof SeatVersionApi
    */
-  public deleteSeatVersion(seatVersionID: number, options?: any) {
+  public deleteSeatVersion(seatVersionID: string, options?: any) {
     return SeatVersionApiFp(this.configuration)
       .deleteSeatVersion(seatVersionID, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
-   * バージョンに席のバージョン追加
-   * @summary バージョンに席のバージョン追加
-   * @param {number} launcherVersionID ランチャーのバージョンのID
+   * 席のバージョン追加
+   * @summary 席のバージョン追加
+   * @param {NewSeatVersion} newSeatVersion
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof SeatVersionApi
    */
-  public postSeatVersion(launcherVersionID: number, options?: any) {
+  public postSeatVersion(newSeatVersion: NewSeatVersion, options?: any) {
     return SeatVersionApiFp(this.configuration)
-      .postSeatVersion(launcherVersionID, options)
+      .postSeatVersion(newSeatVersion, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
@@ -4462,7 +4561,7 @@ export const VersionApiAxiosParamCreator = function (
     /**
      * ブラウザゲーム以外のゲームのID、MD5、ゲームの種類、更新日の一覧
      * @summary ブラウザゲーム以外のゲームのID、MD5、ゲームの種類、更新日の一覧
-     * @param {string} operatingSystem osのパラメーター(mac,windows)
+     * @param {string} operatingSystem osのパラメーター(win32,darwin)
      * @param {string} [sessions]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4515,12 +4614,12 @@ export const VersionApiAxiosParamCreator = function (
     /**
      * バージョンの詳細情報の取得
      * @summary バージョンの詳細情報の取得
-     * @param {number} launcherVersionID ランチャーのバージョンのID
+     * @param {string} launcherVersionID ランチャーのバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getVersion: async (
-      launcherVersionID: number,
+      launcherVersionID: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'launcherVersionID' is not null or undefined
@@ -4620,14 +4719,14 @@ export const VersionApiAxiosParamCreator = function (
     /**
      * バージョンへのゲームの追加
      * @summary バージョンへのゲームの追加
-     * @param {number} launcherVersionID ランチャーのバージョンのID
-     * @param {Array<string>} requestBody
+     * @param {string} launcherVersionID ランチャーのバージョンのID
+     * @param {GameIDs} gameIDs
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     postGameToVersion: async (
-      launcherVersionID: number,
-      requestBody: Array<string>,
+      launcherVersionID: string,
+      gameIDs: GameIDs,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'launcherVersionID' is not null or undefined
@@ -4636,8 +4735,8 @@ export const VersionApiAxiosParamCreator = function (
         'launcherVersionID',
         launcherVersionID
       );
-      // verify required parameter 'requestBody' is not null or undefined
-      assertParamExists('postGameToVersion', 'requestBody', requestBody);
+      // verify required parameter 'gameIDs' is not null or undefined
+      assertParamExists('postGameToVersion', 'gameIDs', gameIDs);
       const localVarPath = `/versions/{launcherVersionID}/game`.replace(
         `{${'launcherVersionID'}}`,
         encodeURIComponent(String(launcherVersionID))
@@ -4679,7 +4778,7 @@ export const VersionApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        requestBody,
+        gameIDs,
         localVarRequestOptions,
         configuration
       );
@@ -4763,7 +4862,7 @@ export const VersionApiFp = function (configuration?: Configuration) {
     /**
      * ブラウザゲーム以外のゲームのID、MD5、ゲームの種類、更新日の一覧
      * @summary ブラウザゲーム以外のゲームのID、MD5、ゲームの種類、更新日の一覧
-     * @param {string} operatingSystem osのパラメーター(mac,windows)
+     * @param {string} operatingSystem osのパラメーター(win32,darwin)
      * @param {string} [sessions]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4793,12 +4892,12 @@ export const VersionApiFp = function (configuration?: Configuration) {
     /**
      * バージョンの詳細情報の取得
      * @summary バージョンの詳細情報の取得
-     * @param {number} launcherVersionID ランチャーのバージョンのID
+     * @param {string} launcherVersionID ランチャーのバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getVersion(
-      launcherVersionID: number,
+      launcherVersionID: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<VersionDetails>
@@ -4838,14 +4937,14 @@ export const VersionApiFp = function (configuration?: Configuration) {
     /**
      * バージョンへのゲームの追加
      * @summary バージョンへのゲームの追加
-     * @param {number} launcherVersionID ランチャーのバージョンのID
-     * @param {Array<string>} requestBody
+     * @param {string} launcherVersionID ランチャーのバージョンのID
+     * @param {GameIDs} gameIDs
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async postGameToVersion(
-      launcherVersionID: number,
-      requestBody: Array<string>,
+      launcherVersionID: string,
+      gameIDs: GameIDs,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<VersionDetails>
@@ -4853,7 +4952,7 @@ export const VersionApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.postGameToVersion(
           launcherVersionID,
-          requestBody,
+          gameIDs,
           options
         );
       return createRequestFunction(
@@ -4904,7 +5003,7 @@ export const VersionApiFactory = function (
     /**
      * ブラウザゲーム以外のゲームのID、MD5、ゲームの種類、更新日の一覧
      * @summary ブラウザゲーム以外のゲームのID、MD5、ゲームの種類、更新日の一覧
-     * @param {string} operatingSystem osのパラメーター(mac,windows)
+     * @param {string} operatingSystem osのパラメーター(win32,darwin)
      * @param {string} [sessions]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4921,12 +5020,12 @@ export const VersionApiFactory = function (
     /**
      * バージョンの詳細情報の取得
      * @summary バージョンの詳細情報の取得
-     * @param {number} launcherVersionID ランチャーのバージョンのID
+     * @param {string} launcherVersionID ランチャーのバージョンのID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getVersion(
-      launcherVersionID: number,
+      launcherVersionID: string,
       options?: any
     ): AxiosPromise<VersionDetails> {
       return localVarFp
@@ -4947,18 +5046,18 @@ export const VersionApiFactory = function (
     /**
      * バージョンへのゲームの追加
      * @summary バージョンへのゲームの追加
-     * @param {number} launcherVersionID ランチャーのバージョンのID
-     * @param {Array<string>} requestBody
+     * @param {string} launcherVersionID ランチャーのバージョンのID
+     * @param {GameIDs} gameIDs
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     postGameToVersion(
-      launcherVersionID: number,
-      requestBody: Array<string>,
+      launcherVersionID: string,
+      gameIDs: GameIDs,
       options?: any
     ): AxiosPromise<VersionDetails> {
       return localVarFp
-        .postGameToVersion(launcherVersionID, requestBody, options)
+        .postGameToVersion(launcherVersionID, gameIDs, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -4989,7 +5088,7 @@ export class VersionApi extends BaseAPI {
   /**
    * ブラウザゲーム以外のゲームのID、MD5、ゲームの種類、更新日の一覧
    * @summary ブラウザゲーム以外のゲームのID、MD5、ゲームの種類、更新日の一覧
-   * @param {string} operatingSystem osのパラメーター(mac,windows)
+   * @param {string} operatingSystem osのパラメーター(win32,darwin)
    * @param {string} [sessions]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -5008,12 +5107,12 @@ export class VersionApi extends BaseAPI {
   /**
    * バージョンの詳細情報の取得
    * @summary バージョンの詳細情報の取得
-   * @param {number} launcherVersionID ランチャーのバージョンのID
+   * @param {string} launcherVersionID ランチャーのバージョンのID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof VersionApi
    */
-  public getVersion(launcherVersionID: number, options?: any) {
+  public getVersion(launcherVersionID: string, options?: any) {
     return VersionApiFp(this.configuration)
       .getVersion(launcherVersionID, options)
       .then((request) => request(this.axios, this.basePath));
@@ -5035,19 +5134,19 @@ export class VersionApi extends BaseAPI {
   /**
    * バージョンへのゲームの追加
    * @summary バージョンへのゲームの追加
-   * @param {number} launcherVersionID ランチャーのバージョンのID
-   * @param {Array<string>} requestBody
+   * @param {string} launcherVersionID ランチャーのバージョンのID
+   * @param {GameIDs} gameIDs
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof VersionApi
    */
   public postGameToVersion(
-    launcherVersionID: number,
-    requestBody: Array<string>,
+    launcherVersionID: string,
+    gameIDs: GameIDs,
     options?: any
   ) {
     return VersionApiFp(this.configuration)
-      .postGameToVersion(launcherVersionID, requestBody, options)
+      .postGameToVersion(launcherVersionID, gameIDs, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

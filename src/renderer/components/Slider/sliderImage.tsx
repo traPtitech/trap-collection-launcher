@@ -12,8 +12,8 @@ const Image = ({ ...props }) => {
 
 const Wrapper = styled(Div)<{ $isSelect: boolean }>`
   position: relative;
-  width: 100%;
-  height: 100%;
+  height: 25rem;
+  width: 25rem;
   background-color: ${(props) => props.theme.colors.panel.primary};
   border-radius: 0.5rem;
   transition: transform ${(props) => props.theme.duration.normal} ease-out;
@@ -21,6 +21,7 @@ const Wrapper = styled(Div)<{ $isSelect: boolean }>`
     transform: scale(${(props) => (props.$isSelect ? '1.0' : '1.1')});
   }
   cursor: pointer;
+  box-shadow: 0px 3px 10px ${(props) => props.theme.colors.shadow.dot};
 `;
 
 const StyledImage = styled(Image)<{ $isLoad: boolean; $isSelect: boolean }>`
@@ -30,7 +31,6 @@ const StyledImage = styled(Image)<{ $isLoad: boolean; $isSelect: boolean }>`
   opacity: ${(props) => (props.$isLoad ? '100%' : '0%')};
   transition: opacity ${(props) => props.theme.duration.normal} ease-out;
   border-radius: 0.5rem;
-  box-shadow: 0px 3px 10px ${(props) => props.theme.colors.background.menu};
 `;
 
 const ImageBorder = styled(Div)<{ $isSelect: boolean }>`
@@ -74,7 +74,7 @@ const PlayText = styled(Div)`
   height: 6.25rem;
   background-color: ${(props) => props.theme.colors.button.information.fill};
   color: ${(props) => props.theme.colors.text.opposite};
-  font-size: 2rem;
+  font-size: ${(props) => props.theme.fontSize.large};
   border-radius: 0 0 0.5rem 0.5rem;
   display: flex;
   justify-content: center;

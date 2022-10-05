@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import Modal, * as ModalPackage from '../Modal';
+
+const Content = styled.div`
+  text-align: center;
+  color: ${(props) => props.theme.colors.text.primary};
+  user-select: text;
+`;
 
 const ProductModal = ({
   ...props
 }: Omit<
   ModalPackage.Props,
-  'noButton' | 'children' | 'modalType' | 'onOk' | 'okButtonText' | 'title'
+  'noButton' | 'children' | 'modalType' | 'okButtonText' | 'title'
 >) => {
   const [productKey, setProductKey] = useState('');
 
@@ -18,7 +25,7 @@ const ProductModal = ({
 
   return (
     <Modal title='プロダクトキー' noButton {...props}>
-      {productKey}
+      <Content>{productKey}</Content>
     </Modal>
   );
 };

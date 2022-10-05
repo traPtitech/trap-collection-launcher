@@ -5,7 +5,7 @@ const Div = ({ ...props }) => <div {...props} />;
 
 const Wrapper = styled(Div)`
   position: absolute;
-  left: 4.5rem;
+  left: 5.5rem;
   top: 4.875rem;
   right: 32.375rem;
   height: auto;
@@ -13,19 +13,20 @@ const Wrapper = styled(Div)`
 
 const Title = styled(Div)`
   width: 100%;
-  font-size: 5rem;
+  font-size: ${(props) => props.theme.fontSize.gameTitle};
   font-weight: bold;
   color: ${(props) => props.theme.colors.text.header};
 `;
 
 const Primary = styled(Div)`
   width: 100%;
-  font-size: 1.25rem;
+  overflow-wrap: break-word;
+  font-size: ${(props) => props.theme.fontSize.small};
   color: ${(props) => props.theme.colors.text.primary};
 `;
 
 export type Props = {
-  gameInfo: TraPCollection.GameInfo;
+  gameInfo: TraPCollection.RendererGameInfo;
 };
 
 const Description = ({ gameInfo }: Props) => {

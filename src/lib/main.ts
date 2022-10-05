@@ -2,11 +2,10 @@ import { app, BrowserWindow, protocol } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 import logger from 'electron-log';
 import updater from 'update-electron-app';
+import { ipcMain } from '@/common/typedIpc';
 import { sitDown } from '@/lib/ipc/handler/sitDownHandler';
 import { sitUp } from '@/lib/ipc/handler/sitUpHandler';
 import ipcListener from '@/lib/ipc/ipcListener';
-import { store } from '@/lib/store';
-import { updateToken } from '@/lib/utils/updateToken';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -39,13 +38,25 @@ const createWindow = (): void => {
       // webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
       preload: process.env.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
+    show: false,
   });
   ipcListener.setWindow(mainWindow);
 
-  mainWindow.maximize();
-
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+    mainWindow.maximize();
+  });
+
+  mainWindow.setMenu(null);
+
+  mainWindow.on('focus', () => {
+    ipcMain.send<'onBrowserWindowFocus'>(mainWindow, 'onBrowserWindowFocus');
+  });
+  mainWindow.on('blur', () => {
+    ipcMain.send<'onBrowserWindowBlur'>(mainWindow, 'onBrowserWindowBlur');
+  });
 
   if (process.env.NODE_ENV === 'production') {
     // mainWindow.setMenu(null);
@@ -54,22 +65,14 @@ const createWindow = (): void => {
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
   }
-
-  mainWindow.on('ready-to-show', () => {
-    // update token
-    updateToken().catch(() => {
-      return;
-    });
-    store.onDidChange('productKey', updateToken);
-    // ipc listen
-    // ipcListener.setWindow(mainWindow);
-  });
-
-  if (process.env.KOUDAISAI === 'true') {
-    sitDown();
-    mainWindow.on('closed', sitUp);
-  }
+  // if (process.env.KOUDAISAI === 'true') {
+  // }
 };
+
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

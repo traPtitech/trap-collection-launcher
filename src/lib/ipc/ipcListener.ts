@@ -7,6 +7,10 @@ import { getProductKeyHandler } from './handler/getProductKeyHandler';
 import { getSeatIdHandler } from './handler/getSeatIdHandler';
 import { getSeatVersionHandler } from './handler/getSeatVersionHandler';
 import { launchHandler } from './handler/launchHandler';
+import { progressHandler } from './handler/progressHandler';
+import { quitAppHandler } from './handler/quitAppHandler';
+import { reloadWindowHandler } from './handler/reloadWindowHandler';
+import { resetProductKeyHandler } from './handler/resetProductKetHandler';
 import { setProductKeyHandler } from './handler/setProductKeyHandler';
 import setSeatIdHandler from './handler/setSeatIdHandler';
 import { setSeatVersionIdHandler } from './handler/setSeatVersionHandler';
@@ -15,6 +19,7 @@ import { sitUpHandler } from './handler/sitUpHandler';
 import { ipcMain } from '@/common/typedIpc';
 import {
   openHomePageHandler,
+  openJavaDownloadPageHandler,
   openQuestionnaireHandler,
 } from '@/lib/ipc/handler/openWebPageHandler';
 
@@ -43,6 +48,7 @@ class IpcListener {
     ipcMain.removeHandler('checkJava');
     ipcMain.removeHandler('getProductKey');
     ipcMain.removeHandler('setProductKey');
+    ipcMain.removeHandler('resetProductKey');
     ipcMain.removeHandler('getSeatId');
     ipcMain.removeHandler('setSeatId');
     ipcMain.removeHandler('getSeatVersionId');
@@ -51,16 +57,22 @@ class IpcListener {
     ipcMain.removeHandler('sitUp');
     ipcMain.removeHandler('postLauncherLogin');
     ipcMain.removeHandler('fetchGame');
+    ipcMain.removeHandler('quitApp');
+    ipcMain.removeHandler('reloadWindow');
+    ipcMain.removeHandler('openJavaDownloadPage');
+    ipcMain.removeHandler('progress');
   }
 
   private addListeners() {
     launchHandler(this.window);
     openQuestionnaireHandler(this.window);
     openHomePageHandler();
+    openJavaDownloadPageHandler();
     getGameInfoHandler();
     checkJavaHandler();
     getProductKeyHandler();
     setProductKeyHandler();
+    resetProductKeyHandler();
     getSeatIdHandler();
     setSeatIdHandler();
     getSeatVersionHandler();
@@ -69,6 +81,9 @@ class IpcListener {
     sitUpHandler();
     postLauncherLoginHandler();
     fetchGameHandler();
+    quitAppHandler();
+    reloadWindowHandler(this.window);
+    progressHandler();
   }
 }
 

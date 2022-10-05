@@ -3,6 +3,7 @@ import { MdClose, MdNavigateNext } from 'react-icons/md';
 import styled from 'styled-components';
 import { packageJson } from '@/config';
 import trap from '@/renderer/assets/trap.svg';
+import { ModalType } from '@/renderer/views/GameSelect/modals';
 
 const Div = ({ ...props }) => <div {...props} />;
 
@@ -37,7 +38,7 @@ const Display = styled(Div)<{ $isOpen: boolean }>`
 `;
 
 const Title = styled(Div)`
-  font-size: 1.75rem;
+  font-size: ${(props) => props.theme.fontSize.large};
   height: 4.5rem;
   width: 100%;
   display: flex;
@@ -71,7 +72,8 @@ const Item = styled(Div)`
 
 const ItemText = styled(Div)`
   padding: 1.25rem;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSize.exSmall};
+  transform: rotate(0.03deg);
   height: auto;
   color: ${(props) => props.theme.colors.text.primary};
 `;
@@ -90,15 +92,21 @@ const Foot = styled(Div)`
   gap: 0.5rem;
 `;
 
+const FootLogo = styled(Div)`
+  cursor: pointer;
+`;
+
 const Collection = styled(Div)`
   position: relative;
   font-size: 1rem;
+  transform: rotate(0.03deg);
   color: ${(props) => props.theme.colors.text.version};
 `;
 
 const Version = styled(Div)`
   position: relative;
   font-size: 0.75rem;
+  transform: rotate(0.03deg);
   color: ${(props) => props.theme.colors.text.version};
 `;
 
@@ -113,12 +121,13 @@ const MetaData = styled(Div)`
 const Edition = styled(Div)`
   position: relative;
   font-size: 0.75rem;
+  transform: rotate(0.03deg);
   color: ${(props) => props.theme.colors.text.version};
 `;
 
 const OnlyTrap = styled(Div)`
   position: relative;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSize.small};
   color: ${(props) => props.theme.colors.text.warn};
 `;
 
@@ -153,12 +162,21 @@ const NavigateButton = styled(MdNavigateNext)`
 
 export type Props = {
   items: { text: string; onClick: MouseEventHandler<HTMLDivElement> }[];
+  setOpenedModal: React.Dispatch<React.SetStateAction<ModalType>>;
+  setIsOpenMenu: React.Dispatch<React.SetStateAction<boolean>>;
   onCancel: MouseEventHandler<HTMLDivElement>;
   isOpen: boolean;
   koudaisai: boolean;
 };
 
-const SideBar = ({ isOpen, items, onCancel, koudaisai }: Props) => {
+const SideBar = ({
+  isOpen,
+  setOpenedModal,
+  setIsOpenMenu,
+  items,
+  onCancel,
+  koudaisai,
+}: Props) => {
   useEffect(() => {
     const active = document.activeElement as HTMLElement;
     active && isOpen && active.blur();
@@ -188,7 +206,16 @@ const SideBar = ({ isOpen, items, onCancel, koudaisai }: Props) => {
           {koudaisai ? (
             <OnlyTrap>このメニューは部員専用です</OnlyTrap>
           ) : undefined}
-          <img src={trap} width='224' />
+          <FootLogo title='公式ホームページを開く'>
+            <img
+              src={trap}
+              width='224'
+              onClick={() => {
+                setIsOpenMenu(false);
+                setOpenedModal('goWeb');
+              }}
+            />
+          </FootLogo>
           <MetaData>
             <Collection>traP Collection</Collection>
             <Version>{`ver. ${packageJson.version}`}</Version>

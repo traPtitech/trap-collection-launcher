@@ -1,10 +1,15 @@
 import Cleave from 'cleave.js/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { MdArrowForward } from 'react-icons/md';
-import Loader from 'react-loader-spinner';
+import { BarLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
-import { NavigateContext } from '@/renderer/App';
+import {
+  NavigateContext,
+  SetOfflineModeContext,
+  ShowNetworkErrorContext,
+} from '@/renderer/App';
 import collectionLogo from '@/renderer/assets/logo.svg';
+import FetchLog from '@/renderer/components/FetchLog';
 
 const Div = ({ ...props }) => <div {...props} />;
 const Img = ({ ...props }) => <img {...props} />;
@@ -16,6 +21,7 @@ const Wrapper = styled(Div)`
   right: 0;
   bottom: 0;
   background-color: ${(props) => props.theme.colors.panel.primary};
+  user-select: none;
 `;
 
 const TitleContainer = styled(Div)`
@@ -32,7 +38,7 @@ const TitleContainer = styled(Div)`
 
 const BottomWrapper = styled(Div)`
   position: absolute;
-  height: 50%;
+  height: 40%;
   left: 0;
   right: 0;
   bottom: 0;
@@ -43,13 +49,14 @@ const BottomWrapper = styled(Div)`
   align-items: center;
 `;
 
-const ProductKeyText = styled(Div)<{ $invalidProductKey: boolean }>`
+const BottomText = styled(Div)<{ $invalidProductKey: boolean }>`
   position: relative;
   color: ${(props) =>
     props.$invalidProductKey
       ? props.theme.colors.text.warn
       : props.theme.colors.text.primary};
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.fontSize.exSmall};
+  transform: rotate(0.03deg);
   font-weight: bold;
 `;
 
@@ -80,6 +87,7 @@ const ProductKeyInput = styled(Cleave)<{ $invalidProductKey: boolean }>`
   color: ${(props) => props.theme.colors.text.primary};
   background-color: transparent;
   text-align: center;
+  transform: rotate(0.03deg);
 `;
 
 const EnterButton = styled(Div)<{ $isValidProductKey: boolean }>`
@@ -123,56 +131,65 @@ const isValidProductKeyFormat = (str: string) => {
   );
 };
 
+type Progress = 'inputProductkey' | 'login' | 'fetchGame';
+
 const TitlePage = () => {
   const [productKey, setProductKey] = useState<string>('');
   const navigate = useContext(NavigateContext);
+  const showNetworkError = useContext(ShowNetworkErrorContext);
   const [invalidProductKey, setInvalidProductKey] = useState(false);
-  const [needUserInput, setNeedUserInput] = useState(false);
+  const [progress, setProgress] = useState<Progress>('login');
   const theme = useTheme();
+  const [isOfflineMode] = useContext(SetOfflineModeContext) ?? [];
+  const [downloadFetchLog, setDownloadFetchLog] = useState<
+    TraPCollection.Progress | undefined
+  >(undefined);
 
-  const tryLogin = async (key: string) => {
-    setNeedUserInput(false);
-    if (isValidProductKeyFormat(key) === false) {
-      setNeedUserInput(true);
-      return false;
-    }
-    //Todo: const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(key);
-    const success = false; //Todo: delete this line
-    console.log(success);
-    if (success) {
-      //Todo: window.TraPCollectionAPI.invoke.syncGame();
-      navigate && navigate('gameSelect');
-      return true;
-    } else {
-      setNeedUserInput(true);
-      return false;
-    }
+  const tryLogin = async () =>
+    (async () => {
+      setProgress('login');
+      const success = await window.TraPCollectionAPI.invoke.postLauncherLogin();
+      if (success) {
+        setProgress('fetchGame');
+        await window.TraPCollectionAPI.invoke.fetchGame();
+        navigate && navigate('gameSelect');
+        return true;
+      } else {
+        setProgress('inputProductkey');
+        return false;
+      }
+    })().catch(showNetworkError);
+
+  const fetchGameProgress = async () => {
+    const progress = await window.TraPCollectionAPI.invoke.progress();
+    setDownloadFetchLog(progress);
   };
 
   useEffect(() => {
-    const fetchProductKeyAndLogin = async () => {
-      const res = await window.TraPCollectionAPI.invoke.getProductKey();
-      if (res === undefined) {
-        setNeedUserInput(true);
-      } else {
-        tryLogin(res);
-      }
-    };
-    fetchProductKeyAndLogin();
+    (async () => {
+      await tryLogin();
+    })();
+    const timerId = setInterval(fetchGameProgress, 500);
+    return () => clearInterval(timerId);
   }, []);
+
+  useEffect(() => {
+    if (isOfflineMode) {
+      navigate && navigate('gameSelect');
+    }
+  }, [isOfflineMode, navigate]);
 
   const onEnterProductKey = () => {
     if (!isValidProductKeyFormat(productKey)) {
       return;
     }
-    window.TraPCollectionAPI.invoke.setProductKey(productKey);
-    const tryLoginAndCheck = async () => {
-      const res = await tryLogin(productKey);
-      if (res === false) {
+    (async () => {
+      await window.TraPCollectionAPI.invoke.setProductKey(productKey);
+      const res = await tryLogin();
+      if (!res) {
         setInvalidProductKey(true);
       }
-    };
-    tryLoginAndCheck();
+    })();
   };
 
   const onKeyPressHandler = (e: { code: string }) => {
@@ -187,13 +204,13 @@ const TitlePage = () => {
         <CollectionLogoWrapper src={collectionLogo} />
       </TitleContainer>
       <BottomWrapper>
-        {needUserInput ? (
+        {progress === 'inputProductkey' ? (
           <>
-            <ProductKeyText $invalidProductKey={invalidProductKey}>
+            <BottomText $invalidProductKey={invalidProductKey}>
               {invalidProductKey
                 ? 'プロダクトキーが誤っています'
                 : 'プロダクトキーを入力して下さい'}
-            </ProductKeyText>
+            </BottomText>
             <ProductKeyInputWrapper>
               <ProductKeyInput
                 onKeyPress={onKeyPressHandler}
@@ -216,16 +233,21 @@ const TitlePage = () => {
               </EnterButton>
             </ProductKeyInputWrapper>
           </>
-        ) : (
+        ) : progress === 'login' ? (
           <>
-            <Loader
-              type='Oval'
-              height='60'
-              width='60'
+            <BottomText> ログインしています </BottomText>
+            <BarLoader
+              height='4px'
+              width='200px'
               color={theme.colors.button.information.fill}
             />
           </>
-        )}
+        ) : progress === 'fetchGame' ? (
+          <>
+            <BottomText> ゲームをダウンロードしています </BottomText>
+            {downloadFetchLog && <FetchLog log={downloadFetchLog} />}
+          </>
+        ) : undefined}
       </BottomWrapper>
     </Wrapper>
   );

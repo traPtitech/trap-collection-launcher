@@ -3,7 +3,6 @@ import path from 'path';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
 import { questionnaireUrl, homePageUrl } from '@/config';
-import { store } from '@/lib/store';
 
 export const openQuestionnaireHandler = async (
   window: BrowserWindow

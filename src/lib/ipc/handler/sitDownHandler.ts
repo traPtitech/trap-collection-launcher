@@ -1,6 +1,6 @@
 import { ipcMain } from '@/common/typedIpc';
 import { postSeats } from '@/lib/axios';
-import { store } from '@/lib/store';
+import store from '@/lib/store';
 
 export const sitDownHandler = (): void => {
   ipcMain.handle('sitDown', sitDown);
