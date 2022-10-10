@@ -4,9 +4,13 @@ import {
   getGameFile,
   getGameImage,
   getGameInfo,
-  getGameUrl,
   getGameVideo,
-  getVersionsCheck,
+  getEditionGames,
+  getEditionInfo,
+  getGameImages,
+  getGameVideos,
+  getGameFiles,
+  getGameMeta,
 } from '@/lib/axios';
 import progressLog from '@/lib/progressLog';
 import store from '@/lib/store';
@@ -65,34 +69,39 @@ export const fetch = async (): Promise<void> => {
     oldGameInfos.find(({ id }) => id === gameId);
 
   //versionsCheck
-  const { data: versionsCheck } = await getVersionsCheck();
+  const { data: editionInfo } = await getEditionInfo();
+  const { data: editionGames } = await getEditionGames(editionInfo.id);
 
   const apiGameInfos = await Promise.all(
-    versionsCheck.map(async ({ id }) => {
-      const { data: gameInfo } = await getGameInfo(id);
-      return gameInfo;
+    editionGames.map(async ({ id }) => {
+      const { data } = await getGameInfo(id);
+      return data;
     })
   );
 
-  //gameIdからそのゲームの最新のゲームバージョンを取得
-  const searchGameVersionId = (gameId: string) =>
-    apiGameInfos.find(({ id }) => id === gameId)?.version?.id;
-
   //アップデートが必要なgameIdの配列
   const needUpdateGameIds = await Promise.all(
-    versionsCheck.map(async (check) => {
+    editionGames.map(async (check) => {
       const { id: gameId } = check;
+
+      const executives = (await getGameFiles(gameId)).data;
+      const images = (await getGameImages(gameId)).data;
+      const videos = (await getGameVideos(gameId)).data;
+
+      const executiveCreatedAt = executives.length && executives[0].createdAt;
+      const imageCreatedAt = images.length && images[0].createdAt;
+      const videoCreatedAt = videos.length && videos[0].createdAt;
 
       const oldGameInfo = searchOldGameInfo(gameId);
       if (!oldGameInfo)
         return {
           check,
-          executive: check.type !== 'url',
-          poster: true,
-          video: check.movieUpdatedAt !== undefined,
+          executive: !!executiveCreatedAt && !check.version.url,
+          poster: !!imageCreatedAt,
+          video: !!videoCreatedAt,
         }; //新規ゲーム
 
-      const gameVersionId = searchGameVersionId(gameId);
+      const gameVersionId = check.version.id;
       if (!gameVersionId)
         return {
           check,
@@ -111,14 +120,15 @@ export const fetch = async (): Promise<void> => {
         check,
         executive:
           (!existExecutive ||
-            oldGameInfo.info.updateAt !== check.bodyUpdatedAt) &&
-          check.type !== 'url',
+            oldGameInfo.info.updateAt !== executiveCreatedAt) &&
+          !check.version.url &&
+          !!executiveCreatedAt,
         video:
-          (!existVideo ||
-            oldGameInfo.video?.updateAt !== check.movieUpdatedAt) &&
-          check.movieUpdatedAt,
+          (!existVideo || oldGameInfo.video?.updateAt !== videoCreatedAt) &&
+          !!videoCreatedAt,
         poster:
-          !existPoster || oldGameInfo.poster?.updateAt !== check.imgUpdatedAt,
+          (!existPoster || oldGameInfo.poster?.updateAt !== imageCreatedAt) &&
+          !!imageCreatedAt,
       };
     })
   );
@@ -134,7 +144,7 @@ export const fetch = async (): Promise<void> => {
     needUpdateGameIds,
     async ({ check, executive, video, poster }) => {
       const { id: gameId } = check;
-      const gameVersionId = searchGameVersionId(gameId);
+      const gameVersionId = check.version.id;
       if (!gameVersionId) return undefined;
 
       const gameDirectory = getAbsoluteGameDirectory(gameVersionId);
@@ -147,12 +157,15 @@ export const fetch = async (): Promise<void> => {
           return;
         }
 
-        const { data } = await getGameFile(gameId);
+        const { data: gameFiles } = await getGameFiles(gameId);
+        if (!gameFiles.length) return;
+        const { id: gameFileId, md5 } = gameFiles[0];
+        const { data } = await getGameFile(gameId, gameFileId);
         await unzip(
           data,
           downloadDirectory.executive,
           gameDirectory.executive,
-          check.md5,
+          md5,
           () => progressLog.add('fileDownload')
         ).catch(console.error);
 
@@ -164,7 +177,11 @@ export const fetch = async (): Promise<void> => {
           return;
         }
 
-        const { data } = await getGameImage(gameId);
+        const { data: gameImages } = await getGameImages(gameId);
+        if (!gameImages.length) return;
+
+        const { id: gameImageId } = gameImages[0];
+        const { data } = await getGameImage(gameId, gameImageId);
 
         promises.unlink(gameDirectory.poster).catch(() => {
           return;
@@ -187,8 +204,15 @@ export const fetch = async (): Promise<void> => {
         if (!video) {
           return;
         }
+
+        const { data: gameVideos } = await getGameVideos(gameId);
+        if (!gameVideos.length) return;
+        const { id: gameVideoId } = await gameVideos[0];
         //303リダイレクトなので型が通らない
-        const { data } = (await getGameVideo(gameId)) as { data: any };
+        const { data } = (await getGameVideo(gameId, gameVideoId)) as {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          data: any;
+        };
 
         promises.unlink(gameDirectory.video).catch(() => {
           return;
@@ -213,52 +237,66 @@ export const fetch = async (): Promise<void> => {
 
   //gameInfoを更新
   const newGameInfos: TraPCollection.GameInfo[] = await promiseSome(
-    versionsCheck,
+    editionGames,
     async (check) => {
       const apiGameInfo = apiGameInfos.find(({ id }) => id === check.id);
       if (!apiGameInfo) {
         return undefined;
       }
 
-      if (!apiGameInfo.version) return undefined;
+      const executives = (await getGameFiles(check.id)).data;
+      const images = (await getGameImages(check.id)).data;
+      const videos = (await getGameVideos(check.id)).data;
 
-      const gameDirectory = getLocalGameDirectory(apiGameInfo.version.id);
+      const executiveCreatedAt = executives.length && executives[0].createdAt;
+      const imageCreatedAt = images.length && images[0].createdAt;
+      const videoCreatedAt = videos.length && videos[0].createdAt;
+
+      const gameDirectory = getLocalGameDirectory(check.version.id);
 
       const info: TraPCollection.GameInfo['info'] = await (async () => {
-        if (check.type === 'url') {
-          const { data: url } = await getGameUrl(check.id);
-          return { type: 'url', url, updateAt: check.bodyUpdatedAt };
+        if (check.version.url) {
+          return {
+            type: 'url',
+            url: check.version.url,
+            updateAt: check.version.createdAt,
+          };
         }
 
+        const { data: gameMeta } = await getGameMeta(
+          check.id,
+          check.version.id
+        );
+
         // typeがurl以外で，かつentryPointが存在しない
-        if (!check.entryPoint) {
+        if (!gameMeta.entryPoint) {
           throw 'entryPoint is not found';
         }
 
         const entryPoint = path.join(
           gameDirectory.base,
           'dist',
-          check.entryPoint
+          gameMeta.entryPoint
         );
 
-        if (check.type === 'jar') {
+        if (gameMeta.type === 'jar') {
           return {
             type: 'jar',
             entryPoint,
-            updateAt: check.bodyUpdatedAt,
+            updateAt: String(executiveCreatedAt),
           };
         }
 
         return {
           type: 'app',
           entryPoint,
-          updateAt: check.bodyUpdatedAt,
+          updateAt: String(executiveCreatedAt),
         };
       })();
 
-      const video = check.movieUpdatedAt
+      const video = videoCreatedAt
         ? {
-            updateAt: check.movieUpdatedAt,
+            updateAt: videoCreatedAt,
             path: gameDirectory.video,
           }
         : undefined;
@@ -270,11 +308,11 @@ export const fetch = async (): Promise<void> => {
         info,
         name: apiGameInfo.name,
         poster: {
-          updateAt: check.imgUpdatedAt,
+          updateAt: String(imageCreatedAt),
           path: gameDirectory.poster,
         },
         video,
-        version: apiGameInfo.version,
+        version: check.version,
       };
     }
   );
