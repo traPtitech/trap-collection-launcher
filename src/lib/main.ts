@@ -4,8 +4,6 @@ import logger from 'electron-log';
 import updater from 'update-electron-app';
 import { detectSeated } from './utils/detectSeated';
 import { ipcMain } from '@/common/typedIpc';
-import { sitDown } from '@/lib/ipc/handler/sitDownHandler';
-import { sitUp } from '@/lib/ipc/handler/sitUpHandler';
 import ipcListener from '@/lib/ipc/ipcListener';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
