@@ -2,6 +2,7 @@ import { app, BrowserWindow, protocol } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 import logger from 'electron-log';
 import updater from 'update-electron-app';
+import { detectSeated } from './utils/detectSeated';
 import { ipcMain } from '@/common/typedIpc';
 import { sitDown } from '@/lib/ipc/handler/sitDownHandler';
 import { sitUp } from '@/lib/ipc/handler/sitUpHandler';
@@ -65,8 +66,9 @@ const createWindow = (): void => {
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
   }
-  // if (process.env.KOUDAISAI === 'true') {
-  // }
+  if (process.env.KOUDAISAI === 'true') {
+    detectSeated();
+  }
 };
 
 const gotTheLock = app.requestSingleInstanceLock();
