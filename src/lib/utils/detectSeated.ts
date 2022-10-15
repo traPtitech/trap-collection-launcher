@@ -1,11 +1,12 @@
 import { screen } from 'electron';
 import store from '@/lib/store';
 
+// if the mouse is not moved in 2 minutes, detect the player not seated.
 export const detectSeated = async (): Promise<boolean> =>
   new Promise((resolve, reject) => {
-    const fps = 5;
+    const detectPerSecond = 5;
     const timelimit = 120;
-    const counterLimit = fps * timelimit;
+    const counterLimit = detectPerSecond * timelimit;
     let counter = 0;
     let prevMousePos = screen.getCursorScreenPoint();
     let isSitDown = false;
@@ -23,5 +24,5 @@ export const detectSeated = async (): Promise<boolean> =>
         isSitDown = false;
         store.set('seated', isSitDown);
       }
-    }, 1000 / fps);
+    }, 1000 / detectPerSecond);
   });
