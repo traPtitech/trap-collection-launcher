@@ -68,19 +68,24 @@ export const diff = (
   oldGameInfos: TraPCollection.GameInfo[],
   newEditionGames: EditionGameResponse[]
 ) =>
-  newEditionGames.filter((newEditionGame) => {
-    oldGameInfos.some(
-      (oldGameInfo) => oldGameInfo.version.id === newEditionGame.version.id
-    );
-  });
+  newEditionGames.filter((newEditionGame) =>
+    oldGameInfos.every(
+      (oldGameInfo) => oldGameInfo.version.id !== newEditionGame.version.id
+    )
+  );
 
 const getFileType = (game: EditionGameResponse) => {
   if (game.version.files?.jar) return GameFileType.Jar;
   const platform = process.platform;
-  if (platform == 'win32') return GameFileType.Win32;
-  if (platform == 'darwin') return GameFileType.Darwin;
+  if (platform === 'win32') return GameFileType.Win32;
+  if (platform === 'darwin') return GameFileType.Darwin;
 };
 
+const downloadInit = async (game: EditionGameResponse) => {
+  await promises.mkdir(getAbsoluteDownloadDirectory(game.version.id).base, {
+    recursive: true,
+  });
+};
 const downloadFile = async (game: EditionGameResponse) => {
   const gameDirectory = getAbsoluteGameDirectory(game.version.id);
   const downloadDirectory = getAbsoluteDownloadDirectory(game.version.id);
@@ -154,23 +159,27 @@ const downloadVideo = async (game: EditionGameResponse) => {
 
 export const fetch = async (): Promise<void> => {
   const oldGameInfos = store.get('gameInfo');
+  console.log(oldGameInfos);
 
   const {
     data: { id: editionID },
   } = await getEditionInfo();
   const { data: newEditionGames } = await getEditionGames(editionID);
+  console.log(newEditionGames);
   const diffs = diff(oldGameInfos, newEditionGames);
+  console.log(diffs);
 
   const gameNum = diffs.length;
 
   progressLog.reset(gameNum, gameNum, gameNum);
 
   await Promise.all(
-    diffs.flatMap((game) => [
-      downloadFile(game),
-      downloadImage(game),
-      downloadVideo(game),
-    ])
+    diffs.map(async (game) => {
+      await downloadInit(game);
+      await downloadFile(game);
+      await downloadImage(game);
+      await downloadVideo(game);
+    })
   );
 
   const newGameInfos: TraPCollection.GameInfo[] = await Promise.all(
