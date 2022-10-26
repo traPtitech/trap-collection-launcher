@@ -123,18 +123,17 @@ export const getGameFile = async (gameId: string, gameFileId: string) =>
   API.GameFileApi.getGameFile(gameId, gameFileId);
 
 /**
+ * ゲームのファイルのメタ情報の取得
+ */
+export const getGameFileMeta = async (gameId: string, gameFileId: string) =>
+  API.GameFileApi.getGameFileMeta(gameId, gameFileId);
+
+/**
  * 指定したゲームIDのゲームの最新バージョンの取得
  * @param gameId string
  */
 export const getLatestGameVersion = async (gameId: string) =>
   API.GameVersionApi.getLatestGameVersion(gameId);
-
-// /**
-//  * バージョンの詳細情報の取得
-//  * @param launcherVersionId number
-//  */
-// export const getVersion = async (launcherVersionId: string) =>
-//   API.GameVersionApi.getVersion(launcherVersionId);
 
 /**
  * アクセストークンをもとにエディションの情報を取得
