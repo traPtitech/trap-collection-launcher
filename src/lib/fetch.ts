@@ -159,15 +159,12 @@ const downloadVideo = async (game: EditionGameResponse) => {
 
 export const fetch = async (): Promise<void> => {
   const oldGameInfos = store.get('gameInfo');
-  console.log(oldGameInfos);
 
   const {
     data: { id: editionID },
   } = await getEditionInfo();
   const { data: newEditionGames } = await getEditionGames(editionID);
-  console.log(newEditionGames);
   const diffs = diff(oldGameInfos, newEditionGames);
-  console.log(diffs);
 
   const gameNum = diffs.length;
 
