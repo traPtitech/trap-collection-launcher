@@ -525,7 +525,7 @@ export interface NewEdition {
    * @type {Array<string>}
    * @memberof NewEdition
    */
-  gameVersions?: Array<string>;
+  gameVersions: Array<string>;
 }
 /**
  * ゲームを新しく作成する際に必要な情報です。
@@ -618,7 +618,7 @@ export interface PatchEdition {
    * @type {string}
    * @memberof PatchEdition
    */
-  questionnaire: string;
+  questionnaire?: string;
 }
 /**
  * エディションのゲームを変更するためのリクエストです。
@@ -2689,10 +2689,6 @@ export const GameApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
 
-      // authentication EditionGameAuth required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
       // authentication TrapMemberAuth required
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -3362,7 +3358,7 @@ export const GameFileApiAxiosParamCreator = function (
      * 指定したゲームIDのゲームにファイルを作成します。 作成したゲームファイルは、1日以内にゲームバージョンと紐づけられない場合自動で削除されます。
      * @summary ゲームファイルの作成
      * @param {string} gameID ゲームのIDを示すパスパラメータです。
-     * @param {GameFileType} type
+     * @param {string} type
      * @param {string} entryPoint ゲームファイルの解凍後の実行ファイルのパスです。
      * @param {any} content ゲームの実行ファイルやデータをzipしたバイナリです。
      * @param {*} [options] Override http request option.
@@ -3370,7 +3366,7 @@ export const GameFileApiAxiosParamCreator = function (
      */
     postGameFile: async (
       gameID: string,
-      type: GameFileType,
+      type: string,
       entryPoint: string,
       content: any,
       options: any = {}
@@ -3405,13 +3401,10 @@ export const GameFileApiAxiosParamCreator = function (
         configuration.formDataCtor) ||
         FormData)();
 
-      // authentication TrapMemberAuth required
+      // authentication GameMaintainerAuth required
 
       if (type !== undefined) {
-        localVarFormParams.append(
-          'type',
-          new Blob([JSON.stringify(type)], { type: 'application/json' })
-        );
+        localVarFormParams.append('type', type as any);
       }
 
       if (entryPoint !== undefined) {
@@ -3534,7 +3527,7 @@ export const GameFileApiFp = function (configuration?: Configuration) {
      * 指定したゲームIDのゲームにファイルを作成します。 作成したゲームファイルは、1日以内にゲームバージョンと紐づけられない場合自動で削除されます。
      * @summary ゲームファイルの作成
      * @param {string} gameID ゲームのIDを示すパスパラメータです。
-     * @param {GameFileType} type
+     * @param {string} type
      * @param {string} entryPoint ゲームファイルの解凍後の実行ファイルのパスです。
      * @param {any} content ゲームの実行ファイルやデータをzipしたバイナリです。
      * @param {*} [options] Override http request option.
@@ -3542,7 +3535,7 @@ export const GameFileApiFp = function (configuration?: Configuration) {
      */
     async postGameFile(
       gameID: string,
-      type: GameFileType,
+      type: string,
       entryPoint: string,
       content: any,
       options?: any
@@ -3627,7 +3620,7 @@ export const GameFileApiFactory = function (
      * 指定したゲームIDのゲームにファイルを作成します。 作成したゲームファイルは、1日以内にゲームバージョンと紐づけられない場合自動で削除されます。
      * @summary ゲームファイルの作成
      * @param {string} gameID ゲームのIDを示すパスパラメータです。
-     * @param {GameFileType} type
+     * @param {string} type
      * @param {string} entryPoint ゲームファイルの解凍後の実行ファイルのパスです。
      * @param {any} content ゲームの実行ファイルやデータをzipしたバイナリです。
      * @param {*} [options] Override http request option.
@@ -3635,7 +3628,7 @@ export const GameFileApiFactory = function (
      */
     postGameFile(
       gameID: string,
-      type: GameFileType,
+      type: string,
       entryPoint: string,
       content: any,
       options?: any
@@ -3702,7 +3695,7 @@ export class GameFileApi extends BaseAPI {
    * 指定したゲームIDのゲームにファイルを作成します。 作成したゲームファイルは、1日以内にゲームバージョンと紐づけられない場合自動で削除されます。
    * @summary ゲームファイルの作成
    * @param {string} gameID ゲームのIDを示すパスパラメータです。
-   * @param {GameFileType} type
+   * @param {string} type
    * @param {string} entryPoint ゲームファイルの解凍後の実行ファイルのパスです。
    * @param {any} content ゲームの実行ファイルやデータをzipしたバイナリです。
    * @param {*} [options] Override http request option.
@@ -3711,7 +3704,7 @@ export class GameFileApi extends BaseAPI {
    */
   public postGameFile(
     gameID: string,
-    type: GameFileType,
+    type: string,
     entryPoint: string,
     content: any,
     options?: any
@@ -3927,7 +3920,7 @@ export const GameImageApiAxiosParamCreator = function (
         configuration.formDataCtor) ||
         FormData)();
 
-      // authentication TrapMemberAuth required
+      // authentication GameMaintainerAuth required
 
       if (content !== undefined) {
         localVarFormParams.append('content', content as any);
@@ -5094,7 +5087,7 @@ export const GameVideoApiAxiosParamCreator = function (
         configuration.formDataCtor) ||
         FormData)();
 
-      // authentication TrapMemberAuth required
+      // authentication GameMaintainerAuth required
 
       if (content !== undefined) {
         localVarFormParams.append('content', content as any);
@@ -5724,6 +5717,10 @@ export const SeatApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
 
+      // authentication EditionAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
       // authentication TrapMemberAuth required
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -5780,6 +5777,10 @@ export const SeatApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
 
+      // authentication EditionAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
       // authentication TrapMemberAuth required
 
       localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -5804,7 +5805,7 @@ export const SeatApiAxiosParamCreator = function (
       };
     },
     /**
-     * 席数を変更します。
+     * 席数を変更します。 既に存在していた席(例:20席から100席への変更ならidが1~20の席、100席から20席ならidが1~20の席)の 着席状態は変更されず、そのまま保持されます。
      * @summary 席数の変更
      * @param {PostSeatRequest} postSeatRequest
      * @param {*} [options] Override http request option.
@@ -5914,7 +5915,7 @@ export const SeatApiFp = function (configuration?: Configuration) {
       );
     },
     /**
-     * 席数を変更します。
+     * 席数を変更します。 既に存在していた席(例:20席から100席への変更ならidが1~20の席、100席から20席ならidが1~20の席)の 着席状態は変更されず、そのまま保持されます。
      * @summary 席数の変更
      * @param {PostSeatRequest} postSeatRequest
      * @param {*} [options] Override http request option.
@@ -5980,7 +5981,7 @@ export const SeatApiFactory = function (
         .then((request) => request(axios, basePath));
     },
     /**
-     * 席数を変更します。
+     * 席数を変更します。 既に存在していた席(例:20席から100席への変更ならidが1~20の席、100席から20席ならidが1~20の席)の 着席状態は変更されず、そのまま保持されます。
      * @summary 席数の変更
      * @param {PostSeatRequest} postSeatRequest
      * @param {*} [options] Override http request option.
@@ -6037,7 +6038,7 @@ export class SeatApi extends BaseAPI {
   }
 
   /**
-   * 席数を変更します。
+   * 席数を変更します。 既に存在していた席(例:20席から100席への変更ならidが1~20の席、100席から20席ならidが1~20の席)の 着席状態は変更されず、そのまま保持されます。
    * @summary 席数の変更
    * @param {PostSeatRequest} postSeatRequest
    * @param {*} [options] Override http request option.

@@ -52,9 +52,12 @@ const API = {
   EditionAuthApi: new EditionAuthApi(config, baseUrl, axiosInstance),
   GameApi: new GameApi(config, baseUrl, axiosInstance),
   GameVersionApi: new GameVersionApi(config, baseUrl, axiosInstance),
-  GameFileApi: new GameFileApi(config, baseUrl, axiosStreamInstance),
-  GameImageApi: new GameImageApi(config, baseUrl, axiosStreamInstance),
-  GameVideoApi: new GameVideoApi(config, baseUrl, axiosStreamInstance),
+  GameFileStreamApi: new GameFileApi(config, baseUrl, axiosStreamInstance),
+  GameImageStreamApi: new GameImageApi(config, baseUrl, axiosStreamInstance),
+  GameVideoStreamApi: new GameVideoApi(config, baseUrl, axiosStreamInstance),
+  GameFileApi: new GameFileApi(config, baseUrl, axiosInstance),
+  GameImageApi: new GameImageApi(config, baseUrl, axiosInstance),
+  GameVideoApi: new GameVideoApi(config, baseUrl, axiosInstance),
   SeatApi: new SeatApi(config, baseUrl, axiosInstance),
 };
 
@@ -92,7 +95,7 @@ export const getGameImages = async (gameId: string) =>
  * @param gameId string
  */
 export const getGameImage = async (gameId: string, gameImageId: string) =>
-  API.GameImageApi.getGameImage(gameId, gameImageId);
+  API.GameImageStreamApi.getGameImage(gameId, gameImageId);
 
 /**
  * ゲーム動画一覧の取得
@@ -106,7 +109,7 @@ export const getGameVideos = async (gameId: string) =>
  * @param gameId string
  */
 export const getGameVideo = async (gameId: string, gameVideoId: string) =>
-  API.GameVideoApi.getGameVideo(gameId, gameVideoId);
+  API.GameVideoStreamApi.getGameVideo(gameId, gameVideoId);
 
 /**
  * ゲームのファイル一覧の取得
@@ -120,7 +123,7 @@ export const getGameFiles = async (gameId: string) =>
  * @param gameId string
  */
 export const getGameFile = async (gameId: string, gameFileId: string) =>
-  API.GameFileApi.getGameFile(gameId, gameFileId);
+  API.GameFileStreamApi.getGameFile(gameId, gameFileId);
 
 /**
  * ゲームのファイルのメタ情報の取得
