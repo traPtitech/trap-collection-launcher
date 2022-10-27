@@ -25,17 +25,20 @@ export const launchHandler = async (
     }
 
     const cp = launch[platform](target);
+    window.minimize();
 
     if (cp instanceof BrowserWindow) {
       launchedGames.add(cp);
       cp.on('close', () => {
         launchedGames.remove(cp);
+        window.maximize();
       });
       return;
     }
     launchedGames.add(cp);
     cp.on('close', () => {
       launchedGames.remove(cp);
+      window.maximize();
     });
   });
 };
