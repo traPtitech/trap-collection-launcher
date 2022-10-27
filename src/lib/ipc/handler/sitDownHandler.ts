@@ -1,5 +1,5 @@
 import { ipcMain } from '@/common/typedIpc';
-import { postSeats } from '@/lib/axios';
+import { patchSeatInUse } from '@/lib/axios';
 import store from '@/lib/store';
 
 export const sitDownHandler = (): void => {
@@ -15,6 +15,6 @@ export const sitDown = async (): Promise<void> => {
   if (!seatVersionId) {
     throw 'seat version id is not setted';
   }
-  await postSeats(seatId, seatVersionId);
+  await patchSeatInUse(seatId);
   return;
 };

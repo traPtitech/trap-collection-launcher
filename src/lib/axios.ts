@@ -3,10 +3,15 @@ import axios from 'axios';
 import store from './store';
 import { baseUrl } from '@/config';
 import {
-  LauncherAuthApi,
+  EditionApi,
+  EditionAuthApi,
   GameApi,
-  VersionApi,
+  GameVersionApi,
+  GameFileApi,
+  GameImageApi,
+  GameVideoApi,
   SeatApi,
+  SeatStatus,
   Configuration,
 } from '@/lib/typescript-axios/index';
 
@@ -43,10 +48,13 @@ axiosStreamInstance.interceptors.request.use(
 const config = new Configuration({ basePath: baseUrl });
 
 const API = {
-  LauncherAuthApi: new LauncherAuthApi(config, baseUrl, axiosInstance),
+  EditionApi: new EditionApi(config, baseUrl, axiosInstance),
+  EditionAuthApi: new EditionAuthApi(config, baseUrl, axiosInstance),
   GameApi: new GameApi(config, baseUrl, axiosInstance),
-  GameStreamApi: new GameApi(config, baseUrl, axiosStreamInstance),
-  VersionApi: new VersionApi(config, baseUrl, axiosInstance),
+  GameVersionApi: new GameVersionApi(config, baseUrl, axiosInstance),
+  GameFileApi: new GameFileApi(config, baseUrl, axiosStreamInstance),
+  GameImageApi: new GameImageApi(config, baseUrl, axiosStreamInstance),
+  GameVideoApi: new GameVideoApi(config, baseUrl, axiosStreamInstance),
   SeatApi: new SeatApi(config, baseUrl, axiosInstance),
 };
 
@@ -55,7 +63,7 @@ const API = {
  * @param key string
  */
 export const postLauncherLogin = async (key: string) =>
-  API.LauncherAuthApi.postLauncherLogin({ key });
+  API.EditionAuthApi.postEditionAuthorize({ key });
 
 /**
  * ゲーム情報の取得
@@ -65,60 +73,91 @@ export const getGameInfo = async (gameId: string) =>
   API.GameApi.getGame(gameId);
 
 /**
+ * 指定したゲームファイルIDのゲームファイルの取得
+ * @param gameId string
+ * @param gameFileId string
+ */
+export const getGameMeta = async (gameId: string, gameFileId: string) =>
+  API.GameFileApi.getGameFileMeta(gameId, gameFileId);
+
+/**
+ * ゲーム画像一覧の取得
+ * @param gameId string
+ */
+export const getGameImages = async (gameId: string) =>
+  API.GameImageApi.getGameImages(gameId);
+
+/**
  * ゲーム画像の取得
  * @param gameId string
  */
-export const getGameImage = async (gameId: string) =>
-  API.GameStreamApi.getImage(gameId);
+export const getGameImage = async (gameId: string, gameImageId: string) =>
+  API.GameImageApi.getGameImage(gameId, gameImageId);
+
+/**
+ * ゲーム動画一覧の取得
+ * @param gameId string
+ */
+export const getGameVideos = async (gameId: string) =>
+  API.GameVideoApi.getGameVideos(gameId);
 
 /**
  * ゲーム動画の取得
  * @param gameId string
  */
-export const getGameVideo = async (gameId: string) =>
-  API.GameStreamApi.getVideo(gameId);
+export const getGameVideo = async (gameId: string, gameVideoId: string) =>
+  API.GameVideoApi.getGameVideo(gameId, gameVideoId);
 
 /**
- * ゲームの最新バージョンのファイルの取得
+ * ゲームのファイル一覧の取得
  * @param gameId string
  */
-export const getGameFile = async (gameId: string) =>
-  API.GameStreamApi.getGameFile(gameId, process.platform);
+export const getGameFiles = async (gameId: string) =>
+  API.GameFileApi.getGameFiles(gameId);
 
 /**
- * ゲームの最新バージョンのURLの取得
+ * ゲームのファイルの取得
  * @param gameId string
  */
-export const getGameUrl = async (gameId: string) =>
-  API.GameApi.getGameURL(gameId);
+export const getGameFile = async (gameId: string, gameFileId: string) =>
+  API.GameFileApi.getGameFile(gameId, gameFileId);
 
 /**
- * バージョンの詳細情報の取得
- * @param launcherVersionId number
+ * ゲームのファイルのメタ情報の取得
  */
-export const getVersion = async (launcherVersionId: string) =>
-  API.VersionApi.getVersion(launcherVersionId);
+export const getGameFileMeta = async (gameId: string, gameFileId: string) =>
+  API.GameFileApi.getGameFileMeta(gameId, gameFileId);
+
+/**
+ * 指定したゲームIDのゲームの最新バージョンの取得
+ * @param gameId string
+ */
+export const getLatestGameVersion = async (gameId: string) =>
+  API.GameVersionApi.getLatestGameVersion(gameId);
+
+/**
+ * アクセストークンをもとにエディションの情報を取得
+ */
+export const getEditionInfo = async () => API.EditionAuthApi.getEditionInfo();
 
 /**
  * ブラウザゲーム以外のゲームのID、MD5、ゲームの種類、更新日の一覧
  */
-export const getVersionsCheck = async () =>
-  API.VersionApi.getCheckList(process.platform);
+export const getEditionGames = async (editionId: string) =>
+  API.EditionApi.getEditionGames(editionId);
 
 /**
  * 着席
  * @param seatId number
  * @param seatVersionId number
  */
-export const postSeats = async (seatId: number, seatVersionId: number) =>
-  API.SeatApi.postSeat({ seatId, seatVersionId });
+export const patchSeatInUse = async (seatId: number) =>
+  API.SeatApi.patchSeatStatus(seatId, { status: SeatStatus.InUse });
 
 /**
  * 離席
  * @param seatId number
  * @param seatVersionId number
  */
-export const deleteSeats = async (seatId: number, seatVersionId: number) =>
-  API.SeatApi.deleteSeat({ seatId, seatVersionId });
-
-export const getLauncherMe = async () => API.LauncherAuthApi.getLauncherMe();
+export const patchSeatEmpty = async (seatId: number) =>
+  API.SeatApi.patchSeatStatus(seatId, { status: SeatStatus.Empty });
