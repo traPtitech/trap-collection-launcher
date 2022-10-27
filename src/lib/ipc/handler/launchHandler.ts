@@ -2,6 +2,7 @@ import childProcess from 'child_process';
 import path from 'path';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
+import launchedGames from '@/lib/launchedGames';
 import store from '@/lib/store';
 import { generateAbsolutePath } from '@/lib/utils/generatePaths';
 
@@ -23,27 +24,73 @@ export const launchHandler = async (
       return;
     }
 
-    launch[platform](target);
+    const cp = launch[platform](target);
+
+    if (cp instanceof BrowserWindow) {
+      launchedGames.add(cp);
+      cp.on('close', () => {
+        launchedGames.remove(cp);
+      });
+      return;
+    }
+    launchedGames.add(cp);
+    cp.on('close', () => {
+      launchedGames.remove(cp);
+    });
   });
 };
 
 export default launchHandler;
 
+const getEntryPointDirname = (versionId: string, entryPoint: string) => {
+  const abs = generateAbsolutePath(
+    path.join('games', versionId, 'dist', entryPoint)
+  );
+  return path.dirname(abs);
+};
+
+const launchBrowserApp = (url: string) => {
+  // Create the browser window.
+  const gameWindow = new BrowserWindow({
+    height: 720,
+    width: 1280,
+    minHeight: 720,
+    minWidth: 1280,
+    // fullscreen: true,
+    webPreferences: {
+      // webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
+      preload: process.env.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+    },
+    show: false,
+  });
+
+  // and load the index.html of the app.
+  gameWindow.loadURL(url);
+  gameWindow.once('ready-to-show', () => {
+    gameWindow.show();
+    gameWindow.maximize();
+  });
+  gameWindow.setMenu(null);
+  return gameWindow;
+};
+
 const launch: Record<
   TraPCollection.Platform,
-  (gameInfo: TraPCollection.GameInfo) => childProcess.ChildProcess
+  (
+    gameInfo: TraPCollection.GameInfo
+  ) => childProcess.ChildProcess | BrowserWindow
 > = {
   win32: (gameInfo) => {
     switch (gameInfo.info.type) {
       case 'url':
-        return childProcess.spawn(`cmd`, [
-          '/C',
-          `start /wait ${gameInfo.info.url}`,
-        ]);
+        return launchBrowserApp(gameInfo.info.url);
       case 'app': {
         return childProcess.spawn(path.basename(gameInfo.info.entryPoint), {
           stdio: 'ignore',
-          cwd: path.dirname(generateAbsolutePath(gameInfo.info.entryPoint)),
+          cwd: getEntryPointDirname(
+            gameInfo.version.id,
+            gameInfo.info.entryPoint
+          ),
         });
       }
       case 'jar':
@@ -52,7 +99,10 @@ const launch: Record<
           ['-jar', path.basename(gameInfo.info.entryPoint)],
           {
             stdio: 'ignore',
-            cwd: path.dirname(generateAbsolutePath(gameInfo.info.entryPoint)),
+            cwd: getEntryPointDirname(
+              gameInfo.version.id,
+              gameInfo.info.entryPoint
+            ),
           }
         );
     }
@@ -60,16 +110,30 @@ const launch: Record<
   darwin: (gameInfo) => {
     switch (gameInfo.info.type) {
       case 'url':
-        return childProcess.spawn('open', ['-W', gameInfo.info.url]);
+        return launchBrowserApp(gameInfo.info.url);
       case 'app':
         return childProcess.spawn('open', [
           '-W',
-          generateAbsolutePath(gameInfo.info.entryPoint),
+          generateAbsolutePath(
+            path.join(
+              'games',
+              gameInfo.version.id,
+              'dist',
+              gameInfo.info.entryPoint
+            )
+          ),
         ]);
       case 'jar':
         return childProcess.spawn('open', [
           '-W',
-          generateAbsolutePath(gameInfo.info.entryPoint),
+          generateAbsolutePath(
+            path.join(
+              'games',
+              gameInfo.version.id,
+              'dist',
+              gameInfo.info.entryPoint
+            )
+          ),
         ]);
     }
   },

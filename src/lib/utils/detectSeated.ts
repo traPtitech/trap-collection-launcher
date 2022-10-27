@@ -1,5 +1,6 @@
 import { screen } from 'electron';
 import { patchSeatEmpty, patchSeatInUse } from '../axios';
+import launchedGames from '../launchedGames';
 import store from '@/lib/store';
 
 // if the mouse is not moved in 2 minutes, detect the player not seated.
@@ -25,7 +26,11 @@ export const detectSeated = () => {
 
   setInterval(() => {
     const mousePos = screen.getCursorScreenPoint();
-    if (prevMousePos.x !== mousePos.x || prevMousePos.y !== mousePos.y) {
+    if (
+      prevMousePos.x !== mousePos.x ||
+      prevMousePos.y !== mousePos.y ||
+      launchedGames.get().size > 0
+    ) {
       counter = 0;
       prevMousePos = mousePos;
       mutateSitDown(true);

@@ -3,13 +3,14 @@ servers:
   - url: https://collection.trap.jp/api/v2
   - url: https://collection-dev.trapti.tech/api/v2
   - url: http://localhost:3000/api/v2
+  - url: /api/v2 #oapi-codegenでproxy後にもmatchできるようにするため必要
 info:
-  description: "traP Collection v2"
-  version: "2.0.0"
-  title: "traP Collection v2"
+  description: 'traP Collection v2'
+  version: '2.0.0'
+  title: 'traP Collection v2'
   contact:
     name: traP
-    url: "https://github.com/traPtitech/trap-collection-server"
+    url: 'https://github.com/traPtitech/trap-collection-server'
 tags:
   - name: oauth2
     description: |
@@ -52,7 +53,7 @@ paths:
   # oauth2
   /oauth2/callback:
     parameters:
-      - $ref: "#/components/parameters/authorizationCodeInQuery"
+      - $ref: '#/components/parameters/authorizationCodeInQuery'
     get:
       tags:
         - oauth2
@@ -67,13 +68,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             セッション、またはAuthorization Codeになんらかの誤りがあり、
             認証に失敗した場合に返されます。
             誤りの内容はレスポンスのmessageに出力されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: traQのOAuth 2.0のコールバック
       description: |
         traQ上での認証後にtraQから
@@ -88,7 +89,7 @@ paths:
         "303":
           headers:
             Set-Cookie:
-              schema:
+              schema: 
                 type: string
                 example: sessions=abcd1234; Path=/; Expires=Wed, 04 May 2022 16:24:11 GMT; Max-Age=2592000; HttpOnly; Secure
             Location:
@@ -99,7 +100,7 @@ paths:
             セッションの設定などに成功した場合に返されます。
             traQの認可ページにリダイレクトされます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: OAuth 2.0のCode Verifierなどのセッションへの設定とtraQへのリダイレクト
       description: |
         OAuth 2.0を利用しての認証に必要なPKCEのCode Verifierを生成し、
@@ -120,15 +121,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             セッションになんらかの誤りがあり、
             認証に失敗した場合に返されます。
             誤りの内容はレスポンスのmessageに出力されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: traP Collectionの管理画面からのログアウト
       description: |
         traP Collectionの管理画面からログアウトします。
@@ -147,14 +148,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: '#/components/schemas/User'
           description: |
             自分の情報の取得に成功した際に返されます。
             レスポンスでログインしているユーザーの情報が返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ログイン中ユーザーの情報の取得
       description: |
         ログイン中のユーザーの情報を取得します。
@@ -173,11 +174,11 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
+                  $ref: '#/components/schemas/User'
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: traPのメンバー一覧取得
       description: |
         traPのアクティブメンバーの一覧を取得します。
@@ -194,7 +195,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserRequest"
+              $ref: '#/components/schemas/UserRequest'
       responses:
         "200":
           content:
@@ -202,7 +203,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
+                  $ref: '#/components/schemas/User'
           description: |
             traP Collection全体の管理者の追加に成功した際に返されます。
             レスポンスで変更後のtraP Collection全体の管理者一覧が返されます。
@@ -210,14 +211,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストの形式が正しくない、または、
             ユーザーIDに対応するユーザーが存在しない場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: traP Collection全体の管理者追加
       description: |
         traP Collection全体の管理者を追加します。
@@ -235,20 +236,20 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
+                  $ref: '#/components/schemas/User'
           description: |
             traP Collection全体の管理者一覧の取得に成功した際に返されます。
             レスポンスでtraP Collection全体の管理者の一覧が返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: traPの管理者一覧取得
       description: |
         traP Collection全体の管理者の一覧を取得します。
   /admins/{userID}:
     parameters:
-      - $ref: "#/components/parameters/userIDInPath"
+      - $ref: '#/components/parameters/userIDInPath'
     delete:
       tags:
         - admin
@@ -262,7 +263,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
+                  $ref: '#/components/schemas/User'
           description: |
             traP Collection全体の管理者の削除に成功した際に返されます。
             レスポンスで変更後のtraP Collection全体の管理者一覧が返されます。
@@ -270,14 +271,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストの形式が正しくない、または、
             ユーザーIDに対応するユーザーが存在しない場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: traP Collection全体の管理者削除
       description: |
         traP Collection全体の管理者を削除します。
@@ -295,20 +296,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/NewGame"
+              $ref: '#/components/schemas/NewGame'
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Game"
+                $ref: '#/components/schemas/Game'
           description: |
             ゲームの追加に成功した際に返されます。
             レスポンスで新しく追加されたゲームの情報が返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームの追加
       description: |
         新しくゲームを追加します。
@@ -353,34 +354,33 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetGamesResponse"
+                $ref: '#/components/schemas/GetGamesResponse'
           description: |
             ゲームの一覧の取得に成功した際に返されます。
             レスポンスで取得したゲームの一覧と条件を満たすゲームの数が返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲーム一覧の取得
       description: |
         ゲームの一覧を取得します。
         作成時刻での降順で結果が返されます。
   /games/{gameID}:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
     get:
       tags:
         - game
       security:
         - TrapMemberAuth: []
-        - EditionGameAuth: []
       operationId: getGame
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Game"
+                $ref: '#/components/schemas/Game'
           description: |
             ゲームの情報の取得に成功した際に返されます。
             レスポンスで取得したゲームの情報が返されます。
@@ -388,14 +388,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             ゲームIDが不正な値である場合に返されます。
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             traQのOAuth 2.0による認証が通過できない、かつ、
             ランチャー用のアクセストークンによるBearer認証も通過できない場合に返されます。
@@ -403,11 +403,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲーム情報の取得
       description: |
         指定したゲームIDのゲームの情報を取得します。
@@ -421,13 +421,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PatchGame"
+              $ref: '#/components/schemas/PatchGame'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GameInfo"
+                $ref: '#/components/schemas/GameInfo'
           description: |
             ゲームの情報の修正に成功した際に返されます。
             レスポンスで修正後のゲームの情報が返されます。
@@ -435,27 +435,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             ゲームID、またはリクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             このゲームのmaintainer、ownerのどちらでもない場合に返されます。
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームの情報の変更
       description: |
         指定したゲームIDのゲームの情報を修正します。
@@ -473,27 +473,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             ゲームIDが不正な値である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             このゲームのownerでない場合に返されます。
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームの削除
       description: |
         指定したゲームIDのゲームを削除します。
@@ -501,7 +501,7 @@ paths:
   # gameRole
   /games/{gameID}/roles:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
     patch:
       tags:
         - gameRole
@@ -512,13 +512,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GameRoleRequest"
+              $ref: '#/components/schemas/GameRoleRequest'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Game"
+                $ref: '#/components/schemas/Game'
           description: |
             ゲームの管理権限の変更に成功した際に返されます。
             レスポンスで変更後のowner、maintainerを含むゲーム情報が返されます。
@@ -526,28 +526,29 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             ゲームID、またはリクエストが不正である場合に返されます。
             既にmaintainerまたはownerとなっているユーザーが含まれる場合にも返されます。
+            一人しかいないownerがmaintainerに変更されようとしている場合にも返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             このゲームのownerでない場合に返されます。
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームの管理権限の変更
       description: |
         指定したゲームIDのゲームの管理者を追加します。
@@ -555,8 +556,8 @@ paths:
         指定された権限で権限を上書きします。
   /games/{gameID}/roles/{userID}:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
-      - $ref: "#/components/parameters/userIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
+      - $ref: '#/components/parameters/userIDInPath'
     delete:
       tags:
         - gameRole
@@ -568,7 +569,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Game"
+                $ref: '#/components/schemas/Game'
           description: |
             ゲームの管理権限の変更に成功した際に返されます。
             レスポンスで変更後のowner、maintainerを含むゲーム情報が返されます。
@@ -576,28 +577,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             ゲームID、またはリクエストが不正である場合に返されます。
             削除によりゲームにownerが存在しなくなる場合にも返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             このゲームのownerでない場合に返されます。
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームの管理権限の削除
       description: |
         指定したゲームIDのゲームの管理権限を削除します。
@@ -607,7 +608,7 @@ paths:
   # gameVersion
   /games/{gameID}/versions:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
     post:
       tags:
         - gameVersion
@@ -618,13 +619,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/NewGameVersion"
+              $ref: '#/components/schemas/NewGameVersion'
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GameVersion"
+                $ref: '#/components/schemas/GameVersion'
           description: |
             ゲームのバージョンの作成に成功した際に返されます。
             レスポンスで作成したゲームのバージョンが返されます。
@@ -632,28 +633,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             ゲームID、またはリクエストが不正である場合に返されます。
             ゲームファイルの種類とwindows,darwin,jarの対応が誤っている場合もこのエラーとなります。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             このゲームのmaintainer、ownerのどちらでもない場合に返されます。
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームのバージョンの作成
       description: |
         指定したゲームIDのゲームにバージョンを作成します。
@@ -687,7 +688,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetGameVersionsResponse"
+                $ref: '#/components/schemas/GetGameVersionsResponse'
           description: |
             ゲームバージョン一覧の取得に成功した際に返されます。
             レスポンスで取得したゲームバージョンの一覧が返されます。
@@ -695,27 +696,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             ゲームIDが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームバージョン一覧の取得
       description: |
         指定したゲームIDのゲームのバージョン一覧を取得します。
         作成時刻での降順で結果が返されます。
   /games/{gameID}/versions/latest:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
     get:
       tags:
         - gameVersion
@@ -727,7 +728,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GameVersion"
+                $ref: '#/components/schemas/GameVersion'
           description: |
             ゲームの最新バージョンの取得に成功した際に返されます。
             レスポンスで取得したゲームの最新バージョンが返されます。
@@ -735,21 +736,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             ゲームIDが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
             また、API v1で追加され、バージョンが存在しないゲームであった場合にも返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームの最新バージョンの取得
       description: |
         指定したゲームIDのゲームの最新バージョンを取得します。
@@ -757,24 +758,24 @@ paths:
   # gameFile
   /games/{gameID}/files:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
     post:
       tags:
         - gameFile
       security:
-        - TrapMemberAuth: []
+        - GameMaintainerAuth: []
       operationId: postGameFile
       requestBody:
         content:
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/NewGameFile"
+              $ref: '#/components/schemas/NewGameFile'
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GameFile"
+                $ref: '#/components/schemas/GameFile'
           description: |
             ゲームファイルの作成に成功した際に返されます。
             レスポンスで作成したゲームファイルのメタ情報が返されます。
@@ -782,20 +783,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームファイルの作成
       description: |
         指定したゲームIDのゲームにファイルを作成します。
@@ -813,7 +814,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/GameFile"
+                  $ref: '#/components/schemas/GameFile'
           description: |
             ゲームファイルの取得に成功した際に返されます。
             アップロード済みゲームファイルのメタ情報一覧が降順で返されます。
@@ -821,28 +822,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームファイル一覧の取得
       description: |
         指定したゲームIDのゲームのアップロード済みファイル一覧を返します。
         ゲームバージョンと紐づけられていないファイルも含まれる点に注意。
   /games/{gameID}/files/{gameFileID}:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
-      - $ref: "#/components/parameters/gameFileIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
+      - $ref: '#/components/parameters/gameFileIDInPath'
     get:
       tags:
         - gameFile
@@ -855,7 +856,7 @@ paths:
           content:
             application/octet-stream:
               schema:
-                $ref: "#/components/schemas/GameFileContent"
+                $ref: '#/components/schemas/GameFileContent'
           description: |
             ゲームファイルの取得に成功した際に返されます。
             レスポンスで取得したゲームファイルのバイナリが返されます。
@@ -863,14 +864,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             ファイルIDが不正である場合に返されます。
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             traQのOAuth 2.0認証を通過できず、かつ、
             ランチャー用のアクセストークンによるBearer認証を通過できない、
@@ -879,18 +880,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームファイルが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームファイルのバイナリの取得
       description: |
         指定したゲームファイルIDのゲームファイルを取得します。
   /games/{gameID}/files/{gameFileID}/meta:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
-      - $ref: "#/components/parameters/gameFileIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
+      - $ref: '#/components/parameters/gameFileIDInPath'
     get:
       tags:
         - gameFile
@@ -903,7 +904,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GameFile"
+                $ref: '#/components/schemas/GameFile'
           description: |
             ゲームファイルのメタ情報の取得に成功した際に返されます。
             レスポンスで取得したゲームファイルのメタ情報が返されます。
@@ -911,14 +912,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             ファイルIDが不正である場合に返されます。
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             traQのOAuth 2.0認証を通過できず、かつ、
             ランチャー用のアクセストークンによるBearer認証を通過できない、
@@ -927,11 +928,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームファイルが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲームファイルのメタ情報の取得
       description: |
         指定したゲームファイルIDのゲームファイルを取得します。
@@ -939,24 +940,24 @@ paths:
   # gameImage
   /games/{gameID}/images:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
     post:
       tags:
         - gameImage
       security:
-        - TrapMemberAuth: []
+        - GameMaintainerAuth: []
       operationId: postGameImage
       requestBody:
         content:
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/NewGameImage"
+              $ref: '#/components/schemas/NewGameImage'
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GameImage"
+                $ref: '#/components/schemas/GameImage'
           description: |
             ゲーム画像の作成に成功した際に返されます。
             レスポンスで作成したゲーム画像のメタ情報が返されます。
@@ -964,20 +965,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲーム画像の作成
       description: |
         指定したゲームIDのゲームに画像を作成します。
@@ -995,7 +996,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/GameImage"
+                  $ref: '#/components/schemas/GameImage'
           description: |
             ゲーム画像一覧の取得に成功した際に返されます。
             アップロード済みゲーム画像のメタ情報一覧が作成時刻の降順で返されます。
@@ -1003,28 +1004,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲームが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲーム画像一覧の取得
       description: |
         指定したゲームIDのアップロード済みゲーム画像一覧を返します。
         ゲームバージョンに紐づけられていないゲーム画像も含まれる点に注意。
   /games/{gameID}/images/{gameImageID}:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
-      - $ref: "#/components/parameters/gameImageIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
+      - $ref: '#/components/parameters/gameImageIDInPath'
     get:
       tags:
         - gameImage
@@ -1037,7 +1038,7 @@ paths:
           content:
             application/octet-stream:
               schema:
-                $ref: "#/components/schemas/GameImageContent"
+                $ref: '#/components/schemas/GameImageContent'
           description: |
             ゲーム画像の取得に成功した際に返されます。
             レスポンスで取得したゲーム画像のバイナリが返されます。
@@ -1045,14 +1046,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             画像IDが不正である場合に返されます。
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             traQのOAuth 2.0認証を通過できず、かつ、
             ランチャー用のアクセストークンによるBearer認証を通過できない、
@@ -1061,18 +1062,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲーム画像が存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲーム画像のバイナリの取得
       description: |
         指定したゲーム画像IDのゲーム画像を取得します。
   /games/{gameID}/images/{gameImageID}/meta:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
-      - $ref: "#/components/parameters/gameImageIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
+      - $ref: '#/components/parameters/gameImageIDInPath'
     get:
       tags:
         - gameImage
@@ -1085,7 +1086,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GameImage"
+                $ref: '#/components/schemas/GameImage'
           description: |
             ゲーム画像のメタ情報の取得に成功した際に返されます。
             レスポンスで取得したゲーム画像のメタ情報が返されます。
@@ -1093,14 +1094,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             画像IDが不正である場合に返されます。
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             traQのOAuth 2.0認証を通過できず、かつ、
             ランチャー用のアクセストークンによるBearer認証を通過できない、
@@ -1109,11 +1110,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲーム画像が存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲーム画像のメタ情報の取得
       description: |
         指定したゲーム画像IDのゲーム画像のメタ情報を取得します。
@@ -1121,24 +1122,24 @@ paths:
   # gameVideo
   /games/{gameID}/videos:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
     post:
       tags:
         - gameVideo
       security:
-        - TrapMemberAuth: []
+        - GameMaintainerAuth: []
       operationId: postGameVideo
       requestBody:
         content:
           multipart/form-data:
             schema:
-              $ref: "#/components/schemas/NewGameVideo"
+              $ref: '#/components/schemas/NewGameVideo'
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GameVideo"
+                $ref: '#/components/schemas/GameVideo'
           description: |
             ゲーム動画の作成に成功した際に返されます。
             レスポンスで作成したゲーム動画のメタ情報が返されます。
@@ -1146,20 +1147,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲーム動画が存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲーム動画の作成
       description: |
         指定したゲームIDのゲームに動画を作成します。
@@ -1177,7 +1178,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/GameVideo"
+                  $ref: '#/components/schemas/GameVideo'
           description: |
             ゲーム動画の一覧取得に成功した際に返されます。
             アップロード済みゲーム動画のメタ情報一覧が作成時刻の降順で返されます。
@@ -1185,28 +1186,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲーム動画が存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲーム動画一覧の取得
       description: |
         指定したゲームIDのゲームのアップロード済み動画一覧を取得します。
         ゲームバージョンに紐づけられていなくても一覧に含まれる点に注意。
   /games/{gameID}/videos/{gameVideoID}:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
-      - $ref: "#/components/parameters/gameVideoIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
+      - $ref: '#/components/parameters/gameVideoIDInPath'
     get:
       tags:
         - gameVideo
@@ -1219,7 +1220,7 @@ paths:
           content:
             application/octet-stream:
               schema:
-                $ref: "#/components/schemas/GameVideoContent"
+                $ref: '#/components/schemas/GameVideoContent'
           description: |
             ゲーム動画の取得に成功した際に返されます。
             レスポンスで取得したゲーム動画のバイナリが返されます。
@@ -1227,14 +1228,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             動画IDが不正である場合に返されます。
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             traQのOAuth 2.0認証を通過できず、かつ、
             ランチャー用のアクセストークンによるBearer認証を通過できない、
@@ -1243,18 +1244,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲーム動画が存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲーム動画のバイナリの取得
       description: |
         指定したゲーム動画IDのゲーム動画を取得します。
   /games/{gameID}/videos/{gameVideoID}/meta:
     parameters:
-      - $ref: "#/components/parameters/gameIDInPath"
-      - $ref: "#/components/parameters/gameVideoIDInPath"
+      - $ref: '#/components/parameters/gameIDInPath'
+      - $ref: '#/components/parameters/gameVideoIDInPath'
     get:
       tags:
         - gameVideo
@@ -1267,7 +1268,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GameVideo"
+                $ref: '#/components/schemas/GameVideo'
           description: |
             ゲーム動画のメタ情報の取得に成功した際に返されます。
             レスポンスで取得したゲーム動画のメタ情報が返されます。
@@ -1275,14 +1276,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             動画IDが不正である場合に返されます。
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             traQのOAuth 2.0認証を通過できず、かつ、
             ランチャー用のアクセストークンによるBearer認証を通過できない、
@@ -1291,11 +1292,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのゲーム動画が存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ゲーム動画のメタ情報の取得
       description: |
         指定したゲーム動画IDのゲーム動画のメタ情報を取得します。
@@ -1312,13 +1313,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/NewEdition"
+              $ref: '#/components/schemas/NewEdition'
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Edition"
+                $ref: '#/components/schemas/Edition'
           description: |
             エディションの作成に成功した際に返されます。
             レスポンスで作成したエディションのメタ情報が返されます。
@@ -1326,15 +1327,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
-          $ref: "#/components/responses/AdminForbidden"
+          $ref: '#/components/responses/AdminForbidden'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: エディションの作成
       description: |
         エディションを作成します。
@@ -1351,7 +1352,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Edition"
+                  $ref: '#/components/schemas/Edition'
           description: |
             エディションの取得に成功した際に返されます。
             レスポンスで取得したエディションのリストが返されます。
@@ -1359,19 +1360,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: エディション一覧の取得
       description: |
         エディションの一覧を取得します。
   /editions/{editionID}:
     parameters:
-      - $ref: "#/components/parameters/editionIDInPath"
+      - $ref: '#/components/parameters/editionIDInPath'
     get:
       tags:
         - edition
@@ -1383,7 +1384,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Edition"
+                $ref: '#/components/schemas/Edition'
           description: |
             エディションの取得に成功した際に返されます。
             レスポンスで取得したエディションのメタ情報が返されます。
@@ -1391,20 +1392,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのエディションが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: エディション情報の取得
       description: |
         指定したeditionIDのエディションのメタ情報を取得します。
@@ -1418,13 +1419,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PatchEdition"
+              $ref: '#/components/schemas/PatchEdition'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Edition"
+                $ref: '#/components/schemas/Edition'
           description: |
             エディションの変更に成功した際に返されます。
             レスポンスで変更したエディションのメタ情報が返されます。
@@ -1432,22 +1433,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
-          $ref: "#/components/responses/AdminForbidden"
+          $ref: '#/components/responses/AdminForbidden'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのエディションが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: エディション情報の変更
       description: |
         指定したeditionIDのエディションの情報を変更します。
@@ -1465,28 +1466,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
-          $ref: "#/components/responses/AdminForbidden"
+          $ref: '#/components/responses/AdminForbidden'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのエディションが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: エディションの削除
       description: |
         指定したエディションを削除します。
   /editions/{editionID}/games:
     parameters:
-      - $ref: "#/components/parameters/editionIDInPath"
+      - $ref: '#/components/parameters/editionIDInPath'
     patch:
       tags:
         - edition
@@ -1497,7 +1498,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PatchEditionGameRequest"
+              $ref: '#/components/schemas/PatchEditionGameRequest'
       responses:
         "200":
           content:
@@ -1505,7 +1506,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/EditionGameResponse"
+                  $ref: '#/components/schemas/EditionGameResponse'
           description: |
             エディションのゲームの変更に成功した際に返されます。
             レスポンスで変更後のエディションに紐づいたゲームとゲームバージョン一覧が返されます。
@@ -1513,15 +1514,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
-          $ref: "#/components/responses/AdminForbidden"
+          $ref: '#/components/responses/AdminForbidden'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: エディションのゲームの変更
       description: |
         エディションにゲームを追加します。
@@ -1539,7 +1540,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/EditionGameResponse"
+                  $ref: '#/components/schemas/EditionGameResponse'
           description: |
             エディションに紐づくゲームとバージョンの一覧の取得に成功した際に返されます。
             レスポンスで取得したゲームとバージョンのリストが返されます。
@@ -1547,14 +1548,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "403":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             traQのOAuth 2.0認証を通過できない、かつ、
             ランチャーのアクセストークンによるBearer認証を通過できない、
@@ -1563,11 +1564,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのエディションが存在しない、または削除されている場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: エディションに紐づくゲームの一覧の取得
       description: |
         エディションに紐づくゲームの一覧を取得します。
@@ -1575,14 +1576,14 @@ paths:
   # editionAuth
   /editions/{editionID}/keys:
     parameters:
-      - $ref: "#/components/parameters/editionIDInPath"
+      - $ref: '#/components/parameters/editionIDInPath'
     post:
       tags:
         - editionAuth
       security:
         - AdminAuth: []
       parameters:
-        - $ref: "#/components/parameters/productKeyNumInQuery"
+        - $ref: '#/components/parameters/productKeyNumInQuery'
       operationId: postProductKey
       responses:
         "201":
@@ -1591,7 +1592,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/ProductKey"
+                  $ref: '#/components/schemas/ProductKey'
           description: |
             プロダクトキーの発行に成功した際に返されます。
             レスポンスで発行したプロダクトキーのリストが返されます。
@@ -1599,15 +1600,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
-          $ref: "#/components/responses/AdminForbidden"
+          $ref: '#/components/responses/AdminForbidden'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: プロダクトキーの生成
       description: |
         ランチャーからのエディション情報取得の認可用プロダクトキーを生成します。
@@ -1617,7 +1618,7 @@ paths:
       security:
         - AdminAuth: []
       parameters:
-        - $ref: "#/components/parameters/productKeyStatusInQuery"
+        - $ref: '#/components/parameters/productKeyStatusInQuery'
       operationId: getProductKeys
       responses:
         "200":
@@ -1626,7 +1627,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/ProductKey"
+                  $ref: '#/components/schemas/ProductKey'
           description: |
             エディションに紐づくプロダクトキーの取得に成功した際に返されます。
             レスポンスで取得したプロダクトキーのリストが返されます。
@@ -1634,22 +1635,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
-          $ref: "#/components/responses/AdminForbidden"
+          $ref: '#/components/responses/AdminForbidden'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: プロダクトキーの一覧の取得
       description: |
         エディションに対するプロダクトキーの一覧を取得します。
   /editions/{editionID}/keys/{productKeyID}/activate:
     parameters:
-      - $ref: "#/components/parameters/editionIDInPath"
-      - $ref: "#/components/parameters/productKeyIDInPath"
+      - $ref: '#/components/parameters/editionIDInPath'
+      - $ref: '#/components/parameters/productKeyIDInPath'
     post:
       tags:
         - editionAuth
@@ -1661,7 +1662,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProductKey"
+                $ref: '#/components/schemas/ProductKey'
           description: |
             プロダクトキーの再有効化に成功した際に返されます。
             変更後のプロダクトキーの情報が返されます。
@@ -1669,29 +1670,29 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
-          $ref: "#/components/responses/AdminForbidden"
+          $ref: '#/components/responses/AdminForbidden'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのプロダクトキーが存在しない、または既に有効な場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: プロダクトキーの再有効化
       description: |
         エディションに対するプロダクトキーを再有効化します。
   /editions/{editionID}/keys/{productKeyID}/revoke:
     parameters:
-      - $ref: "#/components/parameters/editionIDInPath"
-      - $ref: "#/components/parameters/productKeyIDInPath"
+      - $ref: '#/components/parameters/editionIDInPath'
+      - $ref: '#/components/parameters/productKeyIDInPath'
     post:
       tags:
         - editionAuth
@@ -1703,7 +1704,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProductKey"
+                $ref: '#/components/schemas/ProductKey'
           description: |
             プロダクトキーの失効に成功した際に返されます。
             変更後のプロダクトキーの情報が返されます。
@@ -1711,22 +1712,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "403":
-          $ref: "#/components/responses/AdminForbidden"
+          $ref: '#/components/responses/AdminForbidden'
         "404":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             指定したIDのプロダクトキーが存在しない、または既に失効している場合に返されます。
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: プロダクトキーの失効
       description: |
         エディションに対するプロダクトキーを失効(revoke)します。
@@ -1740,13 +1741,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/EditionAuthorizeRequest"
+              $ref: '#/components/schemas/EditionAuthorizeRequest'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EditionAccessToken"
+                $ref: '#/components/schemas/EditionAccessToken'
           description: |
             ランチャーのエディション情報取得の認可に成功した際に返されます。
             ランチャーのBearer認証に使用するトークンが返されます。
@@ -1754,13 +1755,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "403":
-          $ref: "#/components/responses/EditionForbidden"
+          $ref: '#/components/responses/EditionForbidden'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: ランチャーの認可リクエスト
       description: |
         ランチャーのエディション情報取得の認可リクエストを行います。
@@ -1778,7 +1779,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Edition"
+                $ref: '#/components/schemas/Edition'
           description: |
             エディション情報取得に成功した際に返されます。
             エディション情報が返されます。
@@ -1786,13 +1787,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "403":
-          $ref: "#/components/responses/EditionForbidden"
+          $ref: '#/components/responses/EditionForbidden'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: エディション情報の取得
       description: |
         アクセストークンをもとにエディションの情報を取得します。
@@ -1810,7 +1811,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PostSeatRequest"
+              $ref: '#/components/schemas/PostSeatRequest'
       responses:
         "200":
           content:
@@ -1818,30 +1819,34 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Seat"
+                  $ref: '#/components/schemas/Seat'
           description: |
             席数の変更に成功した際に返されます。
             変更後の席一覧が返されます。
+            並び順は席idの昇順です。
         "400":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: 席数の変更
       description: |
         席数を変更します。
+        既に存在していた席(例:20席から100席への変更ならidが1~20の席、100席から20席ならidが1~20の席)の
+        着席状態は変更されず、そのまま保持されます。
     get:
       tags:
         - seat
       operationId: getSeats
       security:
         - TrapMemberAuth: []
+        - EditionAuth: []
       responses:
         "200":
           content:
@@ -1849,38 +1854,40 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Seat"
+                  $ref: '#/components/schemas/Seat'
           description: |
             座席一覧の取得に成功した際に返されます。
             座席一覧が返されます。
+            並び順は席idの昇順です。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: 座席一覧の取得
       description: |
         座席一覧を取得します。
   /seats/{seatID}:
     parameters:
-      - $ref: "#/components/parameters/seatIDInPath"
+      - $ref: '#/components/parameters/seatIDInPath'
     patch:
       tags:
         - seat
       operationId: patchSeatStatus
       security:
         - TrapMemberAuth: []
+        - EditionAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PatchSeatStatusRequest"
+              $ref: '#/components/schemas/PatchSeatStatusRequest'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Seat"
+                $ref: '#/components/schemas/Seat'
           description: |
             席の変更に成功した際に返されます。
             変更後の席情報が返されます。
@@ -1888,13 +1895,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
           description: |
             リクエストが不正である場合に返されます。
         "401":
-          $ref: "#/components/responses/TraPUnauthorized"
+          $ref: '#/components/responses/TraPUnauthorized'
         "500":
-          $ref: "#/components/responses/InternalServerError"
+          $ref: '#/components/responses/InternalServerError'
       summary: 席の変更
       description: |
         席の変更を行います。
@@ -1905,7 +1912,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
       description: |
         traQのOAuth 2.0での認証がされていない、
         もしくは認証したが既にセッションが切れている場合に返されます。
@@ -1913,14 +1920,14 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
       description: |
         adminでない場合に返されます。
     EditionForbidden:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
       description: |
         Bearer認証のアクセストークンが誤っている、
         もしくは既に有効期限が切れている場合に返されます。
@@ -1928,7 +1935,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: '#/components/schemas/Error'
       description: |
         何らかの予期しないエラーが発生した場合に返されます。
         このレスポンスが返された場合、サーバーのバグやインフラの障害の可能性が高いです。
@@ -1978,14 +1985,6 @@ components:
         アクセストークンが正しく、有効期限が切れていないかつ、
         editionIDを対応するエディションが一致する場合にのみアクセスできます。
         プロダクトキーがrevokeされた場合、即座に反映されます。
-    EditionGameAuth:
-      type: http
-      scheme: bearer
-      description: |
-        プロダクトキーを利用して得られるアクセストークンを利用した認証です。
-        アクセストークンから得られるエディションに、
-        ゲームIDで指定されたゲームが含まれる場合のみアクセスできます。
-        プロダクトキーがrevokeされた場合、即座に反映されます。
     EditionGameFileAuth:
       type: http
       scheme: bearer
@@ -2034,7 +2033,7 @@ components:
       in: query
       required: false
       schema:
-        $ref: "#/components/schemas/ProductKeyStatus"
+        $ref: '#/components/schemas/ProductKeyStatus'
       description: |
         プロダクトキーのステータスを示すクエリパラメータです。
         指定がない場合は全てのステータスのプロダクトキーが返されます。
@@ -2043,7 +2042,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: "#/components/schemas/UserID"
+        $ref: '#/components/schemas/UserID'
       description: |
         ユーザーIDを示すパスパラメータです。
     editionIDInPath:
@@ -2060,7 +2059,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: "#/components/schemas/GameID"
+        $ref: '#/components/schemas/GameID'
       description: |
         ゲームのIDを示すパスパラメータです。
     gameFileIDInPath:
@@ -2068,7 +2067,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: "#/components/schemas/GameFileID"
+        $ref: '#/components/schemas/GameFileID'
       description: |
         ゲームのファイルのIDを示すパスパラメータです。
     gameImageIDInPath:
@@ -2076,7 +2075,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: "#/components/schemas/GameImageID"
+        $ref: '#/components/schemas/GameImageID'
       description: |
         ゲームの画像のIDを示すパスパラメータです。
     gameVideoIDInPath:
@@ -2084,7 +2083,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: "#/components/schemas/GameVideoID"
+        $ref: '#/components/schemas/GameVideoID'
       description: |
         ゲームの動画のIDを示すパスパラメータです。
     productKeyIDInPath:
@@ -2101,7 +2100,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: "#/components/schemas/SeatID"
+        $ref: '#/components/schemas/SeatID'
       description: |
         席のIDを示すパスパラメータです。
   schemas:
@@ -2118,7 +2117,7 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/UserID"
+          $ref: '#/components/schemas/UserID'
       required:
         - id
       description: |
@@ -2134,7 +2133,7 @@ components:
         games:
           type: array
           items:
-            $ref: "#/components/schemas/GameInfo"
+            $ref: '#/components/schemas/GameInfo'
           description: |
             limit、offsetが適用された後のゲームの一覧です。
       required:
@@ -2148,9 +2147,9 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/UserID"
+          $ref: '#/components/schemas/UserID'
         type:
-          $ref: "#/components/schemas/GameRoleType"
+          $ref: '#/components/schemas/GameRoleType'
       required:
         - id
       additionalProperties: false
@@ -2166,7 +2165,7 @@ components:
         versions:
           type: array
           items:
-            $ref: "#/components/schemas/GameVersion"
+            $ref: '#/components/schemas/GameVersion'
           description: |
             limit、offsetが適用された後のゲームバージョンの一覧です。
       required:
@@ -2182,7 +2181,7 @@ components:
         gameVersionIDs:
           type: array
           items:
-            $ref: "#/components/schemas/GameVersionID"
+            $ref: '#/components/schemas/GameVersionID'
       required:
         - gameVersionIDs
       additionalProperties: false
@@ -2191,11 +2190,11 @@ components:
     EditionGameResponse:
       type: object
       allOf:
-        - $ref: "#/components/schemas/GameInfo"
+        - $ref: '#/components/schemas/GameInfo'
         - type: object
           properties:
             version:
-              $ref: "#/components/schemas/GameVersion"
+              $ref: '#/components/schemas/GameVersion'
           required:
             - version
           additionalProperties: false
@@ -2206,7 +2205,7 @@ components:
       type: object
       properties:
         key:
-          $ref: "#/components/schemas/ProductKeyValue"
+          $ref: '#/components/schemas/ProductKeyValue'
       required:
         - key
       additionalProperties: false
@@ -2229,7 +2228,7 @@ components:
       type: object
       properties:
         status:
-          $ref: "#/components/schemas/SeatStatus"
+          $ref: '#/components/schemas/SeatStatus'
       required:
         - status
       additionalProperties: false
@@ -2243,9 +2242,9 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/UserID"
+          $ref: '#/components/schemas/UserID'
         name:
-          $ref: "#/components/schemas/UserName"
+          $ref: '#/components/schemas/UserName'
       required:
         - id
         - name
@@ -2256,13 +2255,13 @@ components:
       type: object
       properties:
         name:
-          $ref: "#/components/schemas/GameName"
+          $ref: '#/components/schemas/GameName'
         description:
-          $ref: "#/components/schemas/GameDescription"
+          $ref: '#/components/schemas/GameDescription'
         owners:
           type: array
           items:
-            $ref: "#/components/schemas/UserName"
+            $ref: '#/components/schemas/UserName'
           description: |
             ゲームのownerの一覧です。
             指定されない場合、空配列として扱われます。
@@ -2272,7 +2271,7 @@ components:
         maintainers:
           type: array
           items:
-            $ref: "#/components/schemas/UserName"
+            $ref: '#/components/schemas/UserName'
           description: |
             ゲームのmaintainerの一覧です。
             指定されない場合、空配列として扱われます。
@@ -2288,9 +2287,9 @@ components:
       type: object
       properties:
         name:
-          $ref: "#/components/schemas/GameName"
+          $ref: '#/components/schemas/GameName'
         description:
-          $ref: "#/components/schemas/GameDescription"
+          $ref: '#/components/schemas/GameDescription'
       required:
         - name
         - description
@@ -2301,26 +2300,26 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/GameID"
+          $ref: '#/components/schemas/GameID'
         name:
-          $ref: "#/components/schemas/GameName"
+          $ref: '#/components/schemas/GameName'
         description:
-          $ref: "#/components/schemas/GameDescription"
+          $ref: '#/components/schemas/GameDescription'
         owners:
           type: array
           items:
-            $ref: "#/components/schemas/UserName"
+            $ref: '#/components/schemas/UserName'
           description: |
             ゲームのownerの一覧です。
         maintainers:
           type: array
           items:
-            $ref: "#/components/schemas/UserName"
+            $ref: '#/components/schemas/UserName'
           description: |
             ゲームのmaintainerの一覧です。
             maintainerがいない場合、このフィールドは存在しません。
         createdAt:
-          $ref: "#/components/schemas/GameCreatedAt"
+          $ref: '#/components/schemas/GameCreatedAt'
       required:
         - id
         - name
@@ -2334,13 +2333,13 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/GameID"
+          $ref: '#/components/schemas/GameID'
         name:
-          $ref: "#/components/schemas/GameName"
+          $ref: '#/components/schemas/GameName'
         description:
-          $ref: "#/components/schemas/GameDescription"
+          $ref: '#/components/schemas/GameDescription'
         createdAt:
-          $ref: "#/components/schemas/GameCreatedAt"
+          $ref: '#/components/schemas/GameCreatedAt'
       required:
         - id
         - name
@@ -2355,17 +2354,17 @@ components:
       type: object
       properties:
         name:
-          $ref: "#/components/schemas/GameVersionName"
+          $ref: '#/components/schemas/GameVersionName'
         description:
-          $ref: "#/components/schemas/GameVersionDescription"
+          $ref: '#/components/schemas/GameVersionDescription'
         url:
-          $ref: "#/components/schemas/GameURL"
+          $ref: '#/components/schemas/GameURL'
         files:
-          $ref: "#/components/schemas/GameVersionFiles"
+          $ref: '#/components/schemas/GameVersionFiles'
         imageID:
-          $ref: "#/components/schemas/GameImageID"
+          $ref: '#/components/schemas/GameImageID'
         videoID:
-          $ref: "#/components/schemas/GameVideoID"
+          $ref: '#/components/schemas/GameVideoID'
       required:
         - name
         - description
@@ -2379,21 +2378,21 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/GameVersionID"
+          $ref: '#/components/schemas/GameVersionID'
         name:
-          $ref: "#/components/schemas/GameVersionName"
+          $ref: '#/components/schemas/GameVersionName'
         description:
-          $ref: "#/components/schemas/GameVersionDescription"
+          $ref: '#/components/schemas/GameVersionDescription'
         url:
-          $ref: "#/components/schemas/GameURL"
+          $ref: '#/components/schemas/GameURL'
         files:
-          $ref: "#/components/schemas/GameVersionFiles"
+          $ref: '#/components/schemas/GameVersionFiles'
         imageID:
-          $ref: "#/components/schemas/GameImageID"
+          $ref: '#/components/schemas/GameImageID'
         videoID:
-          $ref: "#/components/schemas/GameVideoID"
+          $ref: '#/components/schemas/GameVideoID'
         createdAt:
-          $ref: "#/components/schemas/GameVersionCreatedAt"
+          $ref: '#/components/schemas/GameVersionCreatedAt'
       required:
         - id
         - name
@@ -2409,11 +2408,11 @@ components:
       type: object
       properties:
         win32:
-          $ref: "#/components/schemas/GameFileID"
+          $ref: '#/components/schemas/GameFileID'
         darwin:
-          $ref: "#/components/schemas/GameFileID"
+          $ref: '#/components/schemas/GameFileID'
         jar:
-          $ref: "#/components/schemas/GameFileID"
+          $ref: '#/components/schemas/GameFileID'
       additionalProperties: false
       description: |
         ゲームバージョンに紐づいたファイルの情報です。
@@ -2423,11 +2422,14 @@ components:
       type: object
       properties:
         type:
-          $ref: "#/components/schemas/GameFileType"
+          # OpenAPI Generatorのバグで、enumだとクライアントの生成がうまくいかないので、
+          # 一旦stringにしている
+          type: string
+          example: 'jar'
         entryPoint:
-          $ref: "#/components/schemas/GameFileEntryPoint"
+          $ref: '#/components/schemas/GameFileEntryPoint'
         content:
-          $ref: "#/components/schemas/GameFileContent"
+          $ref: '#/components/schemas/GameFileContent'
       required:
         - type
         - entryPoint
@@ -2439,15 +2441,15 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/GameFileID"
+          $ref: '#/components/schemas/GameFileID'
         type:
-          $ref: "#/components/schemas/GameFileType"
+          $ref: '#/components/schemas/GameFileType'
         md5:
-          $ref: "#/components/schemas/GameFileMd5"
+          $ref: '#/components/schemas/GameFileMd5'
         entryPoint:
-          $ref: "#/components/schemas/GameFileEntryPoint"
+          $ref: '#/components/schemas/GameFileEntryPoint'
         createdAt:
-          $ref: "#/components/schemas/GameFileCreatedAt"
+          $ref: '#/components/schemas/GameFileCreatedAt'
       required:
         - id
         - type
@@ -2463,7 +2465,7 @@ components:
       type: object
       properties:
         content:
-          $ref: "#/components/schemas/GameImageContent"
+          $ref: '#/components/schemas/GameImageContent'
       required:
         - content
       additionalProperties: false
@@ -2473,11 +2475,11 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/GameImageID"
+          $ref: '#/components/schemas/GameImageID'
         mime:
-          $ref: "#/components/schemas/GameImageMime"
+          $ref: '#/components/schemas/GameImageMime'
         createdAt:
-          $ref: "#/components/schemas/GameImageCreatedAt"
+          $ref: '#/components/schemas/GameImageCreatedAt'
       required:
         - id
         - mime
@@ -2491,7 +2493,7 @@ components:
       type: object
       properties:
         content:
-          $ref: "#/components/schemas/GameVideoContent"
+          $ref: '#/components/schemas/GameVideoContent'
       required:
         - content
       additionalProperties: false
@@ -2501,11 +2503,11 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/GameVideoID"
+          $ref: '#/components/schemas/GameVideoID'
         mime:
-          $ref: "#/components/schemas/GameVideoMime"
+          $ref: '#/components/schemas/GameVideoMime'
         createdAt:
-          $ref: "#/components/schemas/GameVideoCreatedAt"
+          $ref: '#/components/schemas/GameVideoCreatedAt'
       required:
         - id
         - mime
@@ -2519,12 +2521,11 @@ components:
       type: object
       properties:
         name:
-          $ref: "#/components/schemas/EditionName"
+          $ref: '#/components/schemas/EditionName'
         questionnaire:
-          $ref: "#/components/schemas/EditionQuestionnaireURL"
+          $ref: '#/components/schemas/EditionQuestionnaireURL'
       required:
         - name
-        - questionnaire
       additionalProperties: false
       description: |
         エディションの情報を修正する際に必要な情報です。
@@ -2532,15 +2533,17 @@ components:
       type: object
       properties:
         name:
-          $ref: "#/components/schemas/EditionName"
+          $ref: '#/components/schemas/EditionName'
         questionnaire:
-          $ref: "#/components/schemas/EditionQuestionnaireURL"
+          $ref: '#/components/schemas/EditionQuestionnaireURL'
         gameVersions:
           type: array
+          minLength: 1
           items:
-            $ref: "#/components/schemas/GameVersionID"
+            $ref: '#/components/schemas/GameVersionID'
       required:
         - name
+        - gameVersions
       additionalProperties: false
       description: |
         エディションを新しく作成する際に必要な情報です。
@@ -2549,13 +2552,13 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/EditionID"
+          $ref: '#/components/schemas/EditionID'
         name:
-          $ref: "#/components/schemas/EditionName"
+          $ref: '#/components/schemas/EditionName'
         questionnaire:
-          $ref: "#/components/schemas/EditionQuestionnaireURL"
+          $ref: '#/components/schemas/EditionQuestionnaireURL'
         createdAt:
-          $ref: "#/components/schemas/EditionCreatedAt"
+          $ref: '#/components/schemas/EditionCreatedAt'
       required:
         - id
         - name
@@ -2570,13 +2573,13 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/ProductKeyID"
+          $ref: '#/components/schemas/ProductKeyID'
         key:
-          $ref: "#/components/schemas/ProductKeyValue"
+          $ref: '#/components/schemas/ProductKeyValue'
         status:
-          $ref: "#/components/schemas/ProductKeyStatus"
+          $ref: '#/components/schemas/ProductKeyStatus'
         createdAt:
-          $ref: "#/components/schemas/ProductKeyCreatedAt"
+          $ref: '#/components/schemas/ProductKeyCreatedAt'
       required:
         - id
         - key
@@ -2587,9 +2590,9 @@ components:
       type: object
       properties:
         accessToken:
-          $ref: "#/components/schemas/EditionAccessTokenValue"
+          $ref: '#/components/schemas/EditionAccessTokenValue'
         expiresAt:
-          $ref: "#/components/schemas/EditionAccessTokenExpiresAt"
+          $ref: '#/components/schemas/EditionAccessTokenExpiresAt'
       required:
         - accessToken
         - expiresAt
@@ -2600,9 +2603,9 @@ components:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/SeatID"
+          $ref: '#/components/schemas/SeatID'
         status:
-          $ref: "#/components/schemas/SeatStatus"
+          $ref: '#/components/schemas/SeatStatus'
       required:
         - id
         - status
@@ -2636,7 +2639,7 @@ components:
       type: string
       minLength: 1
       maxLength: 256
-      example: "PrestoRay"
+      example: 'PrestoRay'
       description: |
         ゲームの名前です。
     GameDescription:
@@ -2676,7 +2679,7 @@ components:
     GameVersionName:
       type: string
       pattern: ^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
-      example: "v1.0.0"
+      example: 'v1.0.0'
       description: |
         ゲームのバージョン名です。
         セマンティックバージョニングに沿った文字列が許容されます。
@@ -2820,7 +2823,7 @@ components:
         プロダクトキーのIDです。
     ProductKeyValue:
       type: string
-      pattern: "^[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}"
+      pattern: '^[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}-[0-9a-zA-Z]{5}'
       example: 12345-ABCDE-67890-FGHIJ-KLMNO
       description: |
         プロダクトキーの値です。
@@ -2839,7 +2842,7 @@ components:
       type: string
       maxLength: 36
       minLength: 36
-      pattern: "[0-9a-zA-Z]{36}"
+      pattern: '[0-9a-zA-Z]{36}'
       example: 1234567890abcdef1234567890abcdef1234
       description: |
         アクセストークンです。

@@ -96,9 +96,9 @@ const downloadFile = async (game: EditionGameResponse) => {
   if (fileID === undefined) return;
 
   const { data } = await getGameFile(game.id, fileID);
-  const {
-    data: { md5 },
-  } = await getGameFileMeta(game.id, fileID);
+  const res = await getGameFileMeta(game.id, fileID);
+
+  const md5 = res.data.md5;
 
   await unzip(
     data,
@@ -162,7 +162,9 @@ export const fetch = async (): Promise<void> => {
 
   const {
     data: { id: editionID },
-  } = await getEditionInfo();
+  } = await getEditionInfo().then((x) => {
+    return x;
+  });
   const { data: newEditionGames } = await getEditionGames(editionID);
   const diffs = diff(oldGameInfos, newEditionGames);
 
@@ -196,9 +198,9 @@ export const fetch = async (): Promise<void> => {
             updateAt,
           };
 
-        const {
-          data: { entryPoint },
-        } = await getGameFileMeta(newEditionGame.id, fileID);
+        const res = await getGameFileMeta(newEditionGame.id, fileID);
+
+        const entryPoint = res.data.entryPoint;
 
         if (fileType === GameFileType.Jar)
           return {
