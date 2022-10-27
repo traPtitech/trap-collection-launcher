@@ -17,8 +17,6 @@ declare namespace TraPCollection {
     resetProductKey(): Promise<void>;
     getSeatId(): Promise<number | null>;
     setSeatId(seatId: number): Promise<void>;
-    getSeatVersionId(): Promise<number | null>;
-    setSeatVersionId(seatVersionId: number): Promise<void>;
     sitDown(): Promise<void>;
     sitUp(): Promise<void>;
     postLauncherLogin(): Promise<boolean>;

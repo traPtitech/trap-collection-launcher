@@ -2,6 +2,8 @@ import childProcess from 'child_process';
 import path from 'path';
 import { BrowserWindow } from 'electron';
 import { ipcMain } from '@/common/typedIpc';
+import { isKoudaisai } from '@/config';
+import { patchSeatInUse } from '@/lib/axios';
 import store from '@/lib/store';
 import { generateAbsolutePath } from '@/lib/utils/generatePaths';
 
@@ -12,6 +14,9 @@ export const launchHandler = async (
     return;
   }
   ipcMain.handle('launch', async (_event, gameId) => {
+    const seatId = store.get('seatId');
+    isKoudaisai && seatId && patchSeatInUse(seatId);
+
     const platform = process.platform;
     if (platform !== 'win32' && platform !== 'darwin') {
       return;

@@ -8,12 +8,8 @@ export const sitUpHandler = (): void => {
 
 export const sitUp = async () => {
   const seatId = store.get('seatId');
-  const seatVersionId = store.get('seatVersionId');
   if (!seatId) {
     throw 'seat id is not setted';
-  }
-  if (!seatVersionId) {
-    throw 'seat version id is not setted';
   }
   await patchSeatEmpty(seatId);
   return;

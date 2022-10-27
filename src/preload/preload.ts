@@ -27,12 +27,6 @@ const api: TraPCollection.API = {
     setSeatId: async (seatId) => {
       return await ipcRenderer.invoke('setSeatId', seatId);
     },
-    getSeatVersionId: async () => {
-      return await ipcRenderer.invoke('getSeatVersionId');
-    },
-    setSeatVersionId: async (seatVersionId) => {
-      return await ipcRenderer.invoke('setSeatVersionId', seatVersionId);
-    },
     sitDown: async () => {
       return await ipcRenderer.invoke('sitDown');
     },
