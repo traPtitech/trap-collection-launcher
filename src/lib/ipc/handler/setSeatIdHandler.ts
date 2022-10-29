@@ -5,7 +5,7 @@ import store from '@/lib/store';
 export const setSeatIdHandler = (): void => {
   ipcMain.handle('setSeatId', async (_, seatId) => {
     const prevSeatId = store.get('seatId');
-    const seated = store.get('seated');
+    const seated = store.get('isSeated');
 
     prevSeatId && patchSeatEmpty(prevSeatId);
     seated ? patchSeatInUse(seatId) : patchSeatEmpty(seatId);
