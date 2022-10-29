@@ -4,7 +4,8 @@ type Store = {
   gameInfo: TraPCollection.GameInfos;
   launcherVersions: TraPCollection.LauncherVersions;
   seatId: number | null;
-  seated: boolean | null;
+  isSeated: boolean | null;
+  launchCounter: number;
   token: string | null;
 };
 
@@ -12,7 +13,8 @@ const store = new ElectronStore<Store>({
   defaults: {
     gameInfo: [],
     launcherVersions: [],
-    seated: null,
+    isSeated: null,
+    launchCounter: 0,
     seatId: null,
     token: null,
   },

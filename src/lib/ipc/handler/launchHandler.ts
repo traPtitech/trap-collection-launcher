@@ -26,10 +26,12 @@ export const launchHandler = async (
 
     const cp = launch[platform](target);
     window.minimize();
+    store.set('launchCounter', store.get('launchCounter') + 1);
 
     if (cp instanceof BrowserWindow) {
       launchedGames.add(cp);
       cp.on('close', () => {
+        store.set('launchCounter', store.get('launchCounter') - 1);
         launchedGames.remove(cp);
         window.maximize();
       });
@@ -37,6 +39,7 @@ export const launchHandler = async (
     }
     launchedGames.add(cp);
     cp.on('close', () => {
+      store.set('launchCounter', store.get('launchCounter') - 1);
       launchedGames.remove(cp);
       window.maximize();
     });
