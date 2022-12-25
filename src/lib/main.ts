@@ -4,6 +4,7 @@ import logger from 'electron-log';
 import updater from 'update-electron-app';
 import { detectSeated } from './utils/detectSeated';
 import { ipcMain } from '@/common/typedIpc';
+import { isKoudaisai } from '@/config';
 import ipcListener from '@/lib/ipc/ipcListener';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -112,8 +113,10 @@ app.on('activate', () => {
 //   autoUpdater.checkForUpdates();
 // }, 30 * 60 * 1000);
 
-updater({
-  repo: 'traPtitech/trap-collection-launcher',
-  updateInterval: '1 hour',
-  logger: logger,
-});
+if (!isKoudaisai) {
+  updater({
+    repo: 'traPtitech/trap-collection-launcher',
+    updateInterval: '1 hour',
+    logger: logger,
+  });
+}

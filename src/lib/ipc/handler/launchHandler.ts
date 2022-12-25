@@ -90,13 +90,15 @@ const launch: Record<
       case 'url':
         return launchBrowserApp(gameInfo.info.url);
       case 'app': {
-        return childProcess.spawn(path.basename(gameInfo.info.entryPoint), {
-          stdio: 'ignore',
-          cwd: getEntryPointDirname(
-            gameInfo.version.id,
-            gameInfo.info.entryPoint
-          ),
-        });
+        return childProcess.exec(
+          `powershell /c "& './${path.basename(gameInfo.info.entryPoint)}'"`,
+          {
+            cwd: getEntryPointDirname(
+              gameInfo.version.id,
+              gameInfo.info.entryPoint
+            ),
+          }
+        );
       }
       case 'jar':
         return childProcess.spawn(
