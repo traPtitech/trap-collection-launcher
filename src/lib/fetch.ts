@@ -182,8 +182,8 @@ export const fetch = async (): Promise<void> => {
     })
   );
 
-  const newGameInfos: TraPCollection.GameInfo[] = await Promise.all(
-    newEditionGames.map(async (newEditionGame) => {
+  const diffGameInfos: TraPCollection.GameInfo[] = await Promise.all(
+    diffs.map(async (newEditionGame) => {
       const gameDirectory = getLocalGameDirectory(newEditionGame.version.id);
       const updateAt = newEditionGame.version.createdAt;
 
@@ -240,5 +240,5 @@ export const fetch = async (): Promise<void> => {
     })
   );
 
-  store.set('gameInfo', newGameInfos);
+  store.set('gameInfo', [...oldGameInfos, ...diffGameInfos]);
 };
