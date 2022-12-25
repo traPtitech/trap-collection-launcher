@@ -135,8 +135,12 @@ const isValidProductKeyFormat = (str: string) => {
 type Progress = 'inputProductkey' | 'login' | 'fetchGame';
 
 const TitlePage = () => {
-  const [productKey, setProductKey] = useState<string | null>(null);
-  const [, setProductKeyContext] = useContext(SelectedProductKeyContext);
+  const [productKeyContext, setProductKeyContext] = useContext(
+    SelectedProductKeyContext
+  );
+  const [productKey, setProductKey] = useState<string | null>(
+    productKeyContext
+  );
   const navigate = useContext(NavigateContext);
   const showNetworkError = useContext(ShowNetworkErrorContext);
   const [invalidProductKey, setInvalidProductKey] = useState(false);
