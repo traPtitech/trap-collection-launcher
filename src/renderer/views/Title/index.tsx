@@ -1,6 +1,6 @@
 import Cleave from 'cleave.js/react';
 import React, { useContext, useEffect, useState } from 'react';
-import { MdArrowForward, MdArrowBack } from 'react-icons/md';
+import { MdArrowForward } from 'react-icons/md';
 import { BarLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
 import {
@@ -135,7 +135,8 @@ const isValidProductKeyFormat = (str: string) => {
 type Progress = 'inputProductkey' | 'login' | 'fetchGame';
 
 const TitlePage = () => {
-  const [productKey, setProductKey] = useContext(SelectedProductKeyContext);
+  const [productKey, setProductKey] = useState<string | null>(null);
+  const [, setProductKeyContext] = useContext(SelectedProductKeyContext);
   const navigate = useContext(NavigateContext);
   const showNetworkError = useContext(ShowNetworkErrorContext);
   const [invalidProductKey, setInvalidProductKey] = useState(false);
@@ -159,6 +160,7 @@ const TitlePage = () => {
       if (success) {
         setProgress('fetchGame');
         await window.TraPCollectionAPI.invoke.fetchGame();
+        setProductKeyContext(productKey);
         navigate && navigate('gameSelect');
         return true;
       } else {
