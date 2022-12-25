@@ -12,11 +12,11 @@ const api: TraPCollection.API = {
     checkJava: async () => {
       return await ipcRenderer.invoke('checkJava');
     },
-    getProductKey: async () => {
-      return await ipcRenderer.invoke('getProductKey');
+    getEditions: async () => {
+      return await ipcRenderer.invoke('getEditions');
     },
-    setProductKey: async (productKey) => {
-      return await ipcRenderer.invoke('setProductKey', productKey);
+    addProductKey: async (productKey) => {
+      return await ipcRenderer.invoke('addProductKey', productKey);
     },
     resetProductKey: async () => {
       return await ipcRenderer.invoke('resetProductKey');
@@ -42,8 +42,8 @@ const api: TraPCollection.API = {
     openJavaDownloadPage: async () => {
       return await ipcRenderer.invoke('openJavaDownloadPage');
     },
-    postLauncherLogin: async () => {
-      return ipcRenderer.invoke('postLauncherLogin');
+    postLauncherLogin: async (productKey) => {
+      return ipcRenderer.invoke('postLauncherLogin', productKey);
     },
     fetchGame: async () => {
       return await ipcRenderer.invoke('fetchGame');

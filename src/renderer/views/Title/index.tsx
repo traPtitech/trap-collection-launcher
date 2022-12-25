@@ -1,10 +1,11 @@
 import Cleave from 'cleave.js/react';
 import React, { useContext, useEffect, useState } from 'react';
-import { MdArrowForward } from 'react-icons/md';
+import { MdArrowForward, MdArrowBack } from 'react-icons/md';
 import { BarLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
 import {
   NavigateContext,
+  SelectedProductKeyContext,
   SetOfflineModeContext,
   ShowNetworkErrorContext,
 } from '@/renderer/App';
@@ -134,7 +135,7 @@ const isValidProductKeyFormat = (str: string) => {
 type Progress = 'inputProductkey' | 'login' | 'fetchGame';
 
 const TitlePage = () => {
-  const [productKey, setProductKey] = useState<string>('');
+  const [productKey, setProductKey] = useContext(SelectedProductKeyContext);
   const navigate = useContext(NavigateContext);
   const showNetworkError = useContext(ShowNetworkErrorContext);
   const [invalidProductKey, setInvalidProductKey] = useState(false);
@@ -147,8 +148,14 @@ const TitlePage = () => {
 
   const tryLogin = async () =>
     (async () => {
+      if (!productKey) {
+        setProgress('inputProductkey');
+        return false;
+      }
       setProgress('login');
-      const success = await window.TraPCollectionAPI.invoke.postLauncherLogin();
+      const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(
+        productKey
+      );
       if (success) {
         setProgress('fetchGame');
         await window.TraPCollectionAPI.invoke.fetchGame();
@@ -180,11 +187,14 @@ const TitlePage = () => {
   }, [isOfflineMode, navigate]);
 
   const onEnterProductKey = () => {
+    if (!productKey) {
+      return;
+    }
     if (!isValidProductKeyFormat(productKey)) {
       return;
     }
     (async () => {
-      await window.TraPCollectionAPI.invoke.setProductKey(productKey);
+      await window.TraPCollectionAPI.invoke.addProductKey(productKey);
       const res = await tryLogin();
       if (!res) {
         setInvalidProductKey(true);
@@ -226,7 +236,9 @@ const TitlePage = () => {
                 }}
               />
               <EnterButton
-                $isValidProductKey={isValidProductKeyFormat(productKey)}
+                $isValidProductKey={
+                  productKey && isValidProductKeyFormat(productKey)
+                }
                 onClick={onEnterProductKey}
               >
                 <EnterIcon />

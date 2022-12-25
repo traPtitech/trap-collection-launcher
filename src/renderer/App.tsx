@@ -2,12 +2,13 @@ import React, { createContext, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import NetworkErrorModal from './components/NetworkErrorModal';
 import { createTheme } from './styles/theme';
+import ProductKeySelect from './views/ProductKeySelect';
 import { isKoudaisai } from '@/config';
 import GlobalStyle from '@/renderer/styles/GlobalStyle';
 import GameSelect from '@/renderer/views/GameSelect';
 import TitlePage from '@/renderer/views/Title';
 
-export type Page = 'title' | 'gameSelect';
+export type Page = 'title' | 'gameSelect' | 'productKeySelect';
 
 const ModalBackground = styled.div<{ $isOpen: boolean }>`
   position: absolute;
@@ -33,6 +34,8 @@ const Navigation = ({
       return <TitlePage></TitlePage>;
     case 'gameSelect':
       return <GameSelect koudaisai={koudaisai}></GameSelect>;
+    case 'productKeySelect':
+      return <ProductKeySelect></ProductKeySelect>;
   }
 };
 
@@ -44,12 +47,24 @@ export const ShowNetworkErrorContext = createContext<(() => void) | undefined>(
   undefined
 );
 
+export const SelectedProductKeyContext = createContext<
+  [string | null, (productKey: string | null) => void]
+>([
+  null,
+  () => {
+    return;
+  },
+]);
+
 export const SetOfflineModeContext = createContext<
   [boolean, (isOfflineMode: boolean) => void] | undefined
 >(undefined);
 
 const App = () => {
-  const [page, setPage] = useState<Page>('title');
+  const [page, setPage] = useState<Page>('productKeySelect');
+  const [selectedProductKey, setSelectedProductKey] = useState<string | null>(
+    null
+  );
   const [isOfflineMode, setIsOfflineMode] = useState(false);
   const [isOpenNetworkErrorModal, setIsOpenNetworkErrorModal] = useState(false);
 
@@ -72,12 +87,16 @@ const App = () => {
       <NavigateContext.Provider value={navigate}>
         <ShowNetworkErrorContext.Provider value={showNetworkError}>
           <SetOfflineModeContext.Provider value={useIsOffline}>
-            <Navigation page={page} koudaisai={isKoudaisai} />
-            <ModalBackground $isOpen={isOpenNetworkErrorModal} />
-            <NetworkErrorModal
-              closeHandler={() => setIsOpenNetworkErrorModal(false)}
-              isOpen={isOpenNetworkErrorModal}
-            />
+            <SelectedProductKeyContext.Provider
+              value={[selectedProductKey, setSelectedProductKey]}
+            >
+              <Navigation page={page} koudaisai={isKoudaisai} />
+              <ModalBackground $isOpen={isOpenNetworkErrorModal} />
+              <NetworkErrorModal
+                closeHandler={() => setIsOpenNetworkErrorModal(false)}
+                isOpen={isOpenNetworkErrorModal}
+              />
+            </SelectedProductKeyContext.Provider>
           </SetOfflineModeContext.Provider>
         </ShowNetworkErrorContext.Provider>
       </NavigateContext.Provider>

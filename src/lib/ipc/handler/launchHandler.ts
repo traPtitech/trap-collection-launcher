@@ -35,11 +35,13 @@ export const launchHandler = async (
       });
       return;
     }
-    launchedGames.add(cp);
-    cp.on('close', () => {
-      launchedGames.remove(cp);
-      window.maximize();
-    });
+    if (cp) {
+      launchedGames.add(cp);
+      cp.on('close', () => {
+        launchedGames.remove(cp);
+        window.maximize();
+      });
+    }
   });
 };
 

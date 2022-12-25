@@ -12,14 +12,14 @@ declare namespace TraPCollection {
     openJavaDownloadPage(): Promise<void>;
     getGameInfo(): Promise<RendererGameInfo[]>;
     checkJava(): Promise<boolean>;
-    getProductKey(): Promise<string | null>;
-    setProductKey(productKey: string): Promise<void>;
+    getEditions(): Promise<LauncherVersion[]>;
+    addProductKey(productKey: string): Promise<boolean>;
     resetProductKey(): Promise<void>;
     getSeatId(): Promise<number | null>;
     setSeatId(seatId: number): Promise<void>;
     sitDown(): Promise<void>;
     sitUp(): Promise<void>;
-    postLauncherLogin(): Promise<boolean>;
+    postLauncherLogin(productKey: string): Promise<boolean>;
     fetchGame(): Promise<void>;
     quitApp(): Promise<void>;
     reloadWindow(): Promise<void>;
@@ -95,6 +95,7 @@ declare namespace TraPCollection {
 
   type LauncherVersion = {
     productKey: string;
+    name?: string;
   };
 
   type LauncherVersions = LauncherVersion[];

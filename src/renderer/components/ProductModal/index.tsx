@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import Modal, * as ModalPackage from '../Modal';
+import { SelectedProductKeyContext } from '@/renderer/App';
 
 const Content = styled.div`
   text-align: center;
@@ -14,14 +15,7 @@ const ProductModal = ({
   ModalPackage.Props,
   'noButton' | 'children' | 'modalType' | 'okButtonText' | 'title'
 >) => {
-  const [productKey, setProductKey] = useState('');
-
-  useEffect(() => {
-    (async () => {
-      const key = await window.TraPCollectionAPI.invoke.getProductKey();
-      setProductKey(key ?? 'プロダクトキーが得られませんでした');
-    })();
-  }, []);
+  const [productKey] = useContext(SelectedProductKeyContext);
 
   return (
     <Modal title='プロダクトキー' noButton {...props}>

@@ -86,6 +86,7 @@ const downloadInit = async (game: EditionGameResponse) => {
     recursive: true,
   });
 };
+
 const downloadFile = async (game: EditionGameResponse) => {
   const gameDirectory = getAbsoluteGameDirectory(game.version.id);
   const downloadDirectory = getAbsoluteDownloadDirectory(game.version.id);

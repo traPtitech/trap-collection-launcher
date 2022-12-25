@@ -19,6 +19,7 @@ const Overlay = styled(Div)<{ $isOpen: boolean }>`
 
   visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.$isOpen ? '1' : '0')};
+  background-color: ${(props) => props.theme.colors.shadow.dot};
 `;
 
 const Display = styled(Div)<{ $isOpen: boolean }>`

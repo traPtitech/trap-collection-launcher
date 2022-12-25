@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState, useContext } from 'react';
 import { MdMenu } from 'react-icons/md';
 import { BarLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
@@ -6,6 +6,7 @@ import Description from './description';
 import DotSelector from './dotSelector';
 import Modals, { ModalType } from './modals';
 import Mover from './mover';
+import { NavigateContext } from '@/renderer/App';
 import collectionLogo from '@/renderer/assets/logo.svg';
 import SideBar from '@/renderer/components/SideBar';
 import Slider from '@/renderer/components/Slider';
@@ -163,6 +164,7 @@ const GameSelect = ({ koudaisai }: Props) => {
   const [gameInfos, setGameInfos] = useState<
     TraPCollection.RendererGameInfo[] | undefined
   >(undefined);
+  const navigate = useContext(NavigateContext);
 
   const theme = useTheme();
 
@@ -202,10 +204,9 @@ const GameSelect = ({ koudaisai }: Props) => {
       },
     },
     {
-      text: 'プロダクトキーのリセット',
+      text: 'エディションの切り替え',
       onClick: () => {
-        setIsOpenMenu(false);
-        setOpenedModal('resetKey');
+        navigate && navigate('productKeySelect');
       },
     },
     ...(koudaisai
