@@ -3,12 +3,13 @@ import styled, { ThemeProvider } from 'styled-components';
 import NetworkErrorModal from './components/NetworkErrorModal';
 import { createTheme } from './styles/theme';
 import ProductKeySelect from './views/ProductKeySelect';
+import SplashScreen from './views/SplashScreen';
 import { isKoudaisai } from '@/config';
 import GlobalStyle from '@/renderer/styles/GlobalStyle';
 import GameSelect from '@/renderer/views/GameSelect';
 import TitlePage from '@/renderer/views/Title';
 
-export type Page = 'title' | 'gameSelect' | 'productKeySelect';
+export type Page = 'title' | 'gameSelect' | 'productKeySelect' | 'splashScreen';
 
 const ModalBackground = styled.div<{ $isOpen: boolean }>`
   position: absolute;
@@ -31,11 +32,13 @@ const Navigation = ({
 }) => {
   switch (page) {
     case 'title':
-      return <TitlePage></TitlePage>;
+      return <TitlePage />;
     case 'gameSelect':
       return <GameSelect koudaisai={koudaisai}></GameSelect>;
     case 'productKeySelect':
-      return <ProductKeySelect></ProductKeySelect>;
+      return <ProductKeySelect />;
+    case 'splashScreen':
+      return <SplashScreen />;
   }
 };
 
@@ -61,7 +64,7 @@ export const SetOfflineModeContext = createContext<
 >(undefined);
 
 const App = () => {
-  const [page, setPage] = useState<Page>('productKeySelect');
+  const [page, setPage] = useState<Page>('splashScreen');
   const [selectedProductKey, setSelectedProductKey] = useState<string | null>(
     null
   );

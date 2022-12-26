@@ -29,7 +29,6 @@ const ProductKeysContainer = styled(Div)`
 
 const ProductKeyContainer = styled(Div)`
   position: relative;
-  width: 40rem;
   height: 4rem;
   display: flex;
   flex-direction: row;
@@ -49,6 +48,7 @@ const ProductKeyContainer = styled(Div)`
 const DescriptionContainer = styled(Div)`
   position: relative;
   height: 4rem;
+  width: 40rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
