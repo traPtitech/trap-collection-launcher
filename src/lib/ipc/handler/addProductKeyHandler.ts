@@ -4,6 +4,10 @@ import store from '@/lib/store';
 
 export const addProductKeyHandler = (): void => {
   ipcMain.handle('addProductKey', async (_, productKey) => {
+    const editions = store.get('launcherVersions') ?? [];
+    if (editions.some((edition) => edition.productKey === productKey)) {
+      return false;
+    }
     const isSuccess = await postLauncherLogin(productKey)
       .then(({ data }) => {
         store.set('token', data.accessToken);
@@ -19,7 +23,6 @@ export const addProductKeyHandler = (): void => {
       return false;
     }
     const editionInfo = await getEditionInfo();
-    const editions = store.get('launcherVersions') ?? [];
     store.set('launcherVersions', [
       ...editions,
       { productKey: productKey, name: editionInfo.data.name },
