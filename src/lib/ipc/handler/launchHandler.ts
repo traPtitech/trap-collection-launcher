@@ -75,6 +75,10 @@ const launchBrowserApp = (url: string) => {
     gameWindow.show();
     gameWindow.maximize();
   });
+  if (process.env.NODE_ENV === 'development') {
+    // Open the DevTools.
+    gameWindow.webContents.openDevTools();
+  }
   gameWindow.setMenu(null);
   return gameWindow;
 };
