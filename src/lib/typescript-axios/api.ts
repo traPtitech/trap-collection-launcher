@@ -19,23 +19,14 @@ import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 import {
   DUMMY_BASE_URL,
   assertParamExists,
-  setApiKeyToObject,
-  setBasicAuthToObject,
   setBearerAuthToObject,
-  setOAuthToObject,
   setSearchParams,
   serializeDataIfNeeded,
   toPathString,
   createRequestFunction,
 } from './common';
 // @ts-ignore
-import {
-  BASE_PATH,
-  COLLECTION_FORMATS,
-  RequestArgs,
-  BaseAPI,
-  RequiredError,
-} from './base';
+import { BASE_PATH, RequestArgs, BaseAPI, RequiredError } from './base';
 
 /**
  * エディションです。 questionnaireは工大祭などのアンケートが必要な際のみ存在します。
@@ -971,9 +962,8 @@ export const AdminApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getAdmins(
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getAdmins(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1564,9 +1554,8 @@ export const EditionApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Edition>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getEditions(
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getEditions(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -2226,9 +2215,8 @@ export const EditionAuthApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Edition>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getEditionInfo(
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getEditionInfo(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -5556,9 +5544,8 @@ export const Oauth2ApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getCode(
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getCode(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -5577,9 +5564,8 @@ export const Oauth2ApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.postLogout(
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.postLogout(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -5877,9 +5863,8 @@ export const SeatApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Seat>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getSeats(
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getSeats(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -6178,9 +6163,8 @@ export const UserApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getUsers(
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getUsers(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+ 
 import axios from 'axios';
 import store from './store';
 import { baseUrl } from '@/config';
@@ -20,10 +20,7 @@ axiosInstance.interceptors.request.use(
   async (config) => {
     const token = store.get('token');
     if (token) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      };
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -35,10 +32,7 @@ axiosStreamInstance.interceptors.request.use(
   async (config) => {
     const token = store.get('token');
     if (token) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      };
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },

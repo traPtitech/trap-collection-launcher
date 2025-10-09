@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const Div = ({ ...props }) => <div {...props} />;
@@ -26,14 +25,14 @@ const Primary = styled(Div)`
 `;
 
 export type Props = {
-  gameInfo: TraPCollection.RendererGameInfo;
+  gameInfo?: TraPCollection.RendererGameInfo;
 };
 
 const Description = ({ gameInfo }: Props) => {
   return (
     <Wrapper>
-      <Title> {gameInfo.name} </Title>
-      <Primary> {gameInfo.description} </Primary>
+      <Title> {gameInfo?.name} </Title>
+      <Primary> {gameInfo?.description} </Primary>
     </Wrapper>
   );
 };

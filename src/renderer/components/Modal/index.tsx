@@ -14,7 +14,8 @@ const Overlay = styled(Div)<{ $isOpen: boolean }>`
   align-items: center;
   padding: 0;
   z-index: 2;
-  transition: opacity ${(props) => props.theme.duration.normal} ease-out,
+  transition:
+    opacity ${(props) => props.theme.duration.normal} ease-out,
     visibility ${(props) => props.theme.duration.normal};
 
   visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
@@ -97,6 +98,8 @@ const ModalButton = styled(Div)<{
   ${(props) => {
     if (props.$buttonType === 'cancel') {
       return `border-color: ${props.theme.colors.button.cancel.border}`;
+    } else {
+      return '';
     }
   }}
 `;
@@ -160,9 +163,9 @@ const Modal = ({
   }, [isOpen]);
 
   return (
-    <Overlay $isOpen={isOpen} onClick={onCancel}>
+    <Overlay $isOpen={!!isOpen} onClick={onCancel}>
       <Display
-        $isOpen={isOpen}
+        $isOpen={!!isOpen}
         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           e.stopPropagation();
         }}

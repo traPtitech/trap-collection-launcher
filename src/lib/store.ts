@@ -1,6 +1,6 @@
-import ElectronStore from 'electron-store';
+import Store from 'electron-store';
 
-type Store = {
+type StoreSchema = {
   gameInfo: TraPCollection.GameInfos;
   launcherVersions: TraPCollection.LauncherVersions;
   seatId: number | null;
@@ -8,7 +8,7 @@ type Store = {
   token: string | null;
 };
 
-const store = new ElectronStore<Store>({
+const store = new Store<StoreSchema>({
   defaults: {
     gameInfo: [],
     launcherVersions: [],
@@ -20,15 +20,15 @@ const store = new ElectronStore<Store>({
 });
 
 export class TraPCollectionStore {
-  private store: ElectronStore<Store>;
-  constructor(store: ElectronStore<Store>) {
+  private store: Store<StoreSchema>;
+  constructor(store: Store<StoreSchema>) {
     this.store = store;
   }
-  public get<T extends keyof Store>(key: T): Store[T] {
+  public get<T extends keyof StoreSchema>(key: T): StoreSchema[T] {
     return this.store.get(key);
   }
-  public set<T extends keyof Store>(key: T, value: Store[T]) {
-    this.store.set(key, value);
+  public set<T extends keyof StoreSchema>(key: T, value: StoreSchema[T]) {
+    return this.store.set(key, value);
   }
 }
 

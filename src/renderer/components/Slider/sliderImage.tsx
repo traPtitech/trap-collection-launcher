@@ -105,7 +105,7 @@ const SliderImage = ({ isSelect, ...props }: Props) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper $isSelect={isSelect}>
       <StyledImage
         {...props}
         onLoad={onLoadHandler}

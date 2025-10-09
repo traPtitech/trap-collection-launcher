@@ -1,5 +1,5 @@
 import Cleave from 'cleave.js/react';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MdArrowForward } from 'react-icons/md';
 import { BarLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
@@ -158,9 +158,8 @@ const TitlePage = () => {
         return false;
       }
       setProgress('login');
-      const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(
-        productKey
-      );
+      const success =
+        await window.TraPCollectionAPI.invoke.postLauncherLogin(productKey);
       if (success) {
         setProgress('fetchGame');
         await window.TraPCollectionAPI.invoke.fetchGame();
@@ -243,7 +242,7 @@ const TitlePage = () => {
               />
               <EnterButton
                 $isValidProductKey={
-                  productKey && isValidProductKeyFormat(productKey)
+                  !!(productKey && isValidProductKeyFormat(productKey))
                 }
                 onClick={onEnterProductKey}
               >
@@ -253,7 +252,10 @@ const TitlePage = () => {
           </>
         ) : progress === 'login' ? (
           <>
-            <BottomText> ログインしています </BottomText>
+            <BottomText $invalidProductKey={false}>
+              {' '}
+              ログインしています{' '}
+            </BottomText>
             <BarLoader
               height='4px'
               width='200px'
@@ -262,7 +264,10 @@ const TitlePage = () => {
           </>
         ) : progress === 'fetchGame' ? (
           <>
-            <BottomText> ゲームをダウンロードしています </BottomText>
+            <BottomText $invalidProductKey={false}>
+              {' '}
+              ゲームをダウンロードしています{' '}
+            </BottomText>
             {downloadFetchLog && <FetchLog log={downloadFetchLog} />}
           </>
         ) : undefined}

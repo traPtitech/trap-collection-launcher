@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-unresolved
-import PackageJson from '/package.json';
+import PackageJson from '../package.json';
 
 export const baseUrl = 'https://collection.trap.jp/api/v2';
 export const isKoudaisai = process.env.KOUDAISAI === 'true';

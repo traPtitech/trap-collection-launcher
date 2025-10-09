@@ -79,6 +79,7 @@ const getFileType = (game: EditionGameResponse) => {
   const platform = process.platform;
   if (platform === 'win32') return GameFileType.Win32;
   if (platform === 'darwin') return GameFileType.Darwin;
+  return undefined;
 };
 
 const downloadInit = async (game: EditionGameResponse) => {

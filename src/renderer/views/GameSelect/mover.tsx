@@ -1,4 +1,3 @@
-import React from 'react';
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
 import styled from 'styled-components';
 

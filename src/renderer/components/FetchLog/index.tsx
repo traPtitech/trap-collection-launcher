@@ -1,4 +1,3 @@
-import React from 'react';
 import { MdDone } from 'react-icons/md';
 import { BounceLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';

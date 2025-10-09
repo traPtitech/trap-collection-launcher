@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useRef,
-  DetailedHTMLProps,
-  VideoHTMLAttributes,
-} from 'react';
+import { useContext, DetailedHTMLProps, VideoHTMLAttributes } from 'react';
 import styled from 'styled-components';
 import { NavigateContext } from '@/renderer/App';
 import traPHoro from '@/renderer/assets/traP_horo.mp4';

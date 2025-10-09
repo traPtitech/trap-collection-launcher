@@ -1,5 +1,5 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import React, { useEffect, useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useEffect, useState } from 'react';
 import ProductModal from './index';
 
 const TestComponent = ({ ...props }) => {
@@ -17,19 +17,19 @@ const TestComponent = ({ ...props }) => {
   return productModal;
 };
 
-export default {
+const meta: Meta<typeof TestComponent> = {
   title: 'ProductModal',
   component: TestComponent,
-} as ComponentMeta<typeof TestComponent>;
+};
 
-const Template: ComponentStory<typeof TestComponent> = (args) => (
-  <TestComponent {...args} />
-);
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Primary = Template.bind({});
-Primary.args = {
-  isOpen: true,
-  onCancel: () => {
-    console.log('cancel');
+export const Primary: Story = {
+  args: {
+    isOpen: true,
+    onCancel: () => {
+      console.log('cancel');
+    },
   },
 };

@@ -1,6 +1,5 @@
 import crypto from 'crypto';
 import fs from 'fs';
-import { promiseExists } from '@/lib/utils/promiseExists';
 
 export const md5sumFile = async (filePath: string): Promise<string> =>
   new Promise((resolve, reject) => {

@@ -1,7 +1,7 @@
 /**
  * @see {@url https://www.electronforge.io/configuration}
  */
-module.exports = {
+export default {
   /**
    * @see {@url https://electron.github.io/electron-packager/main/interfaces/electronpackager.options.html}
    */
@@ -38,25 +38,29 @@ module.exports = {
     },
   ],
   plugins: [
-    [
-      '@electron-forge/plugin-webpack',
-      {
-        mainConfig: './webpack.main.config.js',
-        renderer: {
-          config: './webpack.renderer.config.js',
-          entryPoints: [
-            {
-              html: './src/renderer/index.html',
-              js: './src/renderer/renderer.tsx',
-              name: 'main_window',
-              preload: {
-                js: './src/preload/preload.ts',
-              },
-            },
-          ],
-        },
+    {
+      name: '@electron-forge/plugin-vite',
+      config: {
+        build: [
+          {
+            entry: 'src/lib/main.ts',
+            config: 'vite.main.config.ts',
+            target: 'main',
+          },
+          {
+            entry: 'src/preload/preload.ts',
+            config: 'vite.preload.config.ts',
+            target: 'preload',
+          },
+        ],
+        renderer: [
+          {
+            name: 'main_window',
+            config: 'vite.renderer.config.ts',
+          },
+        ],
       },
-    ],
+    },
   ],
   publishers: [
     {

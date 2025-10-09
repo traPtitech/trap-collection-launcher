@@ -1,35 +1,34 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import SideBar from './index';
 
-export default {
+const meta: Meta<typeof SideBar> = {
   title: 'SideBar',
   component: SideBar,
-} as ComponentMeta<typeof SideBar>;
+};
 
-const Template: ComponentStory<typeof SideBar> = (args) => (
-  <SideBar {...args} />
-);
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Primary = Template.bind({});
-Primary.args = {
-  isOpen: true,
-  items: [
-    {
-      text: 'プロダクトキーのリセット',
-      onClick: () => {
-        console.log('プロダクトキーのリセット');
+export const Primary: Story = {
+  args: {
+    isOpen: true,
+    items: [
+      {
+        text: 'プロダクトキーのリセット',
+        onClick: () => {
+          console.log('プロダクトキーのリセット');
+        },
       },
-    },
-    {
-      text: 'ゲーム本体データのリセット',
-      onClick: () => {
-        console.log('ゲーム本体データのリセット');
+      {
+        text: 'ゲーム本体データのリセット',
+        onClick: () => {
+          console.log('ゲーム本体データのリセット');
+        },
       },
+    ],
+    onCancel: () => {
+      console.log('cancel');
     },
-  ],
-  onCancel: () => {
-    console.log('cancel');
+    koudaisai: false,
   },
-  koudaisai: false,
 };

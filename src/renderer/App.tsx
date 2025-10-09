@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import { createContext, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import NetworkErrorModal from './components/NetworkErrorModal';
 import { createTheme } from './styles/theme';

@@ -7,7 +7,7 @@ import { ModalType } from '@/renderer/views/GameSelect/modals';
 
 const Div = ({ ...props }) => <div {...props} />;
 
-const Overlay = styled(Div)<{ $isOepn: boolean }>`
+const Overlay = styled(Div)<{ $isOpen: boolean }>`
   position: fixed;
   left: 0;
   right: 0;
@@ -15,7 +15,8 @@ const Overlay = styled(Div)<{ $isOepn: boolean }>`
   bottom: 0;
   padding: 0;
   z-index: 2;
-  transition: opacity ${(props) => props.theme.duration.normal} ease-out,
+  transition:
+    opacity ${(props) => props.theme.duration.normal} ease-out,
     visibility ${(props) => props.theme.duration.normal};
 
   visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};

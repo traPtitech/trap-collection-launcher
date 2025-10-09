@@ -64,7 +64,7 @@ const launchBrowserApp = (url: string) => {
     // fullscreen: true,
     webPreferences: {
       // webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
-      preload: process.env.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      preload: path.join(__dirname, 'preload.cjs'),
     },
     show: false,
   });

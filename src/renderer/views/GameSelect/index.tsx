@@ -12,7 +12,7 @@ import SideBar from '@/renderer/components/SideBar';
 import Slider from '@/renderer/components/Slider';
 
 const Div = ({ ...props }) => <div {...props} />;
-const Video = forwardRef<HTMLVideoElement, JSX.IntrinsicElements['video']>(
+const Video = forwardRef<HTMLVideoElement, React.ComponentProps<'video'>>(
   ({ ...props }, ref) => <video {...props} ref={ref} />
 );
 const Hr = ({ ...props }) => <hr {...props} />;
@@ -262,7 +262,7 @@ const GameSelect = ({ koudaisai }: Props) => {
                 src={
                   gameInfos[mod(selectedGame, gameInfos.length)]?.video ?? ''
                 }
-                poster={gameInfos[mod(selectedGame, gameInfos.length)].poster}
+                poster={gameInfos[mod(selectedGame, gameInfos.length)]?.poster}
                 autoPlay
                 loop
                 controls={false}
@@ -278,15 +278,18 @@ const GameSelect = ({ koudaisai }: Props) => {
                   const checkJava =
                     await window.TraPCollectionAPI.invoke.checkJava();
                   if (
-                    gameInfos[mod(selectedGame, gameInfos.length)].type ==
+                    gameInfos[mod(selectedGame, gameInfos.length)]?.type ==
                       'jar' &&
                     checkJava === false
                   ) {
                     setOpenedModal('noJava');
                   } else {
-                    await window.TraPCollectionAPI.invoke.launch(
-                      gameInfos[mod(selectedGame, gameInfos.length)].id
-                    );
+                    const gameInfo =
+                      gameInfos[mod(selectedGame, gameInfos.length)];
+                    if (gameInfo === undefined) {
+                      return;
+                    }
+                    await window.TraPCollectionAPI.invoke.launch(gameInfo.id);
                   }
                 })();
               }}

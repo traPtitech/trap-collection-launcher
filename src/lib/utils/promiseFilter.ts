@@ -6,7 +6,7 @@ const promiseFilter = async <T>(
   predicate: (value: T, index: number) => Promise<boolean>
 ) => {
   const result = await Promise.all(array.map(predicate));
-  return array.filter((v, i) => result[i]);
+  return array.filter((_, i) => result[i]);
 };
 
 export default promiseFilter;

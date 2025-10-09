@@ -1,7 +1,9 @@
 import { app, BrowserWindow, protocol } from 'electron';
-declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+import path from 'path';
+declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
+declare const MAIN_WINDOW_VITE_NAME: string;
 import logger from 'electron-log';
-import updater from 'update-electron-app';
+import { updateElectronApp } from 'update-electron-app';
 import { detectSeated } from './utils/detectSeated';
 import { ipcMain } from '@/common/typedIpc';
 import { isKoudaisai } from '@/config';
@@ -9,7 +11,7 @@ import ipcListener from '@/lib/ipc/ipcListener';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
-  // eslint-disable-line global-require
+   
   app.quit();
 }
 
@@ -36,14 +38,20 @@ const createWindow = (): void => {
     // fullscreen: true,
     webPreferences: {
       // webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
-      preload: process.env.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      preload: path.join(__dirname, 'preload.cjs'),
     },
     show: false,
   });
   ipcListener.setWindow(mainWindow);
 
   // and load the index.html of the app.
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  } else {
+    mainWindow.loadFile(
+      `${__dirname}/../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`
+    );
+  }
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
     mainWindow.maximize();
@@ -114,7 +122,7 @@ app.on('activate', () => {
 // }, 30 * 60 * 1000);
 
 if (!isKoudaisai) {
-  updater({
+  updateElectronApp({
     repo: 'traPtitech/trap-collection-launcher',
     updateInterval: '1 hour',
     logger: logger,

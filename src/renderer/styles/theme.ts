@@ -1,7 +1,6 @@
-// eslint-disable-next-line import/no-unresolved
-import { Theme } from '../types/styled';
+import { Theme } from '@/renderer/types/styled';
 
-export const createTheme = ({ dark }: { dark: boolean }): Theme => {
+export const createTheme = (_: { dark: boolean }): Theme => {
   return {
     fontSize: {
       exSmall: '1.1rem',

@@ -2,7 +2,6 @@ import Cleave from 'cleave.js/react';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Modal, { ModalEventHandler } from '@/renderer/components/Modal';
-import ProductModal from '@/renderer/components/ProductModal';
 
 const Div = ({ ...props }) => <div {...props} />;
 
@@ -53,9 +52,8 @@ const AddProductKeyModal = ({ openedModal, closeHandler }: Props) => {
       onCancel={closeHandler}
       onOk={(e) => {
         (async () => {
-          const isSuccess = await window.TraPCollectionAPI.invoke.addProductKey(
-            value
-          );
+          const isSuccess =
+            await window.TraPCollectionAPI.invoke.addProductKey(value);
           if (isSuccess) {
             closeHandler(e);
           }

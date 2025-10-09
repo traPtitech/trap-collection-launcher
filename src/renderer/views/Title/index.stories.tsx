@@ -1,12 +1,14 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import TitlePage from './index';
 
-export default {
+const meta: Meta<typeof TitlePage> = {
   title: 'TitlePage',
   component: TitlePage,
-} as ComponentMeta<typeof TitlePage>;
+};
 
-const Template: ComponentStory<typeof TitlePage> = () => <TitlePage />;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Primary = Template.bind({});
+export const Primary: Story = {
+  render: () => <TitlePage />,
+};

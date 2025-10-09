@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import Modal, * as ModalPackage from '../Modal';
 import { SelectedProductKeyContext } from '@/renderer/App';
