@@ -39,7 +39,7 @@ const ProductKeyContainer = styled(Div)`
   cursor: pointer;
   transition: background-color 0.08s;
   background-color: 'transparent';
-  :hover {
+  &:hover {
     background-color: ${(props) => props.theme.colors.button.transparent.hover};
   }
   border-width: 0;
@@ -95,7 +95,7 @@ const IconButton = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
-  :hover {
+  &:hover {
     color: ${(props) => props.theme.colors.text.primary};
   }
 `;
