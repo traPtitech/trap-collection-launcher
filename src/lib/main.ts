@@ -37,7 +37,7 @@ const createWindow = (): void => {
     // fullscreen: true,
     webPreferences: {
       // webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.cjs'),
     },
     show: false,
   });
