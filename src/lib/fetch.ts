@@ -15,7 +15,7 @@ import {
   generateAbsolutePath,
   generateLocalPath,
 } from '@/lib/utils/generatePaths';
-import unzip from '@/lib/utils/unzip';
+import { unzip } from '@/lib/utils/unzip';
 
 /*
 やる処理 v2
@@ -95,7 +95,11 @@ const downloadFile = async (game: EditionGameResponse) => {
   const fileType = getFileType(game);
   const fileID: string | undefined = fileType && game.version.files?.[fileType];
 
-  if (fileID === undefined) return;
+  if (fileID === undefined) {
+    progressLog.add('fileDownload');
+    progressLog.add('fileDecompress');
+    return;
+  }
 
   const { data } = await getGameFile(game.id, fileID);
   const res = await getGameFileMeta(game.id, fileID);
@@ -108,7 +112,7 @@ const downloadFile = async (game: EditionGameResponse) => {
     gameDirectory.executive,
     md5,
     () => progressLog.add('fileDownload')
-  ).catch(console.error);
+  );
 
   progressLog.add('fileDecompress');
 };
@@ -164,82 +168,85 @@ export const fetch = async (): Promise<void> => {
 
   const {
     data: { id: editionID },
-  } = await getEditionInfo().then((x) => {
-    return x;
-  });
+  } = await getEditionInfo();
   const { data: newEditionGames } = await getEditionGames(editionID);
   const diffs = diff(oldGameInfos, newEditionGames);
 
-  const gameNum = diffs.length;
+  progressLog.reset(diffs.length, diffs.length, diffs.length);
 
-  progressLog.reset(gameNum, gameNum, gameNum);
+  // storeのコピーを保持して更新していく
+  const currentInfos = [...oldGameInfos];
 
-  await Promise.all(
+  // store書き込み用のキュー（排他制御のため直列化）
+  let storeQueue = Promise.resolve();
+  const addToStore = (newInfo: TraPCollection.GameInfo) => {
+    storeQueue = storeQueue.then(() => {
+      currentInfos.push(newInfo);
+      store.set('gameInfo', currentInfos);
+    });
+  };
+
+  // 全ゲームを並列処理
+  const results = await Promise.allSettled(
     diffs.map(async (game) => {
-      await downloadInit(game);
-      await downloadFile(game);
-      await downloadImage(game);
-      await downloadVideo(game);
-    })
-  );
+      try {
+        await downloadInit(game);
+        await downloadFile(game);
+        await downloadImage(game);
+        await downloadVideo(game);
 
-  const diffGameInfos: TraPCollection.GameInfo[] = await Promise.all(
-    diffs.map(async (newEditionGame) => {
-      const gameDirectory = getLocalGameDirectory(newEditionGame.version.id);
-      const updateAt = newEditionGame.version.createdAt;
+        const gameDirectory = getLocalGameDirectory(game.version.id);
+        const updateAt = game.version.createdAt;
 
-      const info: TraPCollection.GameInfo['info'] = await (async () => {
-        const fileType = getFileType(newEditionGame);
+        const fileType = getFileType(game);
         const fileID: string | undefined =
-          fileType && newEditionGame.version.files?.[fileType];
+          fileType && game.version.files?.[fileType];
 
-        if (fileID === undefined)
-          return {
-            type: 'url',
-            url: newEditionGame.version.url ?? '',
-            updateAt,
-          };
+        const info: TraPCollection.GameInfo['info'] = await (fileID
+          ? (async () => {
+              const res = await getGameFileMeta(game.id, fileID);
+              const entryPoint = res.data.entryPoint;
+              if (fileType === GameFileType.Jar)
+                return { type: 'jar', entryPoint, updateAt };
+              return { type: 'app', entryPoint, updateAt };
+            })()
+          : { type: 'url', url: game.version.url ?? '', updateAt });
 
-        const res = await getGameFileMeta(newEditionGame.id, fileID);
-
-        const entryPoint = res.data.entryPoint;
-
-        if (fileType === GameFileType.Jar)
-          return {
-            type: 'jar',
-            entryPoint,
-            updateAt,
-          };
-        return {
-          type: 'app',
-          entryPoint,
-          updateAt,
+        const newInfo: TraPCollection.GameInfo = {
+          createdAt: game.createdAt,
+          description: game.description,
+          id: game.id,
+          name: game.name,
+          version: {
+            createdAt: updateAt,
+            description: game.version.description,
+            id: game.version.id,
+            name: game.version.name,
+          },
+          info,
+          poster: { updateAt, path: gameDirectory.poster },
+          video: { updateAt, path: gameDirectory.video },
         };
-      })();
 
-      return {
-        createdAt: newEditionGame.createdAt,
-        description: newEditionGame.description,
-        id: newEditionGame.id,
-        name: newEditionGame.name,
-        version: {
-          createdAt: updateAt,
-          description: newEditionGame.version.description,
-          id: newEditionGame.version.id,
-          name: newEditionGame.version.name,
-        },
-        info,
-        poster: {
-          updateAt,
-          path: gameDirectory.poster,
-        },
-        video: {
-          updateAt,
-          path: gameDirectory.video,
-        },
-      };
+        // ここで store に逐次反映（キュー経由で排他制御）
+        addToStore(newInfo);
+      } catch (error) {
+        console.error(`Failed to download game: ${game.name}`, error);
+        throw error; // Promise.allSettled で rejected として記録
+      }
     })
   );
 
-  store.set('gameInfo', [...oldGameInfos, ...diffGameInfos]);
+  // 全ての store 書き込みが完了するまで待つ
+  await storeQueue;
+
+  // エラー結果をログに出力
+  results.forEach((result, index) => {
+    if (result.status === 'rejected') {
+      console.error(
+        `Game download failed: ${diffs[index]?.name}`,
+        result.reason
+      );
+    }
+  });
 };

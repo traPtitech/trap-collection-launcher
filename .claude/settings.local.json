@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run package:*)",
+      "Bash(test:*)",
+      "Bash(\"./out/trap-collection-win32-x64/trap-collection.exe\")",
+      "Bash(cat:*)",
+      "Bash(npx asar list:*)",
+      "Bash(npm install:*)",
+      "Bash(node:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

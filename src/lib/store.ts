@@ -1,4 +1,7 @@
-import Store from 'electron-store';
+import StoreImport from 'electron-store';
+
+const Store = (StoreImport as any).default as typeof StoreImport;
+type Store<T extends Record<string, any>> = InstanceType<typeof Store<T>>;
 
 type StoreSchema = {
   gameInfo: TraPCollection.GameInfos;

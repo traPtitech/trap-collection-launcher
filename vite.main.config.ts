@@ -11,7 +11,13 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['electron', 'electron-log', 'update-electron-app'],
+      external: [
+        'electron',
+        'electron-log',
+        'electron-store',
+        'electron-squirrel-startup',
+        'update-electron-app',
+      ],
       output: {
         format: 'cjs',
         entryFileNames: '[name].cjs',

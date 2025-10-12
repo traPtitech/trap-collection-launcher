@@ -1,3 +1,5 @@
+import { AutoUnpackNativesPlugin } from '@electron-forge/plugin-auto-unpack-natives';
+
 /**
  * @see {@url https://www.electronforge.io/configuration}
  */
@@ -23,6 +25,8 @@ export default {
       'hardened-runtime': true,
       'gatekeeper-assess': false,
     },
+    asar: true,
+    ignore: [],
   },
   makers: [
     {
@@ -38,6 +42,7 @@ export default {
     },
   ],
   plugins: [
+    new AutoUnpackNativesPlugin({}),
     {
       name: '@electron-forge/plugin-vite',
       config: {

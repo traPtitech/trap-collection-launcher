@@ -11,7 +11,6 @@ import ipcListener from '@/lib/ipc/ipcListener';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
-   
   app.quit();
 }
 
@@ -38,7 +37,7 @@ const createWindow = (): void => {
     // fullscreen: true,
     webPreferences: {
       // webSecurity: process.env.NODE_ENV !== 'development', // developmentのときのみローカルファイルへのアクセスを許可する
-      preload: path.join(__dirname, 'preload.cjs'),
+      preload: path.join(__dirname, 'preload.js'),
     },
     show: false,
   });
