@@ -102,6 +102,7 @@ declare namespace TraPCollection {
 
   type RendererGameInfo = {
     id: string;
+    versionId: string;
     name: string;
     description: string;
     versionName: string;
