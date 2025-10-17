@@ -289,7 +289,9 @@ const GameSelect = ({ koudaisai }: Props) => {
                     if (gameInfo === undefined) {
                       return;
                     }
-                    await window.TraPCollectionAPI.invoke.launch(gameInfo.id);
+                    await window.TraPCollectionAPI.invoke.launch(
+                      gameInfo.versionId
+                    );
                   }
                 })();
               }}

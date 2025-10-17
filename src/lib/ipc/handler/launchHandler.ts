@@ -12,14 +12,14 @@ export const launchHandler = async (
   if (!window) {
     return;
   }
-  ipcMain.handle('launch', async (_event, gameId) => {
+  ipcMain.handle('launch', async (_event, versionId) => {
     const platform = process.platform;
     if (platform !== 'win32' && platform !== 'darwin') {
       return;
     }
     const target = store
       .get('gameInfo')
-      .find((gameInfo) => gameInfo.id === gameId);
+      .find((gameInfo) => gameInfo.version.id === versionId);
     if (!target) {
       return;
     }

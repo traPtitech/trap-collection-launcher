@@ -20,6 +20,7 @@ export const getGameInfoHandler = (): void => {
         ? [
             {
               id: gameInfo.id,
+              versionId: gameInfo.version.id,
               name: gameInfo.name,
               poster: generateAbsolutePath(gameInfo.poster.path),
               video:
