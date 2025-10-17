@@ -91,3 +91,5 @@ out/
 
 # Vite
 .vite
+
+.claude
