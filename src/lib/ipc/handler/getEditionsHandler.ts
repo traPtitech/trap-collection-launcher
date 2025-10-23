@@ -19,6 +19,7 @@ export const getEditionsHandler = (): void => {
           });
         const editionInfo = await getEditionInfo();
         return {
+          id: launcherVersion.id,
           productKey: launcherVersion.productKey,
           name: editionInfo.data.name,
         };

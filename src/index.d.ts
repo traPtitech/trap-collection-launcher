@@ -94,6 +94,7 @@ declare namespace TraPCollection {
   type GameInfos = GameInfo[];
 
   type LauncherVersion = {
+    id: string;
     productKey: string;
     name?: string;
   };
