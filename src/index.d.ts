@@ -6,7 +6,7 @@ declare namespace TraPCollection {
     removeListener: FromMainReceiver;
   };
   type FromRenderer = {
-    launch(gameId: string): Promise<void>;
+    launch(versionId: string, editionId: string): Promise<void>;
     openQuestionnaire(): Promise<void>;
     openHomePage(): Promise<void>;
     openJavaDownloadPage(): Promise<void>;

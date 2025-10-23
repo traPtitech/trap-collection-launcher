@@ -5,6 +5,7 @@ import { ipcMain } from '@/common/typedIpc';
 import launchedGames from '@/lib/launchedGames';
 import store from '@/lib/store';
 import { generateAbsolutePath } from '@/lib/utils/generatePaths';
+import { patchPlayLogEnd, postPlayLog } from '@/lib/axios';
 
 export const launchHandler = async (
   window: BrowserWindow | null
@@ -12,35 +13,39 @@ export const launchHandler = async (
   if (!window) {
     return;
   }
-  ipcMain.handle('launch', async (_event, versionId) => {
+  ipcMain.handle('launch', async (_event, versionId, editionId) => {
     const platform = process.platform;
     if (platform !== 'win32' && platform !== 'darwin') {
       return;
     }
-    const target = store
+    const gameInfo = store
       .get('gameInfo')
       .find((gameInfo) => gameInfo.version.id === versionId);
-    if (!target) {
+    if (!gameInfo) {
       return;
     }
 
-    const cp = launch[platform](target);
+    const cp = launch[platform](gameInfo);
     window.minimize();
+
+    const {
+      data: { playLogID },
+    } = await postPlayLog(editionId, gameInfo.id, versionId, new Date());
+
+    const cpCloseHandler = async () => {
+      launchedGames.remove(cp);
+      window.maximize();
+      await patchPlayLogEnd(editionId, gameInfo.id, playLogID, new Date());
+    };
 
     if (cp instanceof BrowserWindow) {
       launchedGames.add(cp);
-      cp.on('close', () => {
-        launchedGames.remove(cp);
-        window.maximize();
-      });
+      cp.on('close', cpCloseHandler);
       return;
     }
     if (cp) {
       launchedGames.add(cp);
-      cp.on('close', () => {
-        launchedGames.remove(cp);
-        window.maximize();
-      });
+      cp.on('close', cpCloseHandler);
     }
   });
 };
