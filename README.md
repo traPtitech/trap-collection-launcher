@@ -1,5 +1,11 @@
 # trap-collection-launcher
 
+## Setup
+
+```bash
+cp .env.example .env.development
+```
+
 ## Development
 
 ```bash
@@ -29,11 +35,12 @@ URL: <https://github.com/settings/tokens/new>
 
 ```bash
 npm i
-cp .env.example .env
+cp .env.example .env.production
 ```
 
-Edit `.env` file and add your _GitHub Personal Access Token_.
+Edit `.env.production` file and add your _GitHub Personal Access Token_.
 Set `KOUDAISAI` to `true` or `false` to enable or disable Koudaisai mode.
+Set `API_BASE_URL` to your desired production API server base URL.
 
 Update version number in `package.json` file if you need.
 

@@ -1,6 +1,6 @@
 import PackageJson from '../package.json';
 
-export const baseUrl = 'https://collection.trap.jp/api/v2';
+export const baseUrl = process.env.API_BASE_URL;
 export const isKoudaisai = process.env.KOUDAISAI === 'true';
 
 export const packageJson: {
