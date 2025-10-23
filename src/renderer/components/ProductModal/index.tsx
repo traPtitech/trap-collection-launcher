@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
 import Modal, * as ModalPackage from '../Modal';
-import { SelectedProductKeyContext } from '@/renderer/App';
+import { SelectedEditionContext } from '@/renderer/App';
 
 const Content = styled.div`
   text-align: center;
@@ -15,11 +15,11 @@ const ProductModal = ({
   ModalPackage.Props,
   'noButton' | 'children' | 'modalType' | 'okButtonText' | 'title'
 >) => {
-  const [productKey] = useContext(SelectedProductKeyContext);
+  const [edition] = useContext(SelectedEditionContext);
 
   return (
     <Modal title='プロダクトキー' noButton {...props}>
-      <Content>{productKey}</Content>
+      <Content>{edition?.productKey}</Content>
     </Modal>
   );
 };

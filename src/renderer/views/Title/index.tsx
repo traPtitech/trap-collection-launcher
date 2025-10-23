@@ -5,7 +5,7 @@ import { BarLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
 import {
   NavigateContext,
-  SelectedProductKeyContext,
+  SelectedEditionContext,
   SetOfflineModeContext,
   ShowNetworkErrorContext,
 } from '@/renderer/App';
@@ -135,11 +135,11 @@ const isValidProductKeyFormat = (str: string) => {
 type Progress = 'inputProductkey' | 'login' | 'fetchGame';
 
 const TitlePage = () => {
-  const [productKeyContext, setProductKeyContext] = useContext(
-    SelectedProductKeyContext
+  const [editionContext, setEditionContext] = useContext(
+    SelectedEditionContext
   );
-  const [productKey, setProductKey] = useState<string | null>(
-    productKeyContext
+  const [edition, setEdition] = useState<TraPCollection.LauncherVersion | null>(
+    editionContext
   );
   const navigate = useContext(NavigateContext);
   const showNetworkError = useContext(ShowNetworkErrorContext);
@@ -153,17 +153,18 @@ const TitlePage = () => {
 
   const tryLogin = async () =>
     (async () => {
-      if (!productKey) {
+      if (!edition) {
         setProgress('inputProductkey');
         return false;
       }
       setProgress('login');
-      const success =
-        await window.TraPCollectionAPI.invoke.postLauncherLogin(productKey);
+      const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(
+        edition.productKey
+      );
       if (success) {
         setProgress('fetchGame');
         await window.TraPCollectionAPI.invoke.fetchGame();
-        setProductKeyContext(productKey);
+        setEditionContext(edition);
         navigate && navigate('gameSelect');
         return true;
       } else {
@@ -192,14 +193,14 @@ const TitlePage = () => {
   }, [isOfflineMode, navigate]);
 
   const onEnterProductKey = () => {
-    if (!productKey) {
+    if (!edition) {
       return;
     }
-    if (!isValidProductKeyFormat(productKey)) {
+    if (!isValidProductKeyFormat(edition.productKey)) {
       return;
     }
     (async () => {
-      await window.TraPCollectionAPI.invoke.addProductKey(productKey);
+      await window.TraPCollectionAPI.invoke.addProductKey(edition.productKey);
       const res = await tryLogin();
       if (!res) {
         setInvalidProductKey(true);
@@ -237,12 +238,14 @@ const TitlePage = () => {
                 }}
                 onChange={(e) => {
                   setInvalidProductKey(false);
-                  setProductKey(e.target.value);
+                  setEdition((edition) =>
+                    edition ? { ...edition, productKey: e.target.value } : null
+                  );
                 }}
               />
               <EnterButton
                 $isValidProductKey={
-                  !!(productKey && isValidProductKeyFormat(productKey))
+                  !!(edition && isValidProductKeyFormat(edition.productKey))
                 }
                 onClick={onEnterProductKey}
               >

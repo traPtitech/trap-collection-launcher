@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import styled from 'styled-components';
 import AddProductKeyModal from './addProductKeyModal';
-import { NavigateContext, SelectedProductKeyContext } from '@/renderer/App';
+import { NavigateContext, SelectedEditionContext } from '@/renderer/App';
 
 const Div = ({ ...props }) => <div {...props} />;
 const Button = ({ ...props }) => <button {...props} />;
@@ -111,7 +111,7 @@ const ProductKeySelect = () => {
     TraPCollection.LauncherVersion[]
   >([]);
   const navigate = useContext(NavigateContext);
-  const [, setProductKey] = useContext(SelectedProductKeyContext);
+  const [, setEdition] = useContext(SelectedEditionContext);
   const [isAddProductKeyModalOpen, setIsAddProductKeyModalOpen] =
     useState(false);
 
@@ -158,7 +158,7 @@ const ProductKeySelect = () => {
             <ProductKeyContainer
               key={i}
               onClick={() => {
-                setProductKey(edition.productKey);
+                setEdition(edition);
                 navigate && navigate('title');
               }}
             >
