@@ -8,6 +8,7 @@ import { detectSeated } from './utils/detectSeated';
 import { ipcMain } from '@/common/typedIpc';
 import { isKoudaisai } from '@/config';
 import ipcListener from '@/lib/ipc/ipcListener';
+import launchedGames from './launchedGames';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -63,6 +64,27 @@ const createWindow = (): void => {
   });
   mainWindow.on('blur', () => {
     ipcMain.send<'onBrowserWindowBlur'>(mainWindow, 'onBrowserWindowBlur');
+  });
+
+  // ランチャーのウィンドウが終了したらゲームも終了する。
+  // ゲーム起動時に closeHandler をゲームプロセス終了時のコールバックとして登録しているが、
+  // プレイ終了ログの送信がランチャーのプロセス終了に間に合わないため、closeHandler をここでも呼び出す必要がある。
+  mainWindow.on('close', async (event) => {
+    if (launchedGames.get().size === 0) {
+      return;
+    }
+    event.preventDefault();
+    await Promise.all(
+      Array.from(launchedGames.get()).map(({ process, closeHandler }) => {
+        if (process instanceof BrowserWindow) {
+          process.close();
+          return;
+        }
+        process.kill();
+        return closeHandler();
+      })
+    );
+    mainWindow.close();
   });
 
   if (process.env.NODE_ENV === 'production') {

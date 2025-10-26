@@ -32,20 +32,23 @@ export const launchHandler = async (
       data: { playLogID },
     } = await postPlayLog(editionId, gameInfo.id, versionId, new Date());
 
-    const cpCloseHandler = async () => {
-      launchedGames.remove(cp);
-      window.maximize();
-      await patchPlayLogEnd(editionId, gameInfo.id, playLogID, new Date());
+    const launchedGame = {
+      process: cp,
+      closeHandler: async () => {
+        launchedGames.remove(launchedGame);
+        window.maximize();
+        await patchPlayLogEnd(editionId, gameInfo.id, playLogID, new Date());
+      },
     };
 
     if (cp instanceof BrowserWindow) {
-      launchedGames.add(cp);
-      cp.on('close', cpCloseHandler);
+      launchedGames.add(launchedGame);
+      cp.on('close', launchedGame.closeHandler);
       return;
     }
     if (cp) {
-      launchedGames.add(cp);
-      cp.on('close', cpCloseHandler);
+      launchedGames.add(launchedGame);
+      cp.on('close', launchedGame.closeHandler);
     }
   });
 };
