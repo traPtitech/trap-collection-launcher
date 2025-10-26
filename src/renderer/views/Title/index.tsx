@@ -163,11 +163,6 @@ const TitlePage = () => {
       if (success) {
         setProgress('fetchGame');
         await window.TraPCollectionAPI.invoke.fetchGame();
-        const editions = await window.TraPCollectionAPI.invoke.getEditions();
-        const edition = editions.find(
-          (edition) => edition.productKey === productKey
-        );
-        setEditionContext(edition ?? null);
         navigate && navigate('gameSelect');
         return true;
       } else {
@@ -208,6 +203,10 @@ const TitlePage = () => {
       if (!res) {
         setInvalidProductKey(true);
       }
+
+      const currentEdition =
+        await window.TraPCollectionAPI.invoke.getCurrentEdition();
+      setEditionContext(currentEdition);
     })();
   };
 

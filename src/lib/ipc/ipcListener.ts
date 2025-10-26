@@ -20,6 +20,7 @@ import {
   openJavaDownloadPageHandler,
   openQuestionnaireHandler,
 } from '@/lib/ipc/handler/openWebPageHandler';
+import { getCurrentEditionHandler } from './handler/getCurrentEditionHandler';
 
 class IpcListener {
   window: BrowserWindow | null;
@@ -45,6 +46,7 @@ class IpcListener {
     ipcMain.removeHandler('getGameInfo');
     ipcMain.removeHandler('checkJava');
     ipcMain.removeHandler('getEditions');
+    ipcMain.removeHandler('getCurrentEdition');
     ipcMain.removeHandler('addProductKey');
     ipcMain.removeHandler('resetProductKey');
     ipcMain.removeHandler('getSeatId');
@@ -67,6 +69,7 @@ class IpcListener {
     getGameInfoHandler();
     checkJavaHandler();
     getEditionsHandler();
+    getCurrentEditionHandler();
     addProductKeyHandler();
     resetProductKeyHandler();
     getSeatIdHandler();

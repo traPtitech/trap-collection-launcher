@@ -13,6 +13,7 @@ declare namespace TraPCollection {
     getGameInfo(): Promise<RendererGameInfo[]>;
     checkJava(): Promise<boolean>;
     getEditions(): Promise<LauncherVersion[]>;
+    getCurrentEdition(): Promise<LauncherVersion | null>;
     addProductKey(productKey: string): Promise<boolean>;
     resetProductKey(): Promise<void>;
     getSeatId(): Promise<number | null>;

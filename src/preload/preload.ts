@@ -15,6 +15,9 @@ const api: TraPCollection.API = {
     getEditions: async () => {
       return await ipcRenderer.invoke('getEditions');
     },
+    getCurrentEdition: async () => {
+      return await ipcRenderer.invoke('getCurrentEdition');
+    },
     addProductKey: async (productKey) => {
       return await ipcRenderer.invoke('addProductKey', productKey);
     },
