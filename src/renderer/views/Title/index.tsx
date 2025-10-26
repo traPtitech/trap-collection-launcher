@@ -138,8 +138,8 @@ const TitlePage = () => {
   const [editionContext, setEditionContext] = useContext(
     SelectedEditionContext
   );
-  const [edition, setEdition] = useState<TraPCollection.LauncherVersion | null>(
-    editionContext
+  const [productKey, setProductKey] = useState<string | undefined>(
+    editionContext?.productKey
   );
   const navigate = useContext(NavigateContext);
   const showNetworkError = useContext(ShowNetworkErrorContext);
@@ -153,18 +153,21 @@ const TitlePage = () => {
 
   const tryLogin = async () =>
     (async () => {
-      if (!edition) {
+      if (!productKey) {
         setProgress('inputProductkey');
         return false;
       }
       setProgress('login');
-      const success = await window.TraPCollectionAPI.invoke.postLauncherLogin(
-        edition.productKey
-      );
+      const success =
+        await window.TraPCollectionAPI.invoke.postLauncherLogin(productKey);
       if (success) {
         setProgress('fetchGame');
         await window.TraPCollectionAPI.invoke.fetchGame();
-        setEditionContext(edition);
+        const editions = await window.TraPCollectionAPI.invoke.getEditions();
+        const edition = editions.find(
+          (edition) => edition.productKey === productKey
+        );
+        setEditionContext(edition ?? null);
         navigate && navigate('gameSelect');
         return true;
       } else {
@@ -193,14 +196,14 @@ const TitlePage = () => {
   }, [isOfflineMode, navigate]);
 
   const onEnterProductKey = () => {
-    if (!edition) {
+    if (!productKey) {
       return;
     }
-    if (!isValidProductKeyFormat(edition.productKey)) {
+    if (!isValidProductKeyFormat(productKey)) {
       return;
     }
     (async () => {
-      await window.TraPCollectionAPI.invoke.addProductKey(edition.productKey);
+      await window.TraPCollectionAPI.invoke.addProductKey(productKey);
       const res = await tryLogin();
       if (!res) {
         setInvalidProductKey(true);
@@ -238,14 +241,12 @@ const TitlePage = () => {
                 }}
                 onChange={(e) => {
                   setInvalidProductKey(false);
-                  setEdition((edition) =>
-                    edition ? { ...edition, productKey: e.target.value } : null
-                  );
+                  setProductKey(e.target.value);
                 }}
               />
               <EnterButton
                 $isValidProductKey={
-                  !!(edition && isValidProductKeyFormat(edition.productKey))
+                  !!(productKey && isValidProductKeyFormat(productKey))
                 }
                 onClick={onEnterProductKey}
               >
