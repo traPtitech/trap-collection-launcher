@@ -6,6 +6,7 @@ import launchedGames from '@/lib/launchedGames';
 import store from '@/lib/store';
 import { generateAbsolutePath } from '@/lib/utils/generatePaths';
 import { patchPlayLogEnd, postPlayLog } from '@/lib/axios';
+import { isKoudaisai } from '@/config';
 
 export const launchHandler = async (
   window: BrowserWindow | null
@@ -30,14 +31,17 @@ export const launchHandler = async (
 
     const {
       data: { playLogID },
-    } = await postPlayLog(editionId, gameInfo.id, versionId, new Date());
+    } = isKoudaisai
+      ? await postPlayLog(editionId, gameInfo.id, versionId, new Date())
+      : { data: { playLogID: null } };
 
     const launchedGame = {
       process: cp,
       closeHandler: async () => {
         launchedGames.remove(launchedGame);
         window.maximize();
-        await patchPlayLogEnd(editionId, gameInfo.id, playLogID, new Date());
+        if (isKoudaisai && playLogID)
+          await patchPlayLogEnd(editionId, gameInfo.id, playLogID, new Date());
       },
     };
 
