@@ -5,7 +5,7 @@ import { BarLoader } from 'react-spinners';
 import styled, { useTheme } from 'styled-components';
 import {
   NavigateContext,
-  SelectedProductKeyContext,
+  SelectedEditionContext,
   SetOfflineModeContext,
   ShowNetworkErrorContext,
 } from '@/renderer/App';
@@ -135,11 +135,11 @@ const isValidProductKeyFormat = (str: string) => {
 type Progress = 'inputProductkey' | 'login' | 'fetchGame';
 
 const TitlePage = () => {
-  const [productKeyContext, setProductKeyContext] = useContext(
-    SelectedProductKeyContext
+  const [editionContext, setEditionContext] = useContext(
+    SelectedEditionContext
   );
-  const [productKey, setProductKey] = useState<string | null>(
-    productKeyContext
+  const [productKey, setProductKey] = useState<string | undefined>(
+    editionContext?.productKey
   );
   const navigate = useContext(NavigateContext);
   const showNetworkError = useContext(ShowNetworkErrorContext);
@@ -163,7 +163,6 @@ const TitlePage = () => {
       if (success) {
         setProgress('fetchGame');
         await window.TraPCollectionAPI.invoke.fetchGame();
-        setProductKeyContext(productKey);
         navigate && navigate('gameSelect');
         return true;
       } else {
@@ -204,6 +203,10 @@ const TitlePage = () => {
       if (!res) {
         setInvalidProductKey(true);
       }
+
+      const currentEdition =
+        await window.TraPCollectionAPI.invoke.getCurrentEdition();
+      setEditionContext(currentEdition);
     })();
   };
 

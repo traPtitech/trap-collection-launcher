@@ -25,7 +25,11 @@ export const addProductKeyHandler = (): void => {
     const editionInfo = await getEditionInfo();
     store.set('launcherVersions', [
       ...editions,
-      { productKey: productKey, name: editionInfo.data.name },
+      {
+        productKey: productKey,
+        name: editionInfo.data.name,
+        id: editionInfo.data.id,
+      },
     ]);
     return isSuccess;
   });

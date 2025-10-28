@@ -1,3 +1,4 @@
+import { electronStoreName } from '@/config';
 import StoreImport from 'electron-store';
 
 const Store = (StoreImport as any).default as typeof StoreImport;
@@ -20,6 +21,7 @@ const store = new Store<StoreSchema>({
     token: null,
   },
   watch: true,
+  name: electronStoreName,
 });
 
 export class TraPCollectionStore {

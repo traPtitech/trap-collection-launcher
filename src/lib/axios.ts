@@ -1,4 +1,3 @@
- 
 import axios from 'axios';
 import store from './store';
 import { baseUrl } from '@/config';
@@ -13,6 +12,7 @@ import {
   SeatApi,
   SeatStatus,
   Configuration,
+  GamePlayLogApi,
 } from '@/lib/typescript-axios/index';
 
 const axiosInstance = axios.create();
@@ -53,6 +53,7 @@ const API = {
   GameImageApi: new GameImageApi(config, baseUrl, axiosInstance),
   GameVideoApi: new GameVideoApi(config, baseUrl, axiosInstance),
   SeatApi: new SeatApi(config, baseUrl, axiosInstance),
+  GamePlayLogApi: new GamePlayLogApi(config, baseUrl, axiosInstance),
 };
 
 /**
@@ -158,3 +159,36 @@ export const patchSeatInUse = async (seatId: number) =>
  */
 export const patchSeatEmpty = async (seatId: number) =>
   API.SeatApi.patchSeatStatus(seatId, { status: SeatStatus.Empty });
+
+/**
+ * プレイログの送信
+ * @param editionId string
+ * @param gameId string
+ * @param gameVersionId string
+ * @param startTime Date
+ */
+export const postPlayLog = async (
+  editionId: string,
+  gameId: string,
+  gameVersionId: string,
+  startTime: Date
+) =>
+  API.GamePlayLogApi.postGamePlayLogStart(editionId, gameId, {
+    editionID: editionId,
+    gameID: gameId,
+    gameVersionID: gameVersionId,
+    startTime: startTime.toISOString(),
+  });
+
+/**
+ * プレイログの終了送信
+ */
+export const patchPlayLogEnd = async (
+  editionId: string,
+  gameId: string,
+  playlogId: string,
+  endTime: Date
+) =>
+  API.GamePlayLogApi.patchGamePlayLogEnd(editionId, gameId, playlogId, {
+    endTime: endTime.toISOString(),
+  });

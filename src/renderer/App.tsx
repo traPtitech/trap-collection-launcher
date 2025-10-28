@@ -50,8 +50,11 @@ export const ShowNetworkErrorContext = createContext<(() => void) | undefined>(
   undefined
 );
 
-export const SelectedProductKeyContext = createContext<
-  [string | null, (productKey: string | null) => void]
+export const SelectedEditionContext = createContext<
+  [
+    TraPCollection.LauncherVersion | null,
+    (launcherVersion: TraPCollection.LauncherVersion | null) => void,
+  ]
 >([
   null,
   () => {
@@ -65,9 +68,8 @@ export const SetOfflineModeContext = createContext<
 
 const App = () => {
   const [page, setPage] = useState<Page>('splashScreen');
-  const [selectedProductKey, setSelectedProductKey] = useState<string | null>(
-    null
-  );
+  const [selectedEdition, setSelectedEdition] =
+    useState<TraPCollection.LauncherVersion | null>(null);
   const [isOfflineMode, setIsOfflineMode] = useState(false);
   const [isOpenNetworkErrorModal, setIsOpenNetworkErrorModal] = useState(false);
 
@@ -90,8 +92,8 @@ const App = () => {
       <NavigateContext.Provider value={navigate}>
         <ShowNetworkErrorContext.Provider value={showNetworkError}>
           <SetOfflineModeContext.Provider value={useIsOffline}>
-            <SelectedProductKeyContext.Provider
-              value={[selectedProductKey, setSelectedProductKey]}
+            <SelectedEditionContext.Provider
+              value={[selectedEdition, setSelectedEdition]}
             >
               <Navigation page={page} koudaisai={isKoudaisai} />
               <ModalBackground $isOpen={isOpenNetworkErrorModal} />
@@ -99,7 +101,7 @@ const App = () => {
                 closeHandler={() => setIsOpenNetworkErrorModal(false)}
                 isOpen={isOpenNetworkErrorModal}
               />
-            </SelectedProductKeyContext.Provider>
+            </SelectedEditionContext.Provider>
           </SetOfflineModeContext.Provider>
         </ShowNetworkErrorContext.Provider>
       </NavigateContext.Provider>

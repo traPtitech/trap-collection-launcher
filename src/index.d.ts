@@ -6,13 +6,14 @@ declare namespace TraPCollection {
     removeListener: FromMainReceiver;
   };
   type FromRenderer = {
-    launch(gameId: string): Promise<void>;
+    launch(versionId: string, editionId: string): Promise<void>;
     openQuestionnaire(): Promise<void>;
     openHomePage(): Promise<void>;
     openJavaDownloadPage(): Promise<void>;
     getGameInfo(): Promise<RendererGameInfo[]>;
     checkJava(): Promise<boolean>;
     getEditions(): Promise<LauncherVersion[]>;
+    getCurrentEdition(): Promise<LauncherVersion | null>;
     addProductKey(productKey: string): Promise<boolean>;
     resetProductKey(): Promise<void>;
     getSeatId(): Promise<number | null>;
@@ -94,6 +95,7 @@ declare namespace TraPCollection {
   type GameInfos = GameInfo[];
 
   type LauncherVersion = {
+    id: string;
     productKey: string;
     name?: string;
   };

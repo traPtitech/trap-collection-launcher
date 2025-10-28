@@ -1,18 +1,23 @@
 import ChildProcess from 'child_process';
 import { BrowserWindow } from 'electron';
 
+interface LaunchedGame {
+  process: ChildProcess.ChildProcess | BrowserWindow;
+  closeHandler: () => Promise<void>;
+}
+
 export class LaunchedGames {
-  private games: Set<ChildProcess.ChildProcess | BrowserWindow> = new Set();
+  private games: Set<LaunchedGame> = new Set();
 
-  public add(game: ChildProcess.ChildProcess | BrowserWindow): void {
-    this.games.add(game);
+  public add(launchedGame: LaunchedGame): void {
+    this.games.add(launchedGame);
   }
 
-  public remove(game: ChildProcess.ChildProcess | BrowserWindow): void {
-    this.games.delete(game);
+  public remove(launchedGame: LaunchedGame): void {
+    this.games.delete(launchedGame);
   }
 
-  public get(): Set<ChildProcess.ChildProcess | BrowserWindow> {
+  public get(): Set<LaunchedGame> {
     return this.games;
   }
 }

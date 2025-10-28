@@ -6,7 +6,7 @@ import Description from './description';
 import DotSelector from './dotSelector';
 import Modals, { ModalType } from './modals';
 import Mover from './mover';
-import { NavigateContext } from '@/renderer/App';
+import { NavigateContext, SelectedEditionContext } from '@/renderer/App';
 import collectionLogo from '@/renderer/assets/logo.svg';
 import SideBar from '@/renderer/components/SideBar';
 import Slider from '@/renderer/components/Slider';
@@ -165,6 +165,7 @@ const GameSelect = ({ koudaisai }: Props) => {
     TraPCollection.RendererGameInfo[] | undefined
   >(undefined);
   const navigate = useContext(NavigateContext);
+  const [edition] = useContext(SelectedEditionContext);
 
   const theme = useTheme();
 
@@ -289,9 +290,12 @@ const GameSelect = ({ koudaisai }: Props) => {
                     if (gameInfo === undefined) {
                       return;
                     }
-                    await window.TraPCollectionAPI.invoke.launch(
-                      gameInfo.versionId
-                    );
+                    if (edition) {
+                      await window.TraPCollectionAPI.invoke.launch(
+                        gameInfo.versionId,
+                        edition.id
+                      );
+                    }
                   }
                 })();
               }}

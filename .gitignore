@@ -93,3 +93,5 @@ out/
 .vite
 
 .claude
+
+.env.*

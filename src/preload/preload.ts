@@ -3,8 +3,8 @@ import { ipcRenderer } from '@/common/typedIpc';
 
 const api: TraPCollection.API = {
   invoke: {
-    launch: async (launchTarget) => {
-      return await ipcRenderer.invoke('launch', launchTarget);
+    launch: async (launchTarget, editionId) => {
+      return await ipcRenderer.invoke('launch', launchTarget, editionId);
     },
     getGameInfo: async () => {
       return await ipcRenderer.invoke('getGameInfo');
@@ -14,6 +14,9 @@ const api: TraPCollection.API = {
     },
     getEditions: async () => {
       return await ipcRenderer.invoke('getEditions');
+    },
+    getCurrentEdition: async () => {
+      return await ipcRenderer.invoke('getCurrentEdition');
     },
     addProductKey: async (productKey) => {
       return await ipcRenderer.invoke('addProductKey', productKey);
