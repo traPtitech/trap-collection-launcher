@@ -27,7 +27,10 @@ axiosInstance.interceptors.request.use(
   (err) => Promise.reject(err)
 );
 
-const axiosStreamInstance = axios.create({ responseType: 'stream' });
+const axiosStreamInstance = axios.create({
+  responseType: 'stream',
+  decompress: false,
+});
 axiosStreamInstance.interceptors.request.use(
   async (config) => {
     const token = store.get('token');
