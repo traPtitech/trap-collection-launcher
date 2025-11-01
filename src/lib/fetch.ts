@@ -1,4 +1,4 @@
-import { createWriteStream, promises } from 'fs';
+import { createWriteStream, promises } from 'original-fs';
 import path from 'path';
 import { EditionGameResponse, GameFileType } from './typescript-axios';
 import {

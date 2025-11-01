@@ -1,4 +1,4 @@
-import { createWriteStream, mkdirSync, promises } from 'fs';
+import { createWriteStream, mkdirSync, promises } from 'original-fs';
 import path from 'path';
 import unzipper from 'unzipper';
 import iconv from 'iconv-lite';

@@ -3,7 +3,7 @@ import path from 'path';
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
 import logger from 'electron-log';
-import { updateElectronApp } from 'update-electron-app';
+import { updateElectronApp, UpdateSourceType } from 'update-electron-app';
 import { detectSeated } from './utils/detectSeated';
 import { ipcMain } from '@/common/typedIpc';
 import { isKoudaisai } from '@/config';
@@ -144,8 +144,10 @@ app.on('activate', () => {
 
 if (!isKoudaisai) {
   updateElectronApp({
-    repo: 'traPtitech/trap-collection-launcher',
-    updateInterval: '1 hour',
     logger: logger,
+    updateSource: {
+      type: UpdateSourceType.ElectronPublicUpdateService,
+      repo: 'traPtitech/trap-collection-launcher',
+    },
   });
 }

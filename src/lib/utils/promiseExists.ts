@@ -1,4 +1,4 @@
-import { promises } from 'fs';
+import { promises } from 'original-fs';
 
 export const promiseExists = (dir: string) => {
   return promises

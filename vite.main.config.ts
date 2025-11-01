@@ -17,6 +17,7 @@ export default defineConfig({
         'electron-store',
         'electron-squirrel-startup',
         'update-electron-app',
+        'original-fs',
       ],
       output: {
         format: 'cjs',

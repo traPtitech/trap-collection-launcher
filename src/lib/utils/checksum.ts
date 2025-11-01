@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import fs from 'fs';
+import fs from 'original-fs';
 
 export const md5sumFile = async (filePath: string): Promise<string> =>
   new Promise((resolve, reject) => {
